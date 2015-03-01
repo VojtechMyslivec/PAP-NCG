@@ -61,6 +61,10 @@ class cDijkstra {
       cDijkstra( );
       ~cDijkstra( );
 
+      // vypocte nejkratsi cesty od uzlu idVychozihoUzlu ke vsem ostatnim
+      // Fronta hran je implementovana binarni haldou
+      // slozitost vypoctu je tedy O( |H|.log(|U|) + |U|.log(|U|) ) = 
+      // = O( |U|^2 . log(|U|) )
       bool spustVypocet( unsigned idVychozihoUzlu );
 //      unsigned * getPredchudci( ) const;
 //      unsigned * getVzdalenosti( ) const;
@@ -87,6 +91,11 @@ class cDijkstra {
       // do podstromu
       // heapify -- synove Otce musi byt bin. haldy
       void haldujRekurzivne( unsigned indexOtce );
+      // nastavi novou vzdalenost uzlu a opravi jeho pozici v halde
+      // nutne volat tuto metodu, aby se nezapomnelo opravit haldu!!!!!!!
+      // Tato metoda jiz nekontroluje, zda je idUzlu platne. Musi se osetrit 
+      // pred volanim!!!
+      void nastavVzdalenostUzlu( unsigned idUzlu, unsigned novaVzdalenost );
 
       // Binarni halda implementovana polem. Pro otce, leveho a praveho syna 
       // existuji makra otec(i), levy(i) a pravy(i), kde i je index v poli.
@@ -174,7 +183,7 @@ bool cDijkstra::spustVypocet( unsigned idVychozihoUzlu ) {
          if ( novaVzdalenost < vzdalenostSouseda ) {
 //cout << "   nova vzdalenost z " << idUzlu << " do " << idSouseda << " = " << vzdalenostHrany << '(' << novaVzdalenost << ')'<< endl;
             predchudce[idSouseda] = idUzlu;
-            vzdalenost[idSouseda] = novaVzdalenost;
+            nastavVzdalenostUzlu( idSouseda, novaVzdalenost );
 
             // oprava haldy dle nove hodnoty
             opravPoziciVHalde( indexyVHalde[idSouseda] );
@@ -200,10 +209,17 @@ bool cDijkstra::inicializace( unsigned idVychozihoUzlu ) {
       uzavreny[idUzlu]   = false;
       pridejPrvekDoHaldy( idUzlu );
    }
-   vzdalenost[idVychozihoUzlu] = 0;
+   // zde neni kontrola navratove hodnoty -- zbytecne, uz je zkontrolovana
+   nastavVzdalenostUzlu( idVychozihoUzlu, 0 );
 
    return true;
 }
+
+void cDijkstra::nastavVzdalenostUzlu( unsigned idUzlu, unsigned novaVzdalenost ) {
+   vzdalenost[idUzlu] = novaVzdalenost;
+   opravPoziciVHalde( indexyVHalde[idUzlu] );
+}
+
 
 void cDijkstra::opravPoziciVHalde( unsigned pozice ) {
    // nalezne misto, kam ma uzel na pozici patrit
@@ -519,6 +535,21 @@ void vypisGrafu( ) { // const unsigned ** graf, unsigned pocetUzlu ) {
    cout << endl;
 }
 
+void dijkstraNtoN( ) {
+   
+   cDijkstra * dijkstra = new cDijkstra( );
+
+   for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
+      cout << "\nDijkstra pro uzel id = " << i << endl;
+      if ( dijkstra->spustVypocet( i ) != true )
+         cerr << "problem s vypoctem pro id = " << i << endl;
+      else
+      dijkstra->vypisVysledek( );
+   }
+
+   delete dijkstra;
+
+}
 
 
 // main =======================================================================
@@ -544,19 +575,13 @@ int main( int argc, char ** argv ) {
 
    vypisGrafu( );
    if ( kontrolaGrafu( ) != GRAF_NEORIENTOVANY ) {
-      cerr << "Graf je orientovany" << endl;
+      cout << "Graf je orientovany" << endl;
    }
    else {
-      cerr << "Graf je neorientovany" << endl;
+      cout << "Graf je neorientovany" << endl;
    }
 
-   cerr << endl;
-
-   cDijkstra * dijkstra = new cDijkstra( );
-   dijkstra->spustVypocet( 0 );
-   dijkstra->vypisVysledek( );
-
-   delete dijkstra;
+   dijkstraNtoN( );
 
    uklid( );
    return MAIN_OK;
