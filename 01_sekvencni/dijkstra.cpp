@@ -18,6 +18,10 @@
 #include <cstring>
 #include <climits>
 
+#ifdef DEBUG2
+   #define DEBUG
+#endif // DEBUG2
+
 #define MAIN_OK            0
 #define MAIN_ERR_VSTUP     1
 #define MAIN_ERR_ORIENTACE 2
@@ -148,19 +152,25 @@ bool cDijkstra::spustVypocet( unsigned idVychozihoUzlu ) {
    }
 
 
-//vypisHaldu( );
+#ifdef DEBUG
+   vypisHaldu( );
+#endif // DEBUG
+
    // dokud nenavstivi vsechny uzly
    while ( jePrazdnaHalda( ) != true ) {
       // uzly navstevuje podle nejmensi vzdalenosti
       vemMinimumZHaldy( idUzlu );
       uzavreny[idUzlu] = true;
-//cout << "\nzpracovavam uzel " << idUzlu << endl;
-//vypisHaldu( );
-
+#ifdef DEBUG
+      cerr << "\nzpracovavam uzel " << idUzlu << endl;
+      vypisHaldu( );
+#endif // DEBUG
       vzdalenostUzlu = vzdalenost[idUzlu];
       // pokud je stale nekonecna, znamena to nedostupny uzel;
       if ( vzdalenostUzlu >= DIJKSTRA_NEKONECNO ) {
-//cout << "preskakuji " << idUzlu << " vzd.: " << vzdalenostUzlu << endl;
+#ifdef DEBUG
+      cerr << "preskakuji " << idUzlu << " vzd.: " << vzdalenostUzlu << endl;
+#endif // DEBUG
          continue;
       }
 
@@ -181,13 +191,17 @@ bool cDijkstra::spustVypocet( unsigned idVychozihoUzlu ) {
          
          // nalezeni kratsi vzdalenosti
          if ( novaVzdalenost < vzdalenostSouseda ) {
-//cout << "   nova vzdalenost z " << idUzlu << " do " << idSouseda << " = " << vzdalenostHrany << '(' << novaVzdalenost << ')'<< endl;
+#ifdef DEBUG
+            cerr << "   nova vzdalenost z " << idUzlu << " do " << idSouseda << " = " << vzdalenostHrany << '(' << novaVzdalenost << ')'<< endl;
+#endif // DEBUG
             predchudce[idSouseda] = idUzlu;
             nastavVzdalenostUzlu( idSouseda, novaVzdalenost );
 
             // oprava haldy dle nove hodnoty
             opravPoziciVHalde( indexyVHalde[idSouseda] );
-//vypisHaldu( );
+#ifdef DEBUG
+            vypisHaldu( );
+#endif // DEBUG
          }
       }
    }
@@ -227,13 +241,22 @@ void cDijkstra::opravPoziciVHalde( unsigned pozice ) {
    // idUzluOtce je hodnota v halde na pozici otce a hodnotaUzlu je vzdalenost uzlu na pozici
    unsigned idUzlu      = halda[pozice];
    unsigned hodnotaUzlu = vzdalenost[idUzlu];
-//cout << " + oprav pozici " << pozice << "; id uzlu " << idUzlu << "; hodnota Uzlu " << hodnotaUzlu << endl;
+#ifdef DEBUG2
+   cerr << " + oprav pozici " << pozice << "; id uzlu " << idUzlu << "; hodnota Uzlu " << hodnotaUzlu << endl;
+#endif // DEBUG2
 
    unsigned indexDoHaldy, indexOtceVHalde, idUzluOtce;
    for ( indexDoHaldy = pozice ; indexDoHaldy > 0 ; indexDoHaldy = otec(indexDoHaldy) ) {
       indexOtceVHalde = otec(indexDoHaldy);
       idUzluOtce      = halda[indexOtceVHalde];
-//cout << " ++ indexOtceVHalde " << indexOtceVHalde << "; idUzluOtce " << idUzluOtce << "; vzdalenost otce " << vzdalenost[idUzluOtce] << endl;
+#ifdef DEBUG2
+      cerr << " ++ indexOtceVHalde " << indexOtceVHalde << "; idUzluOtce " << idUzluOtce << "; vzdalenost otce ";
+      if ( vzdalenost[idUzluOtce] == DIJKSTRA_NEKONECNO ) 
+         cerr << " - ";
+      else 
+         cerr << vzdalenost[idUzluOtce];
+      cerr << endl;
+#endif // DEBUG2
 
       // pokud je vzdalenost otce mensi nez hodnota uzlu, skonci a indexDoHaldy ukazuje 
       // na spravnou pozici
@@ -271,8 +294,9 @@ void cDijkstra::haldujRekurzivne( unsigned indexOtce ) {
    unsigned indexPraveho      = pravy( indexOtce );
 
    unsigned vzdalenostOtce    = vzdalenost[halda[indexOtce]];
-//cout << " +       indexOtce " << indexOtce      << ";      indexLeveho " << indexLeveho      << ";      indexPraveho " << indexPraveho << endl;
-
+#ifdef DEBUG2
+   cerr << " +       indexOtce " << indexOtce      << ";      indexLeveho " << indexLeveho      << ";      indexPraveho " << indexPraveho << endl;
+#endif //DEBUG2
    // nejmensi ze tri
    unsigned indexNejmensiho, vzdalenostNejmensiho, pomocny;
    if (  indexLeveho < velikostHaldy    &&
@@ -280,14 +304,21 @@ void cDijkstra::haldujRekurzivne( unsigned indexOtce ) {
       indexNejmensiho = indexLeveho;
    else 
       indexNejmensiho = indexOtce;
-   vzdalenostNejmensiho = vzdalenost[indexNejmensiho]; 
+   vzdalenostNejmensiho = vzdalenost[halda[indexNejmensiho]]; 
 
    if ( indexPraveho < velikostHaldy    &&
         vzdalenost[halda[indexPraveho]] < vzdalenostNejmensiho )
       indexNejmensiho = indexPraveho;
-   vzdalenostNejmensiho = vzdalenost[indexNejmensiho]; 
+   vzdalenostNejmensiho = vzdalenost[halda[indexNejmensiho]]; 
 
-//cout << " ++ vzdalenostOtce " << vzdalenostOtce << "; indexNejmensiho " << indexNejmensiho << "; vzdalenostNejmensiho " << vzdalenostNejmensiho << endl;
+#ifdef DEBUG2
+   cerr << " ++ vzdalenostOtce ";
+   if ( vzdalenostOtce == DIJKSTRA_NEKONECNO ) 
+      cerr << '-';
+   else
+      cerr << vzdalenostOtce;
+   cerr << "; indexNejmensiho " << indexNejmensiho << "; vzdalenostNejmensiho " << vzdalenostNejmensiho << endl;
+#endif //DEBUG2
 
    // pokud je pod otcem mensi prvek, prohod je a zavolej se rekurzivne
    if ( indexNejmensiho != indexOtce ) {
@@ -354,18 +385,23 @@ void cDijkstra::vypisVysledek( ) const {
 }
 
 void cDijkstra::vypisHaldu( ) const {
-   cout << "Halda: \n";
+   cerr << "Halda: \n";
    unsigned pravy = 0;
    for ( unsigned i = 0 ; i < velikostHaldy ; i++ ) {
       if ( i > pravy ) {
-         cout << '\n';
+         cerr << '\n';
          pravy = pravy(pravy);
       }
-      cout << halda[i] << '(' << vzdalenost[halda[i]] << ") ";
+      cerr << halda[i] << '(';
+      if ( vzdalenost[halda[i]] == DIJKSTRA_NEKONECNO ) 
+         cerr << '-';
+      else 
+         cerr << vzdalenost[halda[i]];
+      cerr << ") ";
       if ( i % 2 == 0 ) 
-         cout << ' ';
+         cerr << ' ';
    }
-   cout << endl;
+   cerr << endl;
 }
 
 // funkce programu ============================================================
