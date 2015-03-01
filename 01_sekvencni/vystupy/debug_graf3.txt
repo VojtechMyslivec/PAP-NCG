@@ -1,0 +1,3104 @@
+   | 0  1  2  3  4  5  6  7  8  9 10 
+------------------------------------
+ 0 | - 10  3  4 12  -  -  9  1  -  - 
+ 1 |10  - 11  2  -  3  2  - 14  -  2 
+ 2 | 3 11  -  -  8  1 11  6  4  -  - 
+ 3 | 4  2  -  -  1  9  6  4  -  -  2 
+ 4 |12  -  8  1  -  -  -  2  8  -  4 
+ 5 | -  3  1  9  -  -  5  6  3  - 10 
+ 6 | -  2 11  6  -  5  -  -  3  -  7 
+ 7 | 9  -  6  4  2  6  -  -  -  -  9 
+ 8 | 1 14  4  -  8  3  3  -  -  -  - 
+ 9 | -  -  -  -  -  -  -  -  -  -  - 
+10 | -  2  -  2  4 10  7  9  -  -  - 
+Graf je neorientovany
+
+Dijkstra pro uzel id = 0
+ + oprav pozici 0; id uzlu 0; hodnota Uzlu 4294967295
+ + oprav pozici 1; id uzlu 1; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+ + oprav pozici 2; id uzlu 2; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+ + oprav pozici 3; id uzlu 3; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ + oprav pozici 4; id uzlu 4; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ + oprav pozici 5; id uzlu 5; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce  - 
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce  - 
+ + oprav pozici 7; id uzlu 7; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce  - 
+ + oprav pozici 8; id uzlu 8; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce  - 
+ + oprav pozici 9; id uzlu 9; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 4; idUzluOtce 4; vzdalenost otce  - 
+ + oprav pozici 10; id uzlu 10; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 4; idUzluOtce 4; vzdalenost otce  - 
+ + oprav pozici 0; id uzlu 0; hodnota Uzlu 0
+Halda: 
+0(0)  
+1(-) 2(-)  
+3(-) 4(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 10(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 0
+Halda: 
+10(-)  
+1(-) 2(-)  
+3(-) 4(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 0 do 1 = 10(10)
+ + oprav pozici 1; id uzlu 1; hodnota Uzlu 10
+ ++ indexOtceVHalde 0; idUzluOtce 10; vzdalenost otce  - 
+ + oprav pozici 0; id uzlu 1; hodnota Uzlu 10
+Halda: 
+1(10)  
+10(-) 2(-)  
+3(-) 4(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 0 do 2 = 3(3)
+ + oprav pozici 2; id uzlu 2; hodnota Uzlu 3
+ ++ indexOtceVHalde 0; idUzluOtce 1; vzdalenost otce 10
+ + oprav pozici 0; id uzlu 2; hodnota Uzlu 3
+Halda: 
+2(3)  
+10(-) 1(10)  
+3(-) 4(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 0 do 3 = 4(4)
+ + oprav pozici 3; id uzlu 3; hodnota Uzlu 4
+ ++ indexOtceVHalde 1; idUzluOtce 10; vzdalenost otce  - 
+ ++ indexOtceVHalde 0; idUzluOtce 2; vzdalenost otce 3
+ + oprav pozici 1; id uzlu 3; hodnota Uzlu 4
+ ++ indexOtceVHalde 0; idUzluOtce 2; vzdalenost otce 3
+Halda: 
+2(3)  
+3(4) 1(10)  
+10(-) 4(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 0 do 4 = 12(12)
+ + oprav pozici 4; id uzlu 4; hodnota Uzlu 12
+ ++ indexOtceVHalde 1; idUzluOtce 3; vzdalenost otce 4
+ + oprav pozici 4; id uzlu 4; hodnota Uzlu 12
+ ++ indexOtceVHalde 1; idUzluOtce 3; vzdalenost otce 4
+Halda: 
+2(3)  
+3(4) 1(10)  
+10(-) 4(12)  5(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 0 do 7 = 9(9)
+ + oprav pozici 7; id uzlu 7; hodnota Uzlu 9
+ ++ indexOtceVHalde 3; idUzluOtce 10; vzdalenost otce  - 
+ ++ indexOtceVHalde 1; idUzluOtce 3; vzdalenost otce 4
+ + oprav pozici 3; id uzlu 7; hodnota Uzlu 9
+ ++ indexOtceVHalde 1; idUzluOtce 3; vzdalenost otce 4
+Halda: 
+2(3)  
+3(4) 1(10)  
+7(9) 4(12)  5(-) 6(-)  
+10(-) 8(-)  9(-) 
+   nova vzdalenost z 0 do 8 = 1(1)
+ + oprav pozici 8; id uzlu 8; hodnota Uzlu 1
+ ++ indexOtceVHalde 3; idUzluOtce 7; vzdalenost otce 9
+ ++ indexOtceVHalde 1; idUzluOtce 3; vzdalenost otce 4
+ ++ indexOtceVHalde 0; idUzluOtce 2; vzdalenost otce 3
+ + oprav pozici 0; id uzlu 8; hodnota Uzlu 1
+Halda: 
+8(1)  
+2(3) 1(10)  
+3(4) 4(12)  5(-) 6(-)  
+10(-) 7(9)  9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 3
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 3; vzdalenostNejmensiho 4
+ +       indexOtce 3;      indexLeveho 7;      indexPraveho 8
+ ++ vzdalenostOtce -; indexNejmensiho 8; vzdalenostNejmensiho 9
+ +       indexOtce 8;      indexLeveho 17;      indexPraveho 18
+ ++ vzdalenostOtce -; indexNejmensiho 8; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 8
+Halda: 
+2(3)  
+3(4) 1(10)  
+7(9) 4(12)  5(-) 6(-)  
+10(-) 9(-)  
+   nova vzdalenost z 8 do 4 = 8(9)
+ + oprav pozici 4; id uzlu 4; hodnota Uzlu 9
+ ++ indexOtceVHalde 1; idUzluOtce 3; vzdalenost otce 4
+ + oprav pozici 4; id uzlu 4; hodnota Uzlu 9
+ ++ indexOtceVHalde 1; idUzluOtce 3; vzdalenost otce 4
+Halda: 
+2(3)  
+3(4) 1(10)  
+7(9) 4(9)  5(-) 6(-)  
+10(-) 9(-)  
+   nova vzdalenost z 8 do 5 = 3(4)
+ + oprav pozici 5; id uzlu 5; hodnota Uzlu 4
+ ++ indexOtceVHalde 2; idUzluOtce 1; vzdalenost otce 10
+ ++ indexOtceVHalde 0; idUzluOtce 2; vzdalenost otce 3
+ + oprav pozici 2; id uzlu 5; hodnota Uzlu 4
+ ++ indexOtceVHalde 0; idUzluOtce 2; vzdalenost otce 3
+Halda: 
+2(3)  
+3(4) 5(4)  
+7(9) 4(9)  1(10) 6(-)  
+10(-) 9(-)  
+   nova vzdalenost z 8 do 6 = 3(4)
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 4
+ ++ indexOtceVHalde 2; idUzluOtce 5; vzdalenost otce 4
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 4
+ ++ indexOtceVHalde 2; idUzluOtce 5; vzdalenost otce 4
+Halda: 
+2(3)  
+3(4) 5(4)  
+7(9) 4(9)  1(10) 6(4)  
+10(-) 9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 4
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 3; vzdalenostNejmensiho 9
+ +       indexOtce 3;      indexLeveho 7;      indexPraveho 8
+ ++ vzdalenostOtce -; indexNejmensiho 3; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 2
+Halda: 
+3(4)  
+7(9) 5(4)  
+9(-) 4(9)  1(10) 6(4)  
+10(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 2; vzdalenostNejmensiho 4
+ +       indexOtce 2;      indexLeveho 5;      indexPraveho 6
+ ++ vzdalenostOtce -; indexNejmensiho 6; vzdalenostNejmensiho 4
+ +       indexOtce 6;      indexLeveho 13;      indexPraveho 14
+ ++ vzdalenostOtce -; indexNejmensiho 6; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 3
+Halda: 
+5(4)  
+7(9) 6(4)  
+9(-) 4(9)  1(10) 10(-)  
+   nova vzdalenost z 3 do 1 = 2(6)
+ + oprav pozici 5; id uzlu 1; hodnota Uzlu 6
+ ++ indexOtceVHalde 2; idUzluOtce 6; vzdalenost otce 4
+ + oprav pozici 5; id uzlu 1; hodnota Uzlu 6
+ ++ indexOtceVHalde 2; idUzluOtce 6; vzdalenost otce 4
+Halda: 
+5(4)  
+7(9) 6(4)  
+9(-) 4(9)  1(6) 10(-)  
+   nova vzdalenost z 3 do 4 = 1(5)
+ + oprav pozici 4; id uzlu 4; hodnota Uzlu 5
+ ++ indexOtceVHalde 1; idUzluOtce 7; vzdalenost otce 9
+ ++ indexOtceVHalde 0; idUzluOtce 5; vzdalenost otce 4
+ + oprav pozici 1; id uzlu 4; hodnota Uzlu 5
+ ++ indexOtceVHalde 0; idUzluOtce 5; vzdalenost otce 4
+Halda: 
+5(4)  
+4(5) 6(4)  
+9(-) 7(9)  1(6) 10(-)  
+   nova vzdalenost z 3 do 7 = 4(8)
+ + oprav pozici 4; id uzlu 7; hodnota Uzlu 8
+ ++ indexOtceVHalde 1; idUzluOtce 4; vzdalenost otce 5
+ + oprav pozici 4; id uzlu 7; hodnota Uzlu 8
+ ++ indexOtceVHalde 1; idUzluOtce 4; vzdalenost otce 5
+Halda: 
+5(4)  
+4(5) 6(4)  
+9(-) 7(8)  1(6) 10(-)  
+   nova vzdalenost z 3 do 10 = 2(6)
+ + oprav pozici 6; id uzlu 10; hodnota Uzlu 6
+ ++ indexOtceVHalde 2; idUzluOtce 6; vzdalenost otce 4
+ + oprav pozici 6; id uzlu 10; hodnota Uzlu 6
+ ++ indexOtceVHalde 2; idUzluOtce 6; vzdalenost otce 4
+Halda: 
+5(4)  
+4(5) 6(4)  
+9(-) 7(8)  1(6) 10(6)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 6; indexNejmensiho 2; vzdalenostNejmensiho 4
+ +       indexOtce 2;      indexLeveho 5;      indexPraveho 6
+ ++ vzdalenostOtce 6; indexNejmensiho 2; vzdalenostNejmensiho 6
+
+zpracovavam uzel 5
+Halda: 
+6(4)  
+4(5) 10(6)  
+9(-) 7(8)  1(6) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 6; indexNejmensiho 1; vzdalenostNejmensiho 5
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce 6; indexNejmensiho 1; vzdalenostNejmensiho 6
+
+zpracovavam uzel 6
+Halda: 
+4(5)  
+1(6) 10(6)  
+9(-) 7(8)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 8; indexNejmensiho 1; vzdalenostNejmensiho 6
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce 8; indexNejmensiho 1; vzdalenostNejmensiho 8
+
+zpracovavam uzel 4
+Halda: 
+1(6)  
+7(8) 10(6)  
+9(-) 
+   nova vzdalenost z 4 do 7 = 2(7)
+ + oprav pozici 1; id uzlu 7; hodnota Uzlu 7
+ ++ indexOtceVHalde 0; idUzluOtce 1; vzdalenost otce 6
+ + oprav pozici 1; id uzlu 7; hodnota Uzlu 7
+ ++ indexOtceVHalde 0; idUzluOtce 1; vzdalenost otce 6
+Halda: 
+1(6)  
+7(7) 10(6)  
+9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 2; vzdalenostNejmensiho 6
+ +       indexOtce 2;      indexLeveho 5;      indexPraveho 6
+ ++ vzdalenostOtce -; indexNejmensiho 2; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 1
+Halda: 
+10(6)  
+7(7) 9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 7
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 10
+Halda: 
+7(7)  
+9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 7
+Halda: 
+9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 9
+Halda: 
+
+preskakuji 9 vzd.: 4294967295
+id uzlu:       0  1  2  3  4  5  6  7  8  9 10 
+Vzdalenosti:   0  6  3  4  5  4  4  7  1  -  6 
+Predchudci:    -  3  0  0  3  8  8  4  0  -  3 
+
+Dijkstra pro uzel id = 1
+ + oprav pozici 0; id uzlu 0; hodnota Uzlu 4294967295
+ + oprav pozici 1; id uzlu 1; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+ + oprav pozici 2; id uzlu 2; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+ + oprav pozici 3; id uzlu 3; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ + oprav pozici 4; id uzlu 4; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ + oprav pozici 5; id uzlu 5; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce  - 
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce  - 
+ + oprav pozici 7; id uzlu 7; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce  - 
+ + oprav pozici 8; id uzlu 8; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce  - 
+ + oprav pozici 9; id uzlu 9; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 4; idUzluOtce 4; vzdalenost otce  - 
+ + oprav pozici 10; id uzlu 10; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 4; idUzluOtce 4; vzdalenost otce  - 
+ + oprav pozici 1; id uzlu 1; hodnota Uzlu 0
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+Halda: 
+1(0)  
+0(-) 2(-)  
+3(-) 4(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 10(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 1
+Halda: 
+10(-)  
+0(-) 2(-)  
+3(-) 4(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 1 do 0 = 10(10)
+ + oprav pozici 1; id uzlu 0; hodnota Uzlu 10
+ ++ indexOtceVHalde 0; idUzluOtce 10; vzdalenost otce  - 
+ + oprav pozici 0; id uzlu 0; hodnota Uzlu 10
+Halda: 
+0(10)  
+10(-) 2(-)  
+3(-) 4(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 1 do 2 = 11(11)
+ + oprav pozici 2; id uzlu 2; hodnota Uzlu 11
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce 10
+ + oprav pozici 2; id uzlu 2; hodnota Uzlu 11
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce 10
+Halda: 
+0(10)  
+10(-) 2(11)  
+3(-) 4(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 1 do 3 = 2(2)
+ + oprav pozici 3; id uzlu 3; hodnota Uzlu 2
+ ++ indexOtceVHalde 1; idUzluOtce 10; vzdalenost otce  - 
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce 10
+ + oprav pozici 0; id uzlu 3; hodnota Uzlu 2
+Halda: 
+3(2)  
+0(10) 2(11)  
+10(-) 4(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 1 do 5 = 3(3)
+ + oprav pozici 5; id uzlu 5; hodnota Uzlu 3
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce 11
+ ++ indexOtceVHalde 0; idUzluOtce 3; vzdalenost otce 2
+ + oprav pozici 2; id uzlu 5; hodnota Uzlu 3
+ ++ indexOtceVHalde 0; idUzluOtce 3; vzdalenost otce 2
+Halda: 
+3(2)  
+0(10) 5(3)  
+10(-) 4(-)  2(11) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 1 do 6 = 2(2)
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 2
+ ++ indexOtceVHalde 2; idUzluOtce 5; vzdalenost otce 3
+ ++ indexOtceVHalde 0; idUzluOtce 3; vzdalenost otce 2
+ + oprav pozici 2; id uzlu 6; hodnota Uzlu 2
+ ++ indexOtceVHalde 0; idUzluOtce 3; vzdalenost otce 2
+Halda: 
+3(2)  
+0(10) 6(2)  
+10(-) 4(-)  2(11) 5(3)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 1 do 8 = 14(14)
+ + oprav pozici 8; id uzlu 8; hodnota Uzlu 14
+ ++ indexOtceVHalde 3; idUzluOtce 10; vzdalenost otce  - 
+ ++ indexOtceVHalde 1; idUzluOtce 0; vzdalenost otce 10
+ + oprav pozici 3; id uzlu 8; hodnota Uzlu 14
+ ++ indexOtceVHalde 1; idUzluOtce 0; vzdalenost otce 10
+Halda: 
+3(2)  
+0(10) 6(2)  
+8(14) 4(-)  2(11) 5(3)  
+7(-) 10(-)  9(-) 
+   nova vzdalenost z 1 do 10 = 2(2)
+ + oprav pozici 8; id uzlu 10; hodnota Uzlu 2
+ ++ indexOtceVHalde 3; idUzluOtce 8; vzdalenost otce 14
+ ++ indexOtceVHalde 1; idUzluOtce 0; vzdalenost otce 10
+ ++ indexOtceVHalde 0; idUzluOtce 3; vzdalenost otce 2
+ + oprav pozici 1; id uzlu 10; hodnota Uzlu 2
+ ++ indexOtceVHalde 0; idUzluOtce 3; vzdalenost otce 2
+Halda: 
+3(2)  
+10(2) 6(2)  
+0(10) 4(-)  2(11) 5(3)  
+7(-) 8(14)  9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 2
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 3; vzdalenostNejmensiho 10
+ +       indexOtce 3;      indexLeveho 7;      indexPraveho 8
+ ++ vzdalenostOtce -; indexNejmensiho 8; vzdalenostNejmensiho 14
+ +       indexOtce 8;      indexLeveho 17;      indexPraveho 18
+ ++ vzdalenostOtce -; indexNejmensiho 8; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 3
+Halda: 
+10(2)  
+0(10) 6(2)  
+8(14) 4(-)  2(11) 5(3)  
+7(-) 9(-)  
+   nova vzdalenost z 3 do 0 = 4(6)
+ + oprav pozici 1; id uzlu 0; hodnota Uzlu 6
+ ++ indexOtceVHalde 0; idUzluOtce 10; vzdalenost otce 2
+ + oprav pozici 1; id uzlu 0; hodnota Uzlu 6
+ ++ indexOtceVHalde 0; idUzluOtce 10; vzdalenost otce 2
+Halda: 
+10(2)  
+0(6) 6(2)  
+8(14) 4(-)  2(11) 5(3)  
+7(-) 9(-)  
+   nova vzdalenost z 3 do 4 = 1(3)
+ + oprav pozici 4; id uzlu 4; hodnota Uzlu 3
+ ++ indexOtceVHalde 1; idUzluOtce 0; vzdalenost otce 6
+ ++ indexOtceVHalde 0; idUzluOtce 10; vzdalenost otce 2
+ + oprav pozici 1; id uzlu 4; hodnota Uzlu 3
+ ++ indexOtceVHalde 0; idUzluOtce 10; vzdalenost otce 2
+Halda: 
+10(2)  
+4(3) 6(2)  
+8(14) 0(6)  2(11) 5(3)  
+7(-) 9(-)  
+   nova vzdalenost z 3 do 7 = 4(6)
+ + oprav pozici 7; id uzlu 7; hodnota Uzlu 6
+ ++ indexOtceVHalde 3; idUzluOtce 8; vzdalenost otce 14
+ ++ indexOtceVHalde 1; idUzluOtce 4; vzdalenost otce 3
+ + oprav pozici 3; id uzlu 7; hodnota Uzlu 6
+ ++ indexOtceVHalde 1; idUzluOtce 4; vzdalenost otce 3
+Halda: 
+10(2)  
+4(3) 6(2)  
+7(6) 0(6)  2(11) 5(3)  
+8(14) 9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 2; vzdalenostNejmensiho 2
+ +       indexOtce 2;      indexLeveho 5;      indexPraveho 6
+ ++ vzdalenostOtce -; indexNejmensiho 6; vzdalenostNejmensiho 3
+ +       indexOtce 6;      indexLeveho 13;      indexPraveho 14
+ ++ vzdalenostOtce -; indexNejmensiho 6; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 10
+Halda: 
+6(2)  
+4(3) 5(3)  
+7(6) 0(6)  2(11) 9(-)  
+8(14) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 14; indexNejmensiho 1; vzdalenostNejmensiho 3
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce 14; indexNejmensiho 3; vzdalenostNejmensiho 6
+ +       indexOtce 3;      indexLeveho 7;      indexPraveho 8
+ ++ vzdalenostOtce 14; indexNejmensiho 3; vzdalenostNejmensiho 14
+
+zpracovavam uzel 6
+Halda: 
+4(3)  
+7(6) 5(3)  
+8(14) 0(6)  2(11) 9(-)  
+   nova vzdalenost z 6 do 8 = 3(5)
+ + oprav pozici 3; id uzlu 8; hodnota Uzlu 5
+ ++ indexOtceVHalde 1; idUzluOtce 7; vzdalenost otce 6
+ ++ indexOtceVHalde 0; idUzluOtce 4; vzdalenost otce 3
+ + oprav pozici 1; id uzlu 8; hodnota Uzlu 5
+ ++ indexOtceVHalde 0; idUzluOtce 4; vzdalenost otce 3
+Halda: 
+4(3)  
+8(5) 5(3)  
+7(6) 0(6)  2(11) 9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 2; vzdalenostNejmensiho 3
+ +       indexOtce 2;      indexLeveho 5;      indexPraveho 6
+ ++ vzdalenostOtce -; indexNejmensiho 5; vzdalenostNejmensiho 11
+ +       indexOtce 5;      indexLeveho 11;      indexPraveho 12
+ ++ vzdalenostOtce -; indexNejmensiho 5; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 4
+Halda: 
+5(3)  
+8(5) 2(11)  
+7(6) 0(6)  9(-) 
+   nova vzdalenost z 4 do 7 = 2(5)
+ + oprav pozici 3; id uzlu 7; hodnota Uzlu 5
+ ++ indexOtceVHalde 1; idUzluOtce 8; vzdalenost otce 5
+ + oprav pozici 3; id uzlu 7; hodnota Uzlu 5
+ ++ indexOtceVHalde 1; idUzluOtce 8; vzdalenost otce 5
+Halda: 
+5(3)  
+8(5) 2(11)  
+7(5) 0(6)  9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 5
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 3; vzdalenostNejmensiho 5
+ +       indexOtce 3;      indexLeveho 7;      indexPraveho 8
+ ++ vzdalenostOtce -; indexNejmensiho 3; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 5
+Halda: 
+8(5)  
+7(5) 2(11)  
+9(-) 0(6)  
+   nova vzdalenost z 5 do 2 = 1(4)
+ + oprav pozici 2; id uzlu 2; hodnota Uzlu 4
+ ++ indexOtceVHalde 0; idUzluOtce 8; vzdalenost otce 5
+ + oprav pozici 0; id uzlu 2; hodnota Uzlu 4
+Halda: 
+2(4)  
+7(5) 8(5)  
+9(-) 0(6)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 6; indexNejmensiho 1; vzdalenostNejmensiho 5
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce 6; indexNejmensiho 1; vzdalenostNejmensiho 6
+
+zpracovavam uzel 2
+Halda: 
+7(5)  
+0(6) 8(5)  
+9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 2; vzdalenostNejmensiho 5
+ +       indexOtce 2;      indexLeveho 5;      indexPraveho 6
+ ++ vzdalenostOtce -; indexNejmensiho 2; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 7
+Halda: 
+8(5)  
+0(6) 9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 6
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 8
+Halda: 
+0(6)  
+9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 0
+Halda: 
+9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 9
+Halda: 
+
+preskakuji 9 vzd.: 4294967295
+id uzlu:       0  1  2  3  4  5  6  7  8  9 10 
+Vzdalenosti:   6  0  4  2  3  3  2  5  5  -  2 
+Predchudci:    3  -  5  1  3  1  1  4  6  -  1 
+
+Dijkstra pro uzel id = 2
+ + oprav pozici 0; id uzlu 0; hodnota Uzlu 4294967295
+ + oprav pozici 1; id uzlu 1; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+ + oprav pozici 2; id uzlu 2; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+ + oprav pozici 3; id uzlu 3; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ + oprav pozici 4; id uzlu 4; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ + oprav pozici 5; id uzlu 5; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce  - 
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce  - 
+ + oprav pozici 7; id uzlu 7; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce  - 
+ + oprav pozici 8; id uzlu 8; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce  - 
+ + oprav pozici 9; id uzlu 9; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 4; idUzluOtce 4; vzdalenost otce  - 
+ + oprav pozici 10; id uzlu 10; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 4; idUzluOtce 4; vzdalenost otce  - 
+ + oprav pozici 2; id uzlu 2; hodnota Uzlu 0
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+Halda: 
+2(0)  
+1(-) 0(-)  
+3(-) 4(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 10(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 2
+Halda: 
+10(-)  
+1(-) 0(-)  
+3(-) 4(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 2 do 0 = 3(3)
+ + oprav pozici 2; id uzlu 0; hodnota Uzlu 3
+ ++ indexOtceVHalde 0; idUzluOtce 10; vzdalenost otce  - 
+ + oprav pozici 0; id uzlu 0; hodnota Uzlu 3
+Halda: 
+0(3)  
+1(-) 10(-)  
+3(-) 4(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 2 do 1 = 11(11)
+ + oprav pozici 1; id uzlu 1; hodnota Uzlu 11
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce 3
+ + oprav pozici 1; id uzlu 1; hodnota Uzlu 11
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce 3
+Halda: 
+0(3)  
+1(11) 10(-)  
+3(-) 4(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 2 do 4 = 8(8)
+ + oprav pozici 4; id uzlu 4; hodnota Uzlu 8
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce 11
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce 3
+ + oprav pozici 1; id uzlu 4; hodnota Uzlu 8
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce 3
+Halda: 
+0(3)  
+4(8) 10(-)  
+3(-) 1(11)  5(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 2 do 5 = 1(1)
+ + oprav pozici 5; id uzlu 5; hodnota Uzlu 1
+ ++ indexOtceVHalde 2; idUzluOtce 10; vzdalenost otce  - 
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce 3
+ + oprav pozici 0; id uzlu 5; hodnota Uzlu 1
+Halda: 
+5(1)  
+4(8) 0(3)  
+3(-) 1(11)  10(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 2 do 6 = 11(11)
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 11
+ ++ indexOtceVHalde 2; idUzluOtce 0; vzdalenost otce 3
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 11
+ ++ indexOtceVHalde 2; idUzluOtce 0; vzdalenost otce 3
+Halda: 
+5(1)  
+4(8) 0(3)  
+3(-) 1(11)  10(-) 6(11)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 2 do 7 = 6(6)
+ + oprav pozici 7; id uzlu 7; hodnota Uzlu 6
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce  - 
+ ++ indexOtceVHalde 1; idUzluOtce 4; vzdalenost otce 8
+ ++ indexOtceVHalde 0; idUzluOtce 5; vzdalenost otce 1
+ + oprav pozici 1; id uzlu 7; hodnota Uzlu 6
+ ++ indexOtceVHalde 0; idUzluOtce 5; vzdalenost otce 1
+Halda: 
+5(1)  
+7(6) 0(3)  
+4(8) 1(11)  10(-) 6(11)  
+3(-) 8(-)  9(-) 
+   nova vzdalenost z 2 do 8 = 4(4)
+ + oprav pozici 8; id uzlu 8; hodnota Uzlu 4
+ ++ indexOtceVHalde 3; idUzluOtce 4; vzdalenost otce 8
+ ++ indexOtceVHalde 1; idUzluOtce 7; vzdalenost otce 6
+ ++ indexOtceVHalde 0; idUzluOtce 5; vzdalenost otce 1
+ + oprav pozici 1; id uzlu 8; hodnota Uzlu 4
+ ++ indexOtceVHalde 0; idUzluOtce 5; vzdalenost otce 1
+Halda: 
+5(1)  
+8(4) 0(3)  
+7(6) 1(11)  10(-) 6(11)  
+3(-) 4(8)  9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 2; vzdalenostNejmensiho 3
+ +       indexOtce 2;      indexLeveho 5;      indexPraveho 6
+ ++ vzdalenostOtce -; indexNejmensiho 6; vzdalenostNejmensiho 11
+ +       indexOtce 6;      indexLeveho 13;      indexPraveho 14
+ ++ vzdalenostOtce -; indexNejmensiho 6; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 5
+Halda: 
+0(3)  
+8(4) 6(11)  
+7(6) 1(11)  10(-) 9(-)  
+3(-) 4(8)  
+   nova vzdalenost z 5 do 1 = 3(4)
+ + oprav pozici 4; id uzlu 1; hodnota Uzlu 4
+ ++ indexOtceVHalde 1; idUzluOtce 8; vzdalenost otce 4
+ + oprav pozici 4; id uzlu 1; hodnota Uzlu 4
+ ++ indexOtceVHalde 1; idUzluOtce 8; vzdalenost otce 4
+Halda: 
+0(3)  
+8(4) 6(11)  
+7(6) 1(4)  10(-) 9(-)  
+3(-) 4(8)  
+   nova vzdalenost z 5 do 3 = 9(10)
+ + oprav pozici 7; id uzlu 3; hodnota Uzlu 10
+ ++ indexOtceVHalde 3; idUzluOtce 7; vzdalenost otce 6
+ + oprav pozici 7; id uzlu 3; hodnota Uzlu 10
+ ++ indexOtceVHalde 3; idUzluOtce 7; vzdalenost otce 6
+Halda: 
+0(3)  
+8(4) 6(11)  
+7(6) 1(4)  10(-) 9(-)  
+3(10) 4(8)  
+   nova vzdalenost z 5 do 6 = 5(6)
+ + oprav pozici 2; id uzlu 6; hodnota Uzlu 6
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce 3
+ + oprav pozici 2; id uzlu 6; hodnota Uzlu 6
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce 3
+Halda: 
+0(3)  
+8(4) 6(6)  
+7(6) 1(4)  10(-) 9(-)  
+3(10) 4(8)  
+   nova vzdalenost z 5 do 10 = 10(11)
+ + oprav pozici 5; id uzlu 10; hodnota Uzlu 11
+ ++ indexOtceVHalde 2; idUzluOtce 6; vzdalenost otce 6
+ + oprav pozici 5; id uzlu 10; hodnota Uzlu 11
+ ++ indexOtceVHalde 2; idUzluOtce 6; vzdalenost otce 6
+Halda: 
+0(3)  
+8(4) 6(6)  
+7(6) 1(4)  10(11) 9(-)  
+3(10) 4(8)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 8; indexNejmensiho 1; vzdalenostNejmensiho 4
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce 8; indexNejmensiho 4; vzdalenostNejmensiho 4
+ +       indexOtce 4;      indexLeveho 9;      indexPraveho 10
+ ++ vzdalenostOtce 8; indexNejmensiho 4; vzdalenostNejmensiho 8
+
+zpracovavam uzel 0
+Halda: 
+8(4)  
+1(4) 6(6)  
+7(6) 4(8)  10(11) 9(-)  
+3(10) 
+   nova vzdalenost z 0 do 3 = 4(7)
+ + oprav pozici 7; id uzlu 3; hodnota Uzlu 7
+ ++ indexOtceVHalde 3; idUzluOtce 7; vzdalenost otce 6
+ + oprav pozici 7; id uzlu 3; hodnota Uzlu 7
+ ++ indexOtceVHalde 3; idUzluOtce 7; vzdalenost otce 6
+Halda: 
+8(4)  
+1(4) 6(6)  
+7(6) 4(8)  10(11) 9(-)  
+3(7) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 7; indexNejmensiho 1; vzdalenostNejmensiho 4
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce 7; indexNejmensiho 3; vzdalenostNejmensiho 6
+ +       indexOtce 3;      indexLeveho 7;      indexPraveho 8
+ ++ vzdalenostOtce 7; indexNejmensiho 3; vzdalenostNejmensiho 7
+
+zpracovavam uzel 8
+Halda: 
+1(4)  
+7(6) 6(6)  
+3(7) 4(8)  10(11) 9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 6
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 3; vzdalenostNejmensiho 7
+ +       indexOtce 3;      indexLeveho 7;      indexPraveho 8
+ ++ vzdalenostOtce -; indexNejmensiho 3; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 1
+Halda: 
+7(6)  
+3(7) 6(6)  
+9(-) 4(8)  10(11) 
+   nova vzdalenost z 1 do 3 = 2(6)
+ + oprav pozici 1; id uzlu 3; hodnota Uzlu 6
+ ++ indexOtceVHalde 0; idUzluOtce 7; vzdalenost otce 6
+ + oprav pozici 1; id uzlu 3; hodnota Uzlu 6
+ ++ indexOtceVHalde 0; idUzluOtce 7; vzdalenost otce 6
+Halda: 
+7(6)  
+3(6) 6(6)  
+9(-) 4(8)  10(11) 
+   nova vzdalenost z 1 do 10 = 2(6)
+ + oprav pozici 5; id uzlu 10; hodnota Uzlu 6
+ ++ indexOtceVHalde 2; idUzluOtce 6; vzdalenost otce 6
+ + oprav pozici 5; id uzlu 10; hodnota Uzlu 6
+ ++ indexOtceVHalde 2; idUzluOtce 6; vzdalenost otce 6
+Halda: 
+7(6)  
+3(6) 6(6)  
+9(-) 4(8)  10(6) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 6; indexNejmensiho 0; vzdalenostNejmensiho 6
+
+zpracovavam uzel 7
+Halda: 
+10(6)  
+3(6) 6(6)  
+9(-) 4(8)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 8; indexNejmensiho 1; vzdalenostNejmensiho 6
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce 8; indexNejmensiho 1; vzdalenostNejmensiho 8
+
+zpracovavam uzel 10
+Halda: 
+3(6)  
+4(8) 6(6)  
+9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 2; vzdalenostNejmensiho 6
+ +       indexOtce 2;      indexLeveho 5;      indexPraveho 6
+ ++ vzdalenostOtce -; indexNejmensiho 2; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 3
+Halda: 
+6(6)  
+4(8) 9(-)  
+   nova vzdalenost z 3 do 4 = 1(7)
+ + oprav pozici 1; id uzlu 4; hodnota Uzlu 7
+ ++ indexOtceVHalde 0; idUzluOtce 6; vzdalenost otce 6
+ + oprav pozici 1; id uzlu 4; hodnota Uzlu 7
+ ++ indexOtceVHalde 0; idUzluOtce 6; vzdalenost otce 6
+Halda: 
+6(6)  
+4(7) 9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 7
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 6
+Halda: 
+4(7)  
+9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 4
+Halda: 
+9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 9
+Halda: 
+
+preskakuji 9 vzd.: 4294967295
+id uzlu:       0  1  2  3  4  5  6  7  8  9 10 
+Vzdalenosti:   3  4  0  6  7  1  6  6  4  -  6 
+Predchudci:    2  5  -  1  3  2  5  2  2  -  1 
+
+Dijkstra pro uzel id = 3
+ + oprav pozici 0; id uzlu 0; hodnota Uzlu 4294967295
+ + oprav pozici 1; id uzlu 1; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+ + oprav pozici 2; id uzlu 2; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+ + oprav pozici 3; id uzlu 3; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ + oprav pozici 4; id uzlu 4; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ + oprav pozici 5; id uzlu 5; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce  - 
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce  - 
+ + oprav pozici 7; id uzlu 7; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce  - 
+ + oprav pozici 8; id uzlu 8; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce  - 
+ + oprav pozici 9; id uzlu 9; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 4; idUzluOtce 4; vzdalenost otce  - 
+ + oprav pozici 10; id uzlu 10; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 4; idUzluOtce 4; vzdalenost otce  - 
+ + oprav pozici 3; id uzlu 3; hodnota Uzlu 0
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+Halda: 
+3(0)  
+0(-) 2(-)  
+1(-) 4(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 10(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 3
+Halda: 
+10(-)  
+0(-) 2(-)  
+1(-) 4(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 3 do 0 = 4(4)
+ + oprav pozici 1; id uzlu 0; hodnota Uzlu 4
+ ++ indexOtceVHalde 0; idUzluOtce 10; vzdalenost otce  - 
+ + oprav pozici 0; id uzlu 0; hodnota Uzlu 4
+Halda: 
+0(4)  
+10(-) 2(-)  
+1(-) 4(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 3 do 1 = 2(2)
+ + oprav pozici 3; id uzlu 1; hodnota Uzlu 2
+ ++ indexOtceVHalde 1; idUzluOtce 10; vzdalenost otce  - 
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce 4
+ + oprav pozici 0; id uzlu 1; hodnota Uzlu 2
+Halda: 
+1(2)  
+0(4) 2(-)  
+10(-) 4(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 3 do 4 = 1(1)
+ + oprav pozici 4; id uzlu 4; hodnota Uzlu 1
+ ++ indexOtceVHalde 1; idUzluOtce 0; vzdalenost otce 4
+ ++ indexOtceVHalde 0; idUzluOtce 1; vzdalenost otce 2
+ + oprav pozici 0; id uzlu 4; hodnota Uzlu 1
+Halda: 
+4(1)  
+1(2) 2(-)  
+10(-) 0(4)  5(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 3 do 5 = 9(9)
+ + oprav pozici 5; id uzlu 5; hodnota Uzlu 9
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce  - 
+ ++ indexOtceVHalde 0; idUzluOtce 4; vzdalenost otce 1
+ + oprav pozici 2; id uzlu 5; hodnota Uzlu 9
+ ++ indexOtceVHalde 0; idUzluOtce 4; vzdalenost otce 1
+Halda: 
+4(1)  
+1(2) 5(9)  
+10(-) 0(4)  2(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 3 do 6 = 6(6)
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 6
+ ++ indexOtceVHalde 2; idUzluOtce 5; vzdalenost otce 9
+ ++ indexOtceVHalde 0; idUzluOtce 4; vzdalenost otce 1
+ + oprav pozici 2; id uzlu 6; hodnota Uzlu 6
+ ++ indexOtceVHalde 0; idUzluOtce 4; vzdalenost otce 1
+Halda: 
+4(1)  
+1(2) 6(6)  
+10(-) 0(4)  2(-) 5(9)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 3 do 7 = 4(4)
+ + oprav pozici 7; id uzlu 7; hodnota Uzlu 4
+ ++ indexOtceVHalde 3; idUzluOtce 10; vzdalenost otce  - 
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce 2
+ + oprav pozici 3; id uzlu 7; hodnota Uzlu 4
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce 2
+Halda: 
+4(1)  
+1(2) 6(6)  
+7(4) 0(4)  2(-) 5(9)  
+10(-) 8(-)  9(-) 
+   nova vzdalenost z 3 do 10 = 2(2)
+ + oprav pozici 7; id uzlu 10; hodnota Uzlu 2
+ ++ indexOtceVHalde 3; idUzluOtce 7; vzdalenost otce 4
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce 2
+ + oprav pozici 3; id uzlu 10; hodnota Uzlu 2
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce 2
+Halda: 
+4(1)  
+1(2) 6(6)  
+10(2) 0(4)  2(-) 5(9)  
+7(4) 8(-)  9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 2
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 3; vzdalenostNejmensiho 2
+ +       indexOtce 3;      indexLeveho 7;      indexPraveho 8
+ ++ vzdalenostOtce -; indexNejmensiho 7; vzdalenostNejmensiho 4
+ +       indexOtce 7;      indexLeveho 15;      indexPraveho 16
+ ++ vzdalenostOtce -; indexNejmensiho 7; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 4
+Halda: 
+1(2)  
+10(2) 6(6)  
+7(4) 0(4)  2(-) 5(9)  
+9(-) 8(-)  
+   nova vzdalenost z 4 do 2 = 8(9)
+ + oprav pozici 5; id uzlu 2; hodnota Uzlu 9
+ ++ indexOtceVHalde 2; idUzluOtce 6; vzdalenost otce 6
+ + oprav pozici 5; id uzlu 2; hodnota Uzlu 9
+ ++ indexOtceVHalde 2; idUzluOtce 6; vzdalenost otce 6
+Halda: 
+1(2)  
+10(2) 6(6)  
+7(4) 0(4)  2(9) 5(9)  
+9(-) 8(-)  
+   nova vzdalenost z 4 do 7 = 2(3)
+ + oprav pozici 3; id uzlu 7; hodnota Uzlu 3
+ ++ indexOtceVHalde 1; idUzluOtce 10; vzdalenost otce 2
+ + oprav pozici 3; id uzlu 7; hodnota Uzlu 3
+ ++ indexOtceVHalde 1; idUzluOtce 10; vzdalenost otce 2
+Halda: 
+1(2)  
+10(2) 6(6)  
+7(3) 0(4)  2(9) 5(9)  
+9(-) 8(-)  
+   nova vzdalenost z 4 do 8 = 8(9)
+ + oprav pozici 8; id uzlu 8; hodnota Uzlu 9
+ ++ indexOtceVHalde 3; idUzluOtce 7; vzdalenost otce 3
+ + oprav pozici 8; id uzlu 8; hodnota Uzlu 9
+ ++ indexOtceVHalde 3; idUzluOtce 7; vzdalenost otce 3
+Halda: 
+1(2)  
+10(2) 6(6)  
+7(3) 0(4)  2(9) 5(9)  
+9(-) 8(9)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 9; indexNejmensiho 1; vzdalenostNejmensiho 2
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce 9; indexNejmensiho 3; vzdalenostNejmensiho 3
+ +       indexOtce 3;      indexLeveho 7;      indexPraveho 8
+ ++ vzdalenostOtce 9; indexNejmensiho 3; vzdalenostNejmensiho 9
+
+zpracovavam uzel 1
+Halda: 
+10(2)  
+7(3) 6(6)  
+8(9) 0(4)  2(9) 5(9)  
+9(-) 
+   nova vzdalenost z 1 do 5 = 3(5)
+ + oprav pozici 6; id uzlu 5; hodnota Uzlu 5
+ ++ indexOtceVHalde 2; idUzluOtce 6; vzdalenost otce 6
+ ++ indexOtceVHalde 0; idUzluOtce 10; vzdalenost otce 2
+ + oprav pozici 2; id uzlu 5; hodnota Uzlu 5
+ ++ indexOtceVHalde 0; idUzluOtce 10; vzdalenost otce 2
+Halda: 
+10(2)  
+7(3) 5(5)  
+8(9) 0(4)  2(9) 6(6)  
+9(-) 
+   nova vzdalenost z 1 do 6 = 2(4)
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 4
+ ++ indexOtceVHalde 2; idUzluOtce 5; vzdalenost otce 5
+ ++ indexOtceVHalde 0; idUzluOtce 10; vzdalenost otce 2
+ + oprav pozici 2; id uzlu 6; hodnota Uzlu 4
+ ++ indexOtceVHalde 0; idUzluOtce 10; vzdalenost otce 2
+Halda: 
+10(2)  
+7(3) 6(4)  
+8(9) 0(4)  2(9) 5(5)  
+9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 3
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 4; vzdalenostNejmensiho 4
+ +       indexOtce 4;      indexLeveho 9;      indexPraveho 10
+ ++ vzdalenostOtce -; indexNejmensiho 4; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 10
+Halda: 
+7(3)  
+0(4) 6(4)  
+8(9) 9(-)  2(9) 5(5)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 5; indexNejmensiho 1; vzdalenostNejmensiho 4
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce 5; indexNejmensiho 1; vzdalenostNejmensiho 5
+
+zpracovavam uzel 7
+Halda: 
+0(4)  
+5(5) 6(4)  
+8(9) 9(-)  2(9) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 9; indexNejmensiho 2; vzdalenostNejmensiho 4
+ +       indexOtce 2;      indexLeveho 5;      indexPraveho 6
+ ++ vzdalenostOtce 9; indexNejmensiho 2; vzdalenostNejmensiho 9
+
+zpracovavam uzel 0
+Halda: 
+6(4)  
+5(5) 2(9)  
+8(9) 9(-)  
+   nova vzdalenost z 0 do 2 = 3(7)
+ + oprav pozici 2; id uzlu 2; hodnota Uzlu 7
+ ++ indexOtceVHalde 0; idUzluOtce 6; vzdalenost otce 4
+ + oprav pozici 2; id uzlu 2; hodnota Uzlu 7
+ ++ indexOtceVHalde 0; idUzluOtce 6; vzdalenost otce 4
+Halda: 
+6(4)  
+5(5) 2(7)  
+8(9) 9(-)  
+   nova vzdalenost z 0 do 8 = 1(5)
+ + oprav pozici 3; id uzlu 8; hodnota Uzlu 5
+ ++ indexOtceVHalde 1; idUzluOtce 5; vzdalenost otce 5
+ + oprav pozici 3; id uzlu 8; hodnota Uzlu 5
+ ++ indexOtceVHalde 1; idUzluOtce 5; vzdalenost otce 5
+Halda: 
+6(4)  
+5(5) 2(7)  
+8(5) 9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 5
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 3; vzdalenostNejmensiho 5
+ +       indexOtce 3;      indexLeveho 7;      indexPraveho 8
+ ++ vzdalenostOtce -; indexNejmensiho 3; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 6
+Halda: 
+5(5)  
+8(5) 2(7)  
+9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 5
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 5
+Halda: 
+8(5)  
+9(-) 2(7)  
+   nova vzdalenost z 5 do 2 = 1(6)
+ + oprav pozici 2; id uzlu 2; hodnota Uzlu 6
+ ++ indexOtceVHalde 0; idUzluOtce 8; vzdalenost otce 5
+ + oprav pozici 2; id uzlu 2; hodnota Uzlu 6
+ ++ indexOtceVHalde 0; idUzluOtce 8; vzdalenost otce 5
+Halda: 
+8(5)  
+9(-) 2(6)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 6; indexNejmensiho 0; vzdalenostNejmensiho 6
+
+zpracovavam uzel 8
+Halda: 
+2(6)  
+9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 2
+Halda: 
+9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 9
+Halda: 
+
+preskakuji 9 vzd.: 4294967295
+id uzlu:       0  1  2  3  4  5  6  7  8  9 10 
+Vzdalenosti:   4  2  6  0  1  5  4  3  5  -  2 
+Predchudci:    3  3  5  -  3  1  1  4  0  -  3 
+
+Dijkstra pro uzel id = 4
+ + oprav pozici 0; id uzlu 0; hodnota Uzlu 4294967295
+ + oprav pozici 1; id uzlu 1; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+ + oprav pozici 2; id uzlu 2; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+ + oprav pozici 3; id uzlu 3; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ + oprav pozici 4; id uzlu 4; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ + oprav pozici 5; id uzlu 5; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce  - 
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce  - 
+ + oprav pozici 7; id uzlu 7; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce  - 
+ + oprav pozici 8; id uzlu 8; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce  - 
+ + oprav pozici 9; id uzlu 9; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 4; idUzluOtce 4; vzdalenost otce  - 
+ + oprav pozici 10; id uzlu 10; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 4; idUzluOtce 4; vzdalenost otce  - 
+ + oprav pozici 4; id uzlu 4; hodnota Uzlu 0
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+Halda: 
+4(0)  
+0(-) 2(-)  
+3(-) 1(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 10(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 4
+Halda: 
+10(-)  
+0(-) 2(-)  
+3(-) 1(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 4 do 0 = 12(12)
+ + oprav pozici 1; id uzlu 0; hodnota Uzlu 12
+ ++ indexOtceVHalde 0; idUzluOtce 10; vzdalenost otce  - 
+ + oprav pozici 0; id uzlu 0; hodnota Uzlu 12
+Halda: 
+0(12)  
+10(-) 2(-)  
+3(-) 1(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 4 do 2 = 8(8)
+ + oprav pozici 2; id uzlu 2; hodnota Uzlu 8
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce 12
+ + oprav pozici 0; id uzlu 2; hodnota Uzlu 8
+Halda: 
+2(8)  
+10(-) 0(12)  
+3(-) 1(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 4 do 3 = 1(1)
+ + oprav pozici 3; id uzlu 3; hodnota Uzlu 1
+ ++ indexOtceVHalde 1; idUzluOtce 10; vzdalenost otce  - 
+ ++ indexOtceVHalde 0; idUzluOtce 2; vzdalenost otce 8
+ + oprav pozici 0; id uzlu 3; hodnota Uzlu 1
+Halda: 
+3(1)  
+2(8) 0(12)  
+10(-) 1(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 4 do 7 = 2(2)
+ + oprav pozici 7; id uzlu 7; hodnota Uzlu 2
+ ++ indexOtceVHalde 3; idUzluOtce 10; vzdalenost otce  - 
+ ++ indexOtceVHalde 1; idUzluOtce 2; vzdalenost otce 8
+ ++ indexOtceVHalde 0; idUzluOtce 3; vzdalenost otce 1
+ + oprav pozici 1; id uzlu 7; hodnota Uzlu 2
+ ++ indexOtceVHalde 0; idUzluOtce 3; vzdalenost otce 1
+Halda: 
+3(1)  
+7(2) 0(12)  
+2(8) 1(-)  5(-) 6(-)  
+10(-) 8(-)  9(-) 
+   nova vzdalenost z 4 do 8 = 8(8)
+ + oprav pozici 8; id uzlu 8; hodnota Uzlu 8
+ ++ indexOtceVHalde 3; idUzluOtce 2; vzdalenost otce 8
+ + oprav pozici 8; id uzlu 8; hodnota Uzlu 8
+ ++ indexOtceVHalde 3; idUzluOtce 2; vzdalenost otce 8
+Halda: 
+3(1)  
+7(2) 0(12)  
+2(8) 1(-)  5(-) 6(-)  
+10(-) 8(8)  9(-) 
+   nova vzdalenost z 4 do 10 = 4(4)
+ + oprav pozici 7; id uzlu 10; hodnota Uzlu 4
+ ++ indexOtceVHalde 3; idUzluOtce 2; vzdalenost otce 8
+ ++ indexOtceVHalde 1; idUzluOtce 7; vzdalenost otce 2
+ + oprav pozici 3; id uzlu 10; hodnota Uzlu 4
+ ++ indexOtceVHalde 1; idUzluOtce 7; vzdalenost otce 2
+Halda: 
+3(1)  
+7(2) 0(12)  
+10(4) 1(-)  5(-) 6(-)  
+2(8) 8(8)  9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 2
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 3; vzdalenostNejmensiho 4
+ +       indexOtce 3;      indexLeveho 7;      indexPraveho 8
+ ++ vzdalenostOtce -; indexNejmensiho 7; vzdalenostNejmensiho 8
+ +       indexOtce 7;      indexLeveho 15;      indexPraveho 16
+ ++ vzdalenostOtce -; indexNejmensiho 7; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 3
+Halda: 
+7(2)  
+10(4) 0(12)  
+2(8) 1(-)  5(-) 6(-)  
+9(-) 8(8)  
+   nova vzdalenost z 3 do 0 = 4(5)
+ + oprav pozici 2; id uzlu 0; hodnota Uzlu 5
+ ++ indexOtceVHalde 0; idUzluOtce 7; vzdalenost otce 2
+ + oprav pozici 2; id uzlu 0; hodnota Uzlu 5
+ ++ indexOtceVHalde 0; idUzluOtce 7; vzdalenost otce 2
+Halda: 
+7(2)  
+10(4) 0(5)  
+2(8) 1(-)  5(-) 6(-)  
+9(-) 8(8)  
+   nova vzdalenost z 3 do 1 = 2(3)
+ + oprav pozici 4; id uzlu 1; hodnota Uzlu 3
+ ++ indexOtceVHalde 1; idUzluOtce 10; vzdalenost otce 4
+ ++ indexOtceVHalde 0; idUzluOtce 7; vzdalenost otce 2
+ + oprav pozici 1; id uzlu 1; hodnota Uzlu 3
+ ++ indexOtceVHalde 0; idUzluOtce 7; vzdalenost otce 2
+Halda: 
+7(2)  
+1(3) 0(5)  
+2(8) 10(4)  5(-) 6(-)  
+9(-) 8(8)  
+   nova vzdalenost z 3 do 5 = 9(10)
+ + oprav pozici 5; id uzlu 5; hodnota Uzlu 10
+ ++ indexOtceVHalde 2; idUzluOtce 0; vzdalenost otce 5
+ + oprav pozici 5; id uzlu 5; hodnota Uzlu 10
+ ++ indexOtceVHalde 2; idUzluOtce 0; vzdalenost otce 5
+Halda: 
+7(2)  
+1(3) 0(5)  
+2(8) 10(4)  5(10) 6(-)  
+9(-) 8(8)  
+   nova vzdalenost z 3 do 6 = 6(7)
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 7
+ ++ indexOtceVHalde 2; idUzluOtce 0; vzdalenost otce 5
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 7
+ ++ indexOtceVHalde 2; idUzluOtce 0; vzdalenost otce 5
+Halda: 
+7(2)  
+1(3) 0(5)  
+2(8) 10(4)  5(10) 6(7)  
+9(-) 8(8)  
+   nova vzdalenost z 3 do 10 = 2(3)
+ + oprav pozici 4; id uzlu 10; hodnota Uzlu 3
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce 3
+ + oprav pozici 4; id uzlu 10; hodnota Uzlu 3
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce 3
+Halda: 
+7(2)  
+1(3) 0(5)  
+2(8) 10(3)  5(10) 6(7)  
+9(-) 8(8)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 8; indexNejmensiho 1; vzdalenostNejmensiho 3
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce 8; indexNejmensiho 4; vzdalenostNejmensiho 3
+ +       indexOtce 4;      indexLeveho 9;      indexPraveho 10
+ ++ vzdalenostOtce 8; indexNejmensiho 4; vzdalenostNejmensiho 8
+
+zpracovavam uzel 7
+Halda: 
+1(3)  
+10(3) 0(5)  
+2(8) 8(8)  5(10) 6(7)  
+9(-) 
+   nova vzdalenost z 7 do 5 = 6(8)
+ + oprav pozici 5; id uzlu 5; hodnota Uzlu 8
+ ++ indexOtceVHalde 2; idUzluOtce 0; vzdalenost otce 5
+ + oprav pozici 5; id uzlu 5; hodnota Uzlu 8
+ ++ indexOtceVHalde 2; idUzluOtce 0; vzdalenost otce 5
+Halda: 
+1(3)  
+10(3) 0(5)  
+2(8) 8(8)  5(8) 6(7)  
+9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 3
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 3; vzdalenostNejmensiho 8
+ +       indexOtce 3;      indexLeveho 7;      indexPraveho 8
+ ++ vzdalenostOtce -; indexNejmensiho 3; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 1
+Halda: 
+10(3)  
+2(8) 0(5)  
+9(-) 8(8)  5(8) 6(7)  
+   nova vzdalenost z 1 do 5 = 3(6)
+ + oprav pozici 5; id uzlu 5; hodnota Uzlu 6
+ ++ indexOtceVHalde 2; idUzluOtce 0; vzdalenost otce 5
+ + oprav pozici 5; id uzlu 5; hodnota Uzlu 6
+ ++ indexOtceVHalde 2; idUzluOtce 0; vzdalenost otce 5
+Halda: 
+10(3)  
+2(8) 0(5)  
+9(-) 8(8)  5(6) 6(7)  
+   nova vzdalenost z 1 do 6 = 2(5)
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 5
+ ++ indexOtceVHalde 2; idUzluOtce 0; vzdalenost otce 5
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 5
+ ++ indexOtceVHalde 2; idUzluOtce 0; vzdalenost otce 5
+Halda: 
+10(3)  
+2(8) 0(5)  
+9(-) 8(8)  5(6) 6(5)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 5; indexNejmensiho 0; vzdalenostNejmensiho 5
+
+zpracovavam uzel 10
+Halda: 
+6(5)  
+2(8) 0(5)  
+9(-) 8(8)  5(6) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 6; indexNejmensiho 2; vzdalenostNejmensiho 5
+ +       indexOtce 2;      indexLeveho 5;      indexPraveho 6
+ ++ vzdalenostOtce 6; indexNejmensiho 2; vzdalenostNejmensiho 6
+
+zpracovavam uzel 6
+Halda: 
+0(5)  
+2(8) 5(6)  
+9(-) 8(8)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 8; indexNejmensiho 2; vzdalenostNejmensiho 6
+ +       indexOtce 2;      indexLeveho 5;      indexPraveho 6
+ ++ vzdalenostOtce 8; indexNejmensiho 2; vzdalenostNejmensiho 8
+
+zpracovavam uzel 0
+Halda: 
+5(6)  
+2(8) 8(8)  
+9(-) 
+   nova vzdalenost z 0 do 8 = 1(6)
+ + oprav pozici 2; id uzlu 8; hodnota Uzlu 6
+ ++ indexOtceVHalde 0; idUzluOtce 5; vzdalenost otce 6
+ + oprav pozici 2; id uzlu 8; hodnota Uzlu 6
+ ++ indexOtceVHalde 0; idUzluOtce 5; vzdalenost otce 6
+Halda: 
+5(6)  
+2(8) 8(6)  
+9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 2; vzdalenostNejmensiho 6
+ +       indexOtce 2;      indexLeveho 5;      indexPraveho 6
+ ++ vzdalenostOtce -; indexNejmensiho 2; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 5
+Halda: 
+8(6)  
+2(8) 9(-)  
+   nova vzdalenost z 5 do 2 = 1(7)
+ + oprav pozici 1; id uzlu 2; hodnota Uzlu 7
+ ++ indexOtceVHalde 0; idUzluOtce 8; vzdalenost otce 6
+ + oprav pozici 1; id uzlu 2; hodnota Uzlu 7
+ ++ indexOtceVHalde 0; idUzluOtce 8; vzdalenost otce 6
+Halda: 
+8(6)  
+2(7) 9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 7
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 8
+Halda: 
+2(7)  
+9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 2
+Halda: 
+9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 9
+Halda: 
+
+preskakuji 9 vzd.: 4294967295
+id uzlu:       0  1  2  3  4  5  6  7  8  9 10 
+Vzdalenosti:   5  3  7  1  0  6  5  2  6  -  3 
+Predchudci:    3  3  5  4  -  1  1  4  0  -  3 
+
+Dijkstra pro uzel id = 5
+ + oprav pozici 0; id uzlu 0; hodnota Uzlu 4294967295
+ + oprav pozici 1; id uzlu 1; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+ + oprav pozici 2; id uzlu 2; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+ + oprav pozici 3; id uzlu 3; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ + oprav pozici 4; id uzlu 4; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ + oprav pozici 5; id uzlu 5; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce  - 
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce  - 
+ + oprav pozici 7; id uzlu 7; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce  - 
+ + oprav pozici 8; id uzlu 8; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce  - 
+ + oprav pozici 9; id uzlu 9; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 4; idUzluOtce 4; vzdalenost otce  - 
+ + oprav pozici 10; id uzlu 10; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 4; idUzluOtce 4; vzdalenost otce  - 
+ + oprav pozici 5; id uzlu 5; hodnota Uzlu 0
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce  - 
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+Halda: 
+5(0)  
+1(-) 0(-)  
+3(-) 4(-)  2(-) 6(-)  
+7(-) 8(-)  9(-) 10(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 5
+Halda: 
+10(-)  
+1(-) 0(-)  
+3(-) 4(-)  2(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 5 do 1 = 3(3)
+ + oprav pozici 1; id uzlu 1; hodnota Uzlu 3
+ ++ indexOtceVHalde 0; idUzluOtce 10; vzdalenost otce  - 
+ + oprav pozici 0; id uzlu 1; hodnota Uzlu 3
+Halda: 
+1(3)  
+10(-) 0(-)  
+3(-) 4(-)  2(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 5 do 2 = 1(1)
+ + oprav pozici 5; id uzlu 2; hodnota Uzlu 1
+ ++ indexOtceVHalde 2; idUzluOtce 0; vzdalenost otce  - 
+ ++ indexOtceVHalde 0; idUzluOtce 1; vzdalenost otce 3
+ + oprav pozici 0; id uzlu 2; hodnota Uzlu 1
+Halda: 
+2(1)  
+10(-) 1(3)  
+3(-) 4(-)  0(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 5 do 3 = 9(9)
+ + oprav pozici 3; id uzlu 3; hodnota Uzlu 9
+ ++ indexOtceVHalde 1; idUzluOtce 10; vzdalenost otce  - 
+ ++ indexOtceVHalde 0; idUzluOtce 2; vzdalenost otce 1
+ + oprav pozici 1; id uzlu 3; hodnota Uzlu 9
+ ++ indexOtceVHalde 0; idUzluOtce 2; vzdalenost otce 1
+Halda: 
+2(1)  
+3(9) 1(3)  
+10(-) 4(-)  0(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 5 do 6 = 5(5)
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 5
+ ++ indexOtceVHalde 2; idUzluOtce 1; vzdalenost otce 3
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 5
+ ++ indexOtceVHalde 2; idUzluOtce 1; vzdalenost otce 3
+Halda: 
+2(1)  
+3(9) 1(3)  
+10(-) 4(-)  0(-) 6(5)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 5 do 7 = 6(6)
+ + oprav pozici 7; id uzlu 7; hodnota Uzlu 6
+ ++ indexOtceVHalde 3; idUzluOtce 10; vzdalenost otce  - 
+ ++ indexOtceVHalde 1; idUzluOtce 3; vzdalenost otce 9
+ ++ indexOtceVHalde 0; idUzluOtce 2; vzdalenost otce 1
+ + oprav pozici 1; id uzlu 7; hodnota Uzlu 6
+ ++ indexOtceVHalde 0; idUzluOtce 2; vzdalenost otce 1
+Halda: 
+2(1)  
+7(6) 1(3)  
+3(9) 4(-)  0(-) 6(5)  
+10(-) 8(-)  9(-) 
+   nova vzdalenost z 5 do 8 = 3(3)
+ + oprav pozici 8; id uzlu 8; hodnota Uzlu 3
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce 9
+ ++ indexOtceVHalde 1; idUzluOtce 7; vzdalenost otce 6
+ ++ indexOtceVHalde 0; idUzluOtce 2; vzdalenost otce 1
+ + oprav pozici 1; id uzlu 8; hodnota Uzlu 3
+ ++ indexOtceVHalde 0; idUzluOtce 2; vzdalenost otce 1
+Halda: 
+2(1)  
+8(3) 1(3)  
+7(6) 4(-)  0(-) 6(5)  
+10(-) 3(9)  9(-) 
+   nova vzdalenost z 5 do 10 = 10(10)
+ + oprav pozici 7; id uzlu 10; hodnota Uzlu 10
+ ++ indexOtceVHalde 3; idUzluOtce 7; vzdalenost otce 6
+ + oprav pozici 7; id uzlu 10; hodnota Uzlu 10
+ ++ indexOtceVHalde 3; idUzluOtce 7; vzdalenost otce 6
+Halda: 
+2(1)  
+8(3) 1(3)  
+7(6) 4(-)  0(-) 6(5)  
+10(10) 3(9)  9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 3
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 3; vzdalenostNejmensiho 6
+ +       indexOtce 3;      indexLeveho 7;      indexPraveho 8
+ ++ vzdalenostOtce -; indexNejmensiho 8; vzdalenostNejmensiho 9
+ +       indexOtce 8;      indexLeveho 17;      indexPraveho 18
+ ++ vzdalenostOtce -; indexNejmensiho 8; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 2
+Halda: 
+8(3)  
+7(6) 1(3)  
+3(9) 4(-)  0(-) 6(5)  
+10(10) 9(-)  
+   nova vzdalenost z 2 do 0 = 3(4)
+ + oprav pozici 5; id uzlu 0; hodnota Uzlu 4
+ ++ indexOtceVHalde 2; idUzluOtce 1; vzdalenost otce 3
+ + oprav pozici 5; id uzlu 0; hodnota Uzlu 4
+ ++ indexOtceVHalde 2; idUzluOtce 1; vzdalenost otce 3
+Halda: 
+8(3)  
+7(6) 1(3)  
+3(9) 4(-)  0(4) 6(5)  
+10(10) 9(-)  
+   nova vzdalenost z 2 do 4 = 8(9)
+ + oprav pozici 4; id uzlu 4; hodnota Uzlu 9
+ ++ indexOtceVHalde 1; idUzluOtce 7; vzdalenost otce 6
+ + oprav pozici 4; id uzlu 4; hodnota Uzlu 9
+ ++ indexOtceVHalde 1; idUzluOtce 7; vzdalenost otce 6
+Halda: 
+8(3)  
+7(6) 1(3)  
+3(9) 4(9)  0(4) 6(5)  
+10(10) 9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 2; vzdalenostNejmensiho 3
+ +       indexOtce 2;      indexLeveho 5;      indexPraveho 6
+ ++ vzdalenostOtce -; indexNejmensiho 5; vzdalenostNejmensiho 4
+ +       indexOtce 5;      indexLeveho 11;      indexPraveho 12
+ ++ vzdalenostOtce -; indexNejmensiho 5; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 8
+Halda: 
+1(3)  
+7(6) 0(4)  
+3(9) 4(9)  9(-) 6(5)  
+10(10) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 10; indexNejmensiho 2; vzdalenostNejmensiho 4
+ +       indexOtce 2;      indexLeveho 5;      indexPraveho 6
+ ++ vzdalenostOtce 10; indexNejmensiho 6; vzdalenostNejmensiho 5
+ +       indexOtce 6;      indexLeveho 13;      indexPraveho 14
+ ++ vzdalenostOtce 10; indexNejmensiho 6; vzdalenostNejmensiho 10
+
+zpracovavam uzel 1
+Halda: 
+0(4)  
+7(6) 6(5)  
+3(9) 4(9)  9(-) 10(10)  
+   nova vzdalenost z 1 do 3 = 2(5)
+ + oprav pozici 3; id uzlu 3; hodnota Uzlu 5
+ ++ indexOtceVHalde 1; idUzluOtce 7; vzdalenost otce 6
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce 4
+ + oprav pozici 1; id uzlu 3; hodnota Uzlu 5
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce 4
+Halda: 
+0(4)  
+3(5) 6(5)  
+7(6) 4(9)  9(-) 10(10)  
+   nova vzdalenost z 1 do 10 = 2(5)
+ + oprav pozici 6; id uzlu 10; hodnota Uzlu 5
+ ++ indexOtceVHalde 2; idUzluOtce 6; vzdalenost otce 5
+ + oprav pozici 6; id uzlu 10; hodnota Uzlu 5
+ ++ indexOtceVHalde 2; idUzluOtce 6; vzdalenost otce 5
+Halda: 
+0(4)  
+3(5) 6(5)  
+7(6) 4(9)  9(-) 10(5)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 5; indexNejmensiho 0; vzdalenostNejmensiho 5
+
+zpracovavam uzel 0
+Halda: 
+10(5)  
+3(5) 6(5)  
+7(6) 4(9)  9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 5
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 3; vzdalenostNejmensiho 6
+ +       indexOtce 3;      indexLeveho 7;      indexPraveho 8
+ ++ vzdalenostOtce -; indexNejmensiho 3; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 10
+Halda: 
+3(5)  
+7(6) 6(5)  
+9(-) 4(9)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 9; indexNejmensiho 2; vzdalenostNejmensiho 5
+ +       indexOtce 2;      indexLeveho 5;      indexPraveho 6
+ ++ vzdalenostOtce 9; indexNejmensiho 2; vzdalenostNejmensiho 9
+
+zpracovavam uzel 3
+Halda: 
+6(5)  
+7(6) 4(9)  
+9(-) 
+   nova vzdalenost z 3 do 4 = 1(6)
+ + oprav pozici 2; id uzlu 4; hodnota Uzlu 6
+ ++ indexOtceVHalde 0; idUzluOtce 6; vzdalenost otce 5
+ + oprav pozici 2; id uzlu 4; hodnota Uzlu 6
+ ++ indexOtceVHalde 0; idUzluOtce 6; vzdalenost otce 5
+Halda: 
+6(5)  
+7(6) 4(6)  
+9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 6
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 6
+Halda: 
+7(6)  
+9(-) 4(6)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 6; indexNejmensiho 0; vzdalenostNejmensiho 6
+
+zpracovavam uzel 7
+Halda: 
+4(6)  
+9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 4
+Halda: 
+9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 9
+Halda: 
+
+preskakuji 9 vzd.: 4294967295
+id uzlu:       0  1  2  3  4  5  6  7  8  9 10 
+Vzdalenosti:   4  3  1  5  6  0  5  6  3  -  5 
+Predchudci:    2  5  5  1  3  -  5  5  5  -  1 
+
+Dijkstra pro uzel id = 6
+ + oprav pozici 0; id uzlu 0; hodnota Uzlu 4294967295
+ + oprav pozici 1; id uzlu 1; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+ + oprav pozici 2; id uzlu 2; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+ + oprav pozici 3; id uzlu 3; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ + oprav pozici 4; id uzlu 4; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ + oprav pozici 5; id uzlu 5; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce  - 
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce  - 
+ + oprav pozici 7; id uzlu 7; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce  - 
+ + oprav pozici 8; id uzlu 8; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce  - 
+ + oprav pozici 9; id uzlu 9; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 4; idUzluOtce 4; vzdalenost otce  - 
+ + oprav pozici 10; id uzlu 10; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 4; idUzluOtce 4; vzdalenost otce  - 
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 0
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce  - 
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+Halda: 
+6(0)  
+1(-) 0(-)  
+3(-) 4(-)  5(-) 2(-)  
+7(-) 8(-)  9(-) 10(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 6
+Halda: 
+10(-)  
+1(-) 0(-)  
+3(-) 4(-)  5(-) 2(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 6 do 1 = 2(2)
+ + oprav pozici 1; id uzlu 1; hodnota Uzlu 2
+ ++ indexOtceVHalde 0; idUzluOtce 10; vzdalenost otce  - 
+ + oprav pozici 0; id uzlu 1; hodnota Uzlu 2
+Halda: 
+1(2)  
+10(-) 0(-)  
+3(-) 4(-)  5(-) 2(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 6 do 2 = 11(11)
+ + oprav pozici 6; id uzlu 2; hodnota Uzlu 11
+ ++ indexOtceVHalde 2; idUzluOtce 0; vzdalenost otce  - 
+ ++ indexOtceVHalde 0; idUzluOtce 1; vzdalenost otce 2
+ + oprav pozici 2; id uzlu 2; hodnota Uzlu 11
+ ++ indexOtceVHalde 0; idUzluOtce 1; vzdalenost otce 2
+Halda: 
+1(2)  
+10(-) 2(11)  
+3(-) 4(-)  5(-) 0(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 6 do 3 = 6(6)
+ + oprav pozici 3; id uzlu 3; hodnota Uzlu 6
+ ++ indexOtceVHalde 1; idUzluOtce 10; vzdalenost otce  - 
+ ++ indexOtceVHalde 0; idUzluOtce 1; vzdalenost otce 2
+ + oprav pozici 1; id uzlu 3; hodnota Uzlu 6
+ ++ indexOtceVHalde 0; idUzluOtce 1; vzdalenost otce 2
+Halda: 
+1(2)  
+3(6) 2(11)  
+10(-) 4(-)  5(-) 0(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 6 do 5 = 5(5)
+ + oprav pozici 5; id uzlu 5; hodnota Uzlu 5
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce 11
+ ++ indexOtceVHalde 0; idUzluOtce 1; vzdalenost otce 2
+ + oprav pozici 2; id uzlu 5; hodnota Uzlu 5
+ ++ indexOtceVHalde 0; idUzluOtce 1; vzdalenost otce 2
+Halda: 
+1(2)  
+3(6) 5(5)  
+10(-) 4(-)  2(11) 0(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 6 do 8 = 3(3)
+ + oprav pozici 8; id uzlu 8; hodnota Uzlu 3
+ ++ indexOtceVHalde 3; idUzluOtce 10; vzdalenost otce  - 
+ ++ indexOtceVHalde 1; idUzluOtce 3; vzdalenost otce 6
+ ++ indexOtceVHalde 0; idUzluOtce 1; vzdalenost otce 2
+ + oprav pozici 1; id uzlu 8; hodnota Uzlu 3
+ ++ indexOtceVHalde 0; idUzluOtce 1; vzdalenost otce 2
+Halda: 
+1(2)  
+8(3) 5(5)  
+3(6) 4(-)  2(11) 0(-)  
+7(-) 10(-)  9(-) 
+   nova vzdalenost z 6 do 10 = 7(7)
+ + oprav pozici 8; id uzlu 10; hodnota Uzlu 7
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce 6
+ + oprav pozici 8; id uzlu 10; hodnota Uzlu 7
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce 6
+Halda: 
+1(2)  
+8(3) 5(5)  
+3(6) 4(-)  2(11) 0(-)  
+7(-) 10(7)  9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 3
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 3; vzdalenostNejmensiho 6
+ +       indexOtce 3;      indexLeveho 7;      indexPraveho 8
+ ++ vzdalenostOtce -; indexNejmensiho 8; vzdalenostNejmensiho 7
+ +       indexOtce 8;      indexLeveho 17;      indexPraveho 18
+ ++ vzdalenostOtce -; indexNejmensiho 8; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 1
+Halda: 
+8(3)  
+3(6) 5(5)  
+10(7) 4(-)  2(11) 0(-)  
+7(-) 9(-)  
+   nova vzdalenost z 1 do 0 = 10(12)
+ + oprav pozici 6; id uzlu 0; hodnota Uzlu 12
+ ++ indexOtceVHalde 2; idUzluOtce 5; vzdalenost otce 5
+ + oprav pozici 6; id uzlu 0; hodnota Uzlu 12
+ ++ indexOtceVHalde 2; idUzluOtce 5; vzdalenost otce 5
+Halda: 
+8(3)  
+3(6) 5(5)  
+10(7) 4(-)  2(11) 0(12)  
+7(-) 9(-)  
+   nova vzdalenost z 1 do 3 = 2(4)
+ + oprav pozici 1; id uzlu 3; hodnota Uzlu 4
+ ++ indexOtceVHalde 0; idUzluOtce 8; vzdalenost otce 3
+ + oprav pozici 1; id uzlu 3; hodnota Uzlu 4
+ ++ indexOtceVHalde 0; idUzluOtce 8; vzdalenost otce 3
+Halda: 
+8(3)  
+3(4) 5(5)  
+10(7) 4(-)  2(11) 0(12)  
+7(-) 9(-)  
+   nova vzdalenost z 1 do 10 = 2(4)
+ + oprav pozici 3; id uzlu 10; hodnota Uzlu 4
+ ++ indexOtceVHalde 1; idUzluOtce 3; vzdalenost otce 4
+ + oprav pozici 3; id uzlu 10; hodnota Uzlu 4
+ ++ indexOtceVHalde 1; idUzluOtce 3; vzdalenost otce 4
+Halda: 
+8(3)  
+3(4) 5(5)  
+10(4) 4(-)  2(11) 0(12)  
+7(-) 9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 4
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 3; vzdalenostNejmensiho 4
+ +       indexOtce 3;      indexLeveho 7;      indexPraveho 8
+ ++ vzdalenostOtce -; indexNejmensiho 3; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 8
+Halda: 
+3(4)  
+10(4) 5(5)  
+9(-) 4(-)  2(11) 0(12)  
+7(-) 
+   nova vzdalenost z 8 do 0 = 1(4)
+ + oprav pozici 6; id uzlu 0; hodnota Uzlu 4
+ ++ indexOtceVHalde 2; idUzluOtce 5; vzdalenost otce 5
+ ++ indexOtceVHalde 0; idUzluOtce 3; vzdalenost otce 4
+ + oprav pozici 2; id uzlu 0; hodnota Uzlu 4
+ ++ indexOtceVHalde 0; idUzluOtce 3; vzdalenost otce 4
+Halda: 
+3(4)  
+10(4) 0(4)  
+9(-) 4(-)  2(11) 5(5)  
+7(-) 
+   nova vzdalenost z 8 do 2 = 4(7)
+ + oprav pozici 5; id uzlu 2; hodnota Uzlu 7
+ ++ indexOtceVHalde 2; idUzluOtce 0; vzdalenost otce 4
+ + oprav pozici 5; id uzlu 2; hodnota Uzlu 7
+ ++ indexOtceVHalde 2; idUzluOtce 0; vzdalenost otce 4
+Halda: 
+3(4)  
+10(4) 0(4)  
+9(-) 4(-)  2(7) 5(5)  
+7(-) 
+   nova vzdalenost z 8 do 4 = 8(11)
+ + oprav pozici 4; id uzlu 4; hodnota Uzlu 11
+ ++ indexOtceVHalde 1; idUzluOtce 10; vzdalenost otce 4
+ + oprav pozici 4; id uzlu 4; hodnota Uzlu 11
+ ++ indexOtceVHalde 1; idUzluOtce 10; vzdalenost otce 4
+Halda: 
+3(4)  
+10(4) 0(4)  
+9(-) 4(11)  2(7) 5(5)  
+7(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 4
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 4; vzdalenostNejmensiho 11
+ +       indexOtce 4;      indexLeveho 9;      indexPraveho 10
+ ++ vzdalenostOtce -; indexNejmensiho 4; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 3
+Halda: 
+10(4)  
+4(11) 0(4)  
+9(-) 7(-)  2(7) 5(5)  
+   nova vzdalenost z 3 do 4 = 1(5)
+ + oprav pozici 1; id uzlu 4; hodnota Uzlu 5
+ ++ indexOtceVHalde 0; idUzluOtce 10; vzdalenost otce 4
+ + oprav pozici 1; id uzlu 4; hodnota Uzlu 5
+ ++ indexOtceVHalde 0; idUzluOtce 10; vzdalenost otce 4
+Halda: 
+10(4)  
+4(5) 0(4)  
+9(-) 7(-)  2(7) 5(5)  
+   nova vzdalenost z 3 do 7 = 4(8)
+ + oprav pozici 4; id uzlu 7; hodnota Uzlu 8
+ ++ indexOtceVHalde 1; idUzluOtce 4; vzdalenost otce 5
+ + oprav pozici 4; id uzlu 7; hodnota Uzlu 8
+ ++ indexOtceVHalde 1; idUzluOtce 4; vzdalenost otce 5
+Halda: 
+10(4)  
+4(5) 0(4)  
+9(-) 7(8)  2(7) 5(5)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 5; indexNejmensiho 2; vzdalenostNejmensiho 4
+ +       indexOtce 2;      indexLeveho 5;      indexPraveho 6
+ ++ vzdalenostOtce 5; indexNejmensiho 2; vzdalenostNejmensiho 5
+
+zpracovavam uzel 10
+Halda: 
+0(4)  
+4(5) 5(5)  
+9(-) 7(8)  2(7) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 7; indexNejmensiho 1; vzdalenostNejmensiho 5
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce 7; indexNejmensiho 1; vzdalenostNejmensiho 7
+
+zpracovavam uzel 0
+Halda: 
+4(5)  
+2(7) 5(5)  
+9(-) 7(8)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 8; indexNejmensiho 2; vzdalenostNejmensiho 5
+ +       indexOtce 2;      indexLeveho 5;      indexPraveho 6
+ ++ vzdalenostOtce 8; indexNejmensiho 2; vzdalenostNejmensiho 8
+
+zpracovavam uzel 4
+Halda: 
+5(5)  
+2(7) 7(8)  
+9(-) 
+   nova vzdalenost z 4 do 7 = 2(7)
+ + oprav pozici 2; id uzlu 7; hodnota Uzlu 7
+ ++ indexOtceVHalde 0; idUzluOtce 5; vzdalenost otce 5
+ + oprav pozici 2; id uzlu 7; hodnota Uzlu 7
+ ++ indexOtceVHalde 0; idUzluOtce 5; vzdalenost otce 5
+Halda: 
+5(5)  
+2(7) 7(7)  
+9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 7
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 5
+Halda: 
+2(7)  
+9(-) 7(7)  
+   nova vzdalenost z 5 do 2 = 1(6)
+ + oprav pozici 0; id uzlu 2; hodnota Uzlu 6
+ + oprav pozici 0; id uzlu 2; hodnota Uzlu 6
+Halda: 
+2(6)  
+9(-) 7(7)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 7; indexNejmensiho 0; vzdalenostNejmensiho 7
+
+zpracovavam uzel 2
+Halda: 
+7(7)  
+9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 7
+Halda: 
+9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 9
+Halda: 
+
+preskakuji 9 vzd.: 4294967295
+id uzlu:       0  1  2  3  4  5  6  7  8  9 10 
+Vzdalenosti:   4  2  6  4  5  5  0  7  3  -  4 
+Predchudci:    8  6  5  1  3  6  -  4  6  -  1 
+
+Dijkstra pro uzel id = 7
+ + oprav pozici 0; id uzlu 0; hodnota Uzlu 4294967295
+ + oprav pozici 1; id uzlu 1; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+ + oprav pozici 2; id uzlu 2; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+ + oprav pozici 3; id uzlu 3; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ + oprav pozici 4; id uzlu 4; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ + oprav pozici 5; id uzlu 5; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce  - 
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce  - 
+ + oprav pozici 7; id uzlu 7; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce  - 
+ + oprav pozici 8; id uzlu 8; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce  - 
+ + oprav pozici 9; id uzlu 9; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 4; idUzluOtce 4; vzdalenost otce  - 
+ + oprav pozici 10; id uzlu 10; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 4; idUzluOtce 4; vzdalenost otce  - 
+ + oprav pozici 7; id uzlu 7; hodnota Uzlu 0
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce  - 
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+Halda: 
+7(0)  
+0(-) 2(-)  
+1(-) 4(-)  5(-) 6(-)  
+3(-) 8(-)  9(-) 10(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 7
+Halda: 
+10(-)  
+0(-) 2(-)  
+1(-) 4(-)  5(-) 6(-)  
+3(-) 8(-)  9(-) 
+   nova vzdalenost z 7 do 0 = 9(9)
+ + oprav pozici 1; id uzlu 0; hodnota Uzlu 9
+ ++ indexOtceVHalde 0; idUzluOtce 10; vzdalenost otce  - 
+ + oprav pozici 0; id uzlu 0; hodnota Uzlu 9
+Halda: 
+0(9)  
+10(-) 2(-)  
+1(-) 4(-)  5(-) 6(-)  
+3(-) 8(-)  9(-) 
+   nova vzdalenost z 7 do 2 = 6(6)
+ + oprav pozici 2; id uzlu 2; hodnota Uzlu 6
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce 9
+ + oprav pozici 0; id uzlu 2; hodnota Uzlu 6
+Halda: 
+2(6)  
+10(-) 0(9)  
+1(-) 4(-)  5(-) 6(-)  
+3(-) 8(-)  9(-) 
+   nova vzdalenost z 7 do 3 = 4(4)
+ + oprav pozici 7; id uzlu 3; hodnota Uzlu 4
+ ++ indexOtceVHalde 3; idUzluOtce 1; vzdalenost otce  - 
+ ++ indexOtceVHalde 1; idUzluOtce 10; vzdalenost otce  - 
+ ++ indexOtceVHalde 0; idUzluOtce 2; vzdalenost otce 6
+ + oprav pozici 0; id uzlu 3; hodnota Uzlu 4
+Halda: 
+3(4)  
+2(6) 0(9)  
+10(-) 4(-)  5(-) 6(-)  
+1(-) 8(-)  9(-) 
+   nova vzdalenost z 7 do 4 = 2(2)
+ + oprav pozici 4; id uzlu 4; hodnota Uzlu 2
+ ++ indexOtceVHalde 1; idUzluOtce 2; vzdalenost otce 6
+ ++ indexOtceVHalde 0; idUzluOtce 3; vzdalenost otce 4
+ + oprav pozici 0; id uzlu 4; hodnota Uzlu 2
+Halda: 
+4(2)  
+3(4) 0(9)  
+10(-) 2(6)  5(-) 6(-)  
+1(-) 8(-)  9(-) 
+   nova vzdalenost z 7 do 5 = 6(6)
+ + oprav pozici 5; id uzlu 5; hodnota Uzlu 6
+ ++ indexOtceVHalde 2; idUzluOtce 0; vzdalenost otce 9
+ ++ indexOtceVHalde 0; idUzluOtce 4; vzdalenost otce 2
+ + oprav pozici 2; id uzlu 5; hodnota Uzlu 6
+ ++ indexOtceVHalde 0; idUzluOtce 4; vzdalenost otce 2
+Halda: 
+4(2)  
+3(4) 5(6)  
+10(-) 2(6)  0(9) 6(-)  
+1(-) 8(-)  9(-) 
+   nova vzdalenost z 7 do 10 = 9(9)
+ + oprav pozici 3; id uzlu 10; hodnota Uzlu 9
+ ++ indexOtceVHalde 1; idUzluOtce 3; vzdalenost otce 4
+ + oprav pozici 3; id uzlu 10; hodnota Uzlu 9
+ ++ indexOtceVHalde 1; idUzluOtce 3; vzdalenost otce 4
+Halda: 
+4(2)  
+3(4) 5(6)  
+10(9) 2(6)  0(9) 6(-)  
+1(-) 8(-)  9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 4
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 4; vzdalenostNejmensiho 6
+ +       indexOtce 4;      indexLeveho 9;      indexPraveho 10
+ ++ vzdalenostOtce -; indexNejmensiho 4; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 4
+Halda: 
+3(4)  
+2(6) 5(6)  
+10(9) 9(-)  0(9) 6(-)  
+1(-) 8(-)  
+   nova vzdalenost z 4 do 3 = 1(3)
+ + oprav pozici 0; id uzlu 3; hodnota Uzlu 3
+ + oprav pozici 0; id uzlu 3; hodnota Uzlu 3
+Halda: 
+3(3)  
+2(6) 5(6)  
+10(9) 9(-)  0(9) 6(-)  
+1(-) 8(-)  
+   nova vzdalenost z 4 do 8 = 8(10)
+ + oprav pozici 8; id uzlu 8; hodnota Uzlu 10
+ ++ indexOtceVHalde 3; idUzluOtce 10; vzdalenost otce 9
+ + oprav pozici 8; id uzlu 8; hodnota Uzlu 10
+ ++ indexOtceVHalde 3; idUzluOtce 10; vzdalenost otce 9
+Halda: 
+3(3)  
+2(6) 5(6)  
+10(9) 9(-)  0(9) 6(-)  
+1(-) 8(10)  
+   nova vzdalenost z 4 do 10 = 4(6)
+ + oprav pozici 3; id uzlu 10; hodnota Uzlu 6
+ ++ indexOtceVHalde 1; idUzluOtce 2; vzdalenost otce 6
+ + oprav pozici 3; id uzlu 10; hodnota Uzlu 6
+ ++ indexOtceVHalde 1; idUzluOtce 2; vzdalenost otce 6
+Halda: 
+3(3)  
+2(6) 5(6)  
+10(6) 9(-)  0(9) 6(-)  
+1(-) 8(10)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 10; indexNejmensiho 1; vzdalenostNejmensiho 6
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce 10; indexNejmensiho 3; vzdalenostNejmensiho 6
+ +       indexOtce 3;      indexLeveho 7;      indexPraveho 8
+ ++ vzdalenostOtce 10; indexNejmensiho 3; vzdalenostNejmensiho 10
+
+zpracovavam uzel 3
+Halda: 
+2(6)  
+10(6) 5(6)  
+8(10) 9(-)  0(9) 6(-)  
+1(-) 
+   nova vzdalenost z 3 do 0 = 4(7)
+ + oprav pozici 5; id uzlu 0; hodnota Uzlu 7
+ ++ indexOtceVHalde 2; idUzluOtce 5; vzdalenost otce 6
+ + oprav pozici 5; id uzlu 0; hodnota Uzlu 7
+ ++ indexOtceVHalde 2; idUzluOtce 5; vzdalenost otce 6
+Halda: 
+2(6)  
+10(6) 5(6)  
+8(10) 9(-)  0(7) 6(-)  
+1(-) 
+   nova vzdalenost z 3 do 1 = 2(5)
+ + oprav pozici 7; id uzlu 1; hodnota Uzlu 5
+ ++ indexOtceVHalde 3; idUzluOtce 8; vzdalenost otce 10
+ ++ indexOtceVHalde 1; idUzluOtce 10; vzdalenost otce 6
+ ++ indexOtceVHalde 0; idUzluOtce 2; vzdalenost otce 6
+ + oprav pozici 0; id uzlu 1; hodnota Uzlu 5
+Halda: 
+1(5)  
+2(6) 5(6)  
+10(6) 9(-)  0(7) 6(-)  
+8(10) 
+   nova vzdalenost z 3 do 6 = 6(9)
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 9
+ ++ indexOtceVHalde 2; idUzluOtce 5; vzdalenost otce 6
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 9
+ ++ indexOtceVHalde 2; idUzluOtce 5; vzdalenost otce 6
+Halda: 
+1(5)  
+2(6) 5(6)  
+10(6) 9(-)  0(7) 6(9)  
+8(10) 
+   nova vzdalenost z 3 do 10 = 2(5)
+ + oprav pozici 3; id uzlu 10; hodnota Uzlu 5
+ ++ indexOtceVHalde 1; idUzluOtce 2; vzdalenost otce 6
+ ++ indexOtceVHalde 0; idUzluOtce 1; vzdalenost otce 5
+ + oprav pozici 1; id uzlu 10; hodnota Uzlu 5
+ ++ indexOtceVHalde 0; idUzluOtce 1; vzdalenost otce 5
+Halda: 
+1(5)  
+10(5) 5(6)  
+2(6) 9(-)  0(7) 6(9)  
+8(10) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 10; indexNejmensiho 1; vzdalenostNejmensiho 5
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce 10; indexNejmensiho 3; vzdalenostNejmensiho 6
+ +       indexOtce 3;      indexLeveho 7;      indexPraveho 8
+ ++ vzdalenostOtce 10; indexNejmensiho 3; vzdalenostNejmensiho 10
+
+zpracovavam uzel 1
+Halda: 
+10(5)  
+2(6) 5(6)  
+8(10) 9(-)  0(7) 6(9)  
+   nova vzdalenost z 1 do 6 = 2(7)
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 7
+ ++ indexOtceVHalde 2; idUzluOtce 5; vzdalenost otce 6
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 7
+ ++ indexOtceVHalde 2; idUzluOtce 5; vzdalenost otce 6
+Halda: 
+10(5)  
+2(6) 5(6)  
+8(10) 9(-)  0(7) 6(7)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 7; indexNejmensiho 1; vzdalenostNejmensiho 6
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce 7; indexNejmensiho 1; vzdalenostNejmensiho 7
+
+zpracovavam uzel 10
+Halda: 
+2(6)  
+6(7) 5(6)  
+8(10) 9(-)  0(7) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 7; indexNejmensiho 2; vzdalenostNejmensiho 6
+ +       indexOtce 2;      indexLeveho 5;      indexPraveho 6
+ ++ vzdalenostOtce 7; indexNejmensiho 2; vzdalenostNejmensiho 7
+
+zpracovavam uzel 2
+Halda: 
+5(6)  
+6(7) 0(7)  
+8(10) 9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 7
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 3; vzdalenostNejmensiho 10
+ +       indexOtce 3;      indexLeveho 7;      indexPraveho 8
+ ++ vzdalenostOtce -; indexNejmensiho 3; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 5
+Halda: 
+6(7)  
+8(10) 0(7)  
+9(-) 
+   nova vzdalenost z 5 do 8 = 3(9)
+ + oprav pozici 1; id uzlu 8; hodnota Uzlu 9
+ ++ indexOtceVHalde 0; idUzluOtce 6; vzdalenost otce 7
+ + oprav pozici 1; id uzlu 8; hodnota Uzlu 9
+ ++ indexOtceVHalde 0; idUzluOtce 6; vzdalenost otce 7
+Halda: 
+6(7)  
+8(9) 0(7)  
+9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 2; vzdalenostNejmensiho 7
+ +       indexOtce 2;      indexLeveho 5;      indexPraveho 6
+ ++ vzdalenostOtce -; indexNejmensiho 2; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 6
+Halda: 
+0(7)  
+8(9) 9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 9
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 0
+Halda: 
+8(9)  
+9(-) 
+   nova vzdalenost z 0 do 8 = 1(8)
+ + oprav pozici 0; id uzlu 8; hodnota Uzlu 8
+ + oprav pozici 0; id uzlu 8; hodnota Uzlu 8
+Halda: 
+8(8)  
+9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 8
+Halda: 
+9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 9
+Halda: 
+
+preskakuji 9 vzd.: 4294967295
+id uzlu:       0  1  2  3  4  5  6  7  8  9 10 
+Vzdalenosti:   7  5  6  3  2  6  7  0  8  -  5 
+Predchudci:    3  3  7  4  7  7  1  -  0  -  3 
+
+Dijkstra pro uzel id = 8
+ + oprav pozici 0; id uzlu 0; hodnota Uzlu 4294967295
+ + oprav pozici 1; id uzlu 1; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+ + oprav pozici 2; id uzlu 2; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+ + oprav pozici 3; id uzlu 3; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ + oprav pozici 4; id uzlu 4; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ + oprav pozici 5; id uzlu 5; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce  - 
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce  - 
+ + oprav pozici 7; id uzlu 7; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce  - 
+ + oprav pozici 8; id uzlu 8; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce  - 
+ + oprav pozici 9; id uzlu 9; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 4; idUzluOtce 4; vzdalenost otce  - 
+ + oprav pozici 10; id uzlu 10; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 4; idUzluOtce 4; vzdalenost otce  - 
+ + oprav pozici 8; id uzlu 8; hodnota Uzlu 0
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce  - 
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+Halda: 
+8(0)  
+0(-) 2(-)  
+1(-) 4(-)  5(-) 6(-)  
+7(-) 3(-)  9(-) 10(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 8
+Halda: 
+10(-)  
+0(-) 2(-)  
+1(-) 4(-)  5(-) 6(-)  
+7(-) 3(-)  9(-) 
+   nova vzdalenost z 8 do 0 = 1(1)
+ + oprav pozici 1; id uzlu 0; hodnota Uzlu 1
+ ++ indexOtceVHalde 0; idUzluOtce 10; vzdalenost otce  - 
+ + oprav pozici 0; id uzlu 0; hodnota Uzlu 1
+Halda: 
+0(1)  
+10(-) 2(-)  
+1(-) 4(-)  5(-) 6(-)  
+7(-) 3(-)  9(-) 
+   nova vzdalenost z 8 do 1 = 14(14)
+ + oprav pozici 3; id uzlu 1; hodnota Uzlu 14
+ ++ indexOtceVHalde 1; idUzluOtce 10; vzdalenost otce  - 
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce 1
+ + oprav pozici 1; id uzlu 1; hodnota Uzlu 14
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce 1
+Halda: 
+0(1)  
+1(14) 2(-)  
+10(-) 4(-)  5(-) 6(-)  
+7(-) 3(-)  9(-) 
+   nova vzdalenost z 8 do 2 = 4(4)
+ + oprav pozici 2; id uzlu 2; hodnota Uzlu 4
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce 1
+ + oprav pozici 2; id uzlu 2; hodnota Uzlu 4
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce 1
+Halda: 
+0(1)  
+1(14) 2(4)  
+10(-) 4(-)  5(-) 6(-)  
+7(-) 3(-)  9(-) 
+   nova vzdalenost z 8 do 4 = 8(8)
+ + oprav pozici 4; id uzlu 4; hodnota Uzlu 8
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce 14
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce 1
+ + oprav pozici 1; id uzlu 4; hodnota Uzlu 8
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce 1
+Halda: 
+0(1)  
+4(8) 2(4)  
+10(-) 1(14)  5(-) 6(-)  
+7(-) 3(-)  9(-) 
+   nova vzdalenost z 8 do 5 = 3(3)
+ + oprav pozici 5; id uzlu 5; hodnota Uzlu 3
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce 4
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce 1
+ + oprav pozici 2; id uzlu 5; hodnota Uzlu 3
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce 1
+Halda: 
+0(1)  
+4(8) 5(3)  
+10(-) 1(14)  2(4) 6(-)  
+7(-) 3(-)  9(-) 
+   nova vzdalenost z 8 do 6 = 3(3)
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 3
+ ++ indexOtceVHalde 2; idUzluOtce 5; vzdalenost otce 3
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 3
+ ++ indexOtceVHalde 2; idUzluOtce 5; vzdalenost otce 3
+Halda: 
+0(1)  
+4(8) 5(3)  
+10(-) 1(14)  2(4) 6(3)  
+7(-) 3(-)  9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 2; vzdalenostNejmensiho 3
+ +       indexOtce 2;      indexLeveho 5;      indexPraveho 6
+ ++ vzdalenostOtce -; indexNejmensiho 6; vzdalenostNejmensiho 3
+ +       indexOtce 6;      indexLeveho 13;      indexPraveho 14
+ ++ vzdalenostOtce -; indexNejmensiho 6; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 0
+Halda: 
+5(3)  
+4(8) 6(3)  
+10(-) 1(14)  2(4) 9(-)  
+7(-) 3(-)  
+   nova vzdalenost z 0 do 1 = 10(11)
+ + oprav pozici 4; id uzlu 1; hodnota Uzlu 11
+ ++ indexOtceVHalde 1; idUzluOtce 4; vzdalenost otce 8
+ + oprav pozici 4; id uzlu 1; hodnota Uzlu 11
+ ++ indexOtceVHalde 1; idUzluOtce 4; vzdalenost otce 8
+Halda: 
+5(3)  
+4(8) 6(3)  
+10(-) 1(11)  2(4) 9(-)  
+7(-) 3(-)  
+   nova vzdalenost z 0 do 3 = 4(5)
+ + oprav pozici 8; id uzlu 3; hodnota Uzlu 5
+ ++ indexOtceVHalde 3; idUzluOtce 10; vzdalenost otce  - 
+ ++ indexOtceVHalde 1; idUzluOtce 4; vzdalenost otce 8
+ ++ indexOtceVHalde 0; idUzluOtce 5; vzdalenost otce 3
+ + oprav pozici 1; id uzlu 3; hodnota Uzlu 5
+ ++ indexOtceVHalde 0; idUzluOtce 5; vzdalenost otce 3
+Halda: 
+5(3)  
+3(5) 6(3)  
+4(8) 1(11)  2(4) 9(-)  
+7(-) 10(-)  
+   nova vzdalenost z 0 do 7 = 9(10)
+ + oprav pozici 7; id uzlu 7; hodnota Uzlu 10
+ ++ indexOtceVHalde 3; idUzluOtce 4; vzdalenost otce 8
+ + oprav pozici 7; id uzlu 7; hodnota Uzlu 10
+ ++ indexOtceVHalde 3; idUzluOtce 4; vzdalenost otce 8
+Halda: 
+5(3)  
+3(5) 6(3)  
+4(8) 1(11)  2(4) 9(-)  
+7(10) 10(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 2; vzdalenostNejmensiho 3
+ +       indexOtce 2;      indexLeveho 5;      indexPraveho 6
+ ++ vzdalenostOtce -; indexNejmensiho 5; vzdalenostNejmensiho 4
+ +       indexOtce 5;      indexLeveho 11;      indexPraveho 12
+ ++ vzdalenostOtce -; indexNejmensiho 5; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 5
+Halda: 
+6(3)  
+3(5) 2(4)  
+4(8) 1(11)  10(-) 9(-)  
+7(10) 
+   nova vzdalenost z 5 do 1 = 3(6)
+ + oprav pozici 4; id uzlu 1; hodnota Uzlu 6
+ ++ indexOtceVHalde 1; idUzluOtce 3; vzdalenost otce 5
+ + oprav pozici 4; id uzlu 1; hodnota Uzlu 6
+ ++ indexOtceVHalde 1; idUzluOtce 3; vzdalenost otce 5
+Halda: 
+6(3)  
+3(5) 2(4)  
+4(8) 1(6)  10(-) 9(-)  
+7(10) 
+   nova vzdalenost z 5 do 7 = 6(9)
+ + oprav pozici 7; id uzlu 7; hodnota Uzlu 9
+ ++ indexOtceVHalde 3; idUzluOtce 4; vzdalenost otce 8
+ + oprav pozici 7; id uzlu 7; hodnota Uzlu 9
+ ++ indexOtceVHalde 3; idUzluOtce 4; vzdalenost otce 8
+Halda: 
+6(3)  
+3(5) 2(4)  
+4(8) 1(6)  10(-) 9(-)  
+7(9) 
+   nova vzdalenost z 5 do 10 = 10(13)
+ + oprav pozici 5; id uzlu 10; hodnota Uzlu 13
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce 4
+ + oprav pozici 5; id uzlu 10; hodnota Uzlu 13
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce 4
+Halda: 
+6(3)  
+3(5) 2(4)  
+4(8) 1(6)  10(13) 9(-)  
+7(9) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 9; indexNejmensiho 2; vzdalenostNejmensiho 4
+ +       indexOtce 2;      indexLeveho 5;      indexPraveho 6
+ ++ vzdalenostOtce 9; indexNejmensiho 2; vzdalenostNejmensiho 9
+
+zpracovavam uzel 6
+Halda: 
+2(4)  
+3(5) 7(9)  
+4(8) 1(6)  10(13) 9(-)  
+   nova vzdalenost z 6 do 1 = 2(5)
+ + oprav pozici 4; id uzlu 1; hodnota Uzlu 5
+ ++ indexOtceVHalde 1; idUzluOtce 3; vzdalenost otce 5
+ + oprav pozici 4; id uzlu 1; hodnota Uzlu 5
+ ++ indexOtceVHalde 1; idUzluOtce 3; vzdalenost otce 5
+Halda: 
+2(4)  
+3(5) 7(9)  
+4(8) 1(5)  10(13) 9(-)  
+   nova vzdalenost z 6 do 10 = 7(10)
+ + oprav pozici 5; id uzlu 10; hodnota Uzlu 10
+ ++ indexOtceVHalde 2; idUzluOtce 7; vzdalenost otce 9
+ + oprav pozici 5; id uzlu 10; hodnota Uzlu 10
+ ++ indexOtceVHalde 2; idUzluOtce 7; vzdalenost otce 9
+Halda: 
+2(4)  
+3(5) 7(9)  
+4(8) 1(5)  10(10) 9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 5
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 4; vzdalenostNejmensiho 5
+ +       indexOtce 4;      indexLeveho 9;      indexPraveho 10
+ ++ vzdalenostOtce -; indexNejmensiho 4; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 2
+Halda: 
+3(5)  
+1(5) 7(9)  
+4(8) 9(-)  10(10) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 10; indexNejmensiho 1; vzdalenostNejmensiho 5
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce 10; indexNejmensiho 3; vzdalenostNejmensiho 8
+ +       indexOtce 3;      indexLeveho 7;      indexPraveho 8
+ ++ vzdalenostOtce 10; indexNejmensiho 3; vzdalenostNejmensiho 10
+
+zpracovavam uzel 3
+Halda: 
+1(5)  
+4(8) 7(9)  
+10(10) 9(-)  
+   nova vzdalenost z 3 do 4 = 1(6)
+ + oprav pozici 1; id uzlu 4; hodnota Uzlu 6
+ ++ indexOtceVHalde 0; idUzluOtce 1; vzdalenost otce 5
+ + oprav pozici 1; id uzlu 4; hodnota Uzlu 6
+ ++ indexOtceVHalde 0; idUzluOtce 1; vzdalenost otce 5
+Halda: 
+1(5)  
+4(6) 7(9)  
+10(10) 9(-)  
+   nova vzdalenost z 3 do 10 = 2(7)
+ + oprav pozici 3; id uzlu 10; hodnota Uzlu 7
+ ++ indexOtceVHalde 1; idUzluOtce 4; vzdalenost otce 6
+ + oprav pozici 3; id uzlu 10; hodnota Uzlu 7
+ ++ indexOtceVHalde 1; idUzluOtce 4; vzdalenost otce 6
+Halda: 
+1(5)  
+4(6) 7(9)  
+10(7) 9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 6
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 3; vzdalenostNejmensiho 7
+ +       indexOtce 3;      indexLeveho 7;      indexPraveho 8
+ ++ vzdalenostOtce -; indexNejmensiho 3; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 1
+Halda: 
+4(6)  
+10(7) 7(9)  
+9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 7
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 4
+Halda: 
+10(7)  
+9(-) 7(9)  
+   nova vzdalenost z 4 do 7 = 2(8)
+ + oprav pozici 2; id uzlu 7; hodnota Uzlu 8
+ ++ indexOtceVHalde 0; idUzluOtce 10; vzdalenost otce 7
+ + oprav pozici 2; id uzlu 7; hodnota Uzlu 8
+ ++ indexOtceVHalde 0; idUzluOtce 10; vzdalenost otce 7
+Halda: 
+10(7)  
+9(-) 7(8)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 8; indexNejmensiho 0; vzdalenostNejmensiho 8
+
+zpracovavam uzel 10
+Halda: 
+7(8)  
+9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 7
+Halda: 
+9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 9
+Halda: 
+
+preskakuji 9 vzd.: 4294967295
+id uzlu:       0  1  2  3  4  5  6  7  8  9 10 
+Vzdalenosti:   1  5  4  5  6  3  3  8  0  -  7 
+Predchudci:    8  6  8  0  3  8  8  4  -  -  3 
+
+Dijkstra pro uzel id = 9
+ + oprav pozici 0; id uzlu 0; hodnota Uzlu 4294967295
+ + oprav pozici 1; id uzlu 1; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+ + oprav pozici 2; id uzlu 2; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+ + oprav pozici 3; id uzlu 3; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ + oprav pozici 4; id uzlu 4; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ + oprav pozici 5; id uzlu 5; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce  - 
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce  - 
+ + oprav pozici 7; id uzlu 7; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce  - 
+ + oprav pozici 8; id uzlu 8; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce  - 
+ + oprav pozici 9; id uzlu 9; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 4; idUzluOtce 4; vzdalenost otce  - 
+ + oprav pozici 10; id uzlu 10; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 4; idUzluOtce 4; vzdalenost otce  - 
+ + oprav pozici 9; id uzlu 9; hodnota Uzlu 0
+ ++ indexOtceVHalde 4; idUzluOtce 4; vzdalenost otce  - 
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+Halda: 
+9(0)  
+0(-) 2(-)  
+3(-) 1(-)  5(-) 6(-)  
+7(-) 8(-)  4(-) 10(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 9
+Halda: 
+10(-)  
+0(-) 2(-)  
+3(-) 1(-)  5(-) 6(-)  
+7(-) 8(-)  4(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 10
+Halda: 
+4(-)  
+0(-) 2(-)  
+3(-) 1(-)  5(-) 6(-)  
+7(-) 8(-)  
+preskakuji 10 vzd.: 4294967295
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 4
+Halda: 
+8(-)  
+0(-) 2(-)  
+3(-) 1(-)  5(-) 6(-)  
+7(-) 
+preskakuji 4 vzd.: 4294967295
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 8
+Halda: 
+7(-)  
+0(-) 2(-)  
+3(-) 1(-)  5(-) 6(-)  
+preskakuji 8 vzd.: 4294967295
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 7
+Halda: 
+6(-)  
+0(-) 2(-)  
+3(-) 1(-)  5(-) 
+preskakuji 7 vzd.: 4294967295
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 6
+Halda: 
+5(-)  
+0(-) 2(-)  
+3(-) 1(-)  
+preskakuji 6 vzd.: 4294967295
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 5
+Halda: 
+1(-)  
+0(-) 2(-)  
+3(-) 
+preskakuji 5 vzd.: 4294967295
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 1
+Halda: 
+3(-)  
+0(-) 2(-)  
+preskakuji 1 vzd.: 4294967295
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 3
+Halda: 
+2(-)  
+0(-) 
+preskakuji 3 vzd.: 4294967295
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 2
+Halda: 
+0(-)  
+preskakuji 2 vzd.: 4294967295
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 0
+Halda: 
+
+preskakuji 0 vzd.: 4294967295
+id uzlu:       0  1  2  3  4  5  6  7  8  9 10 
+Vzdalenosti:   -  -  -  -  -  -  -  -  -  0  - 
+Predchudci:    -  -  -  -  -  -  -  -  -  -  - 
+
+Dijkstra pro uzel id = 10
+ + oprav pozici 0; id uzlu 0; hodnota Uzlu 4294967295
+ + oprav pozici 1; id uzlu 1; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+ + oprav pozici 2; id uzlu 2; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+ + oprav pozici 3; id uzlu 3; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ + oprav pozici 4; id uzlu 4; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ + oprav pozici 5; id uzlu 5; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce  - 
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce  - 
+ + oprav pozici 7; id uzlu 7; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce  - 
+ + oprav pozici 8; id uzlu 8; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 3; idUzluOtce 3; vzdalenost otce  - 
+ + oprav pozici 9; id uzlu 9; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 4; idUzluOtce 4; vzdalenost otce  - 
+ + oprav pozici 10; id uzlu 10; hodnota Uzlu 4294967295
+ ++ indexOtceVHalde 4; idUzluOtce 4; vzdalenost otce  - 
+ + oprav pozici 10; id uzlu 10; hodnota Uzlu 0
+ ++ indexOtceVHalde 4; idUzluOtce 4; vzdalenost otce  - 
+ ++ indexOtceVHalde 1; idUzluOtce 1; vzdalenost otce  - 
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce  - 
+Halda: 
+10(0)  
+0(-) 2(-)  
+3(-) 1(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 4(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 10
+Halda: 
+4(-)  
+0(-) 2(-)  
+3(-) 1(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 10 do 1 = 2(2)
+ + oprav pozici 4; id uzlu 1; hodnota Uzlu 2
+ ++ indexOtceVHalde 1; idUzluOtce 0; vzdalenost otce  - 
+ ++ indexOtceVHalde 0; idUzluOtce 4; vzdalenost otce  - 
+ + oprav pozici 0; id uzlu 1; hodnota Uzlu 2
+Halda: 
+1(2)  
+4(-) 2(-)  
+3(-) 0(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 10 do 3 = 2(2)
+ + oprav pozici 3; id uzlu 3; hodnota Uzlu 2
+ ++ indexOtceVHalde 1; idUzluOtce 4; vzdalenost otce  - 
+ ++ indexOtceVHalde 0; idUzluOtce 1; vzdalenost otce 2
+ + oprav pozici 1; id uzlu 3; hodnota Uzlu 2
+ ++ indexOtceVHalde 0; idUzluOtce 1; vzdalenost otce 2
+Halda: 
+1(2)  
+3(2) 2(-)  
+4(-) 0(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 10 do 4 = 4(4)
+ + oprav pozici 3; id uzlu 4; hodnota Uzlu 4
+ ++ indexOtceVHalde 1; idUzluOtce 3; vzdalenost otce 2
+ + oprav pozici 3; id uzlu 4; hodnota Uzlu 4
+ ++ indexOtceVHalde 1; idUzluOtce 3; vzdalenost otce 2
+Halda: 
+1(2)  
+3(2) 2(-)  
+4(4) 0(-)  5(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 10 do 5 = 10(10)
+ + oprav pozici 5; id uzlu 5; hodnota Uzlu 10
+ ++ indexOtceVHalde 2; idUzluOtce 2; vzdalenost otce  - 
+ ++ indexOtceVHalde 0; idUzluOtce 1; vzdalenost otce 2
+ + oprav pozici 2; id uzlu 5; hodnota Uzlu 10
+ ++ indexOtceVHalde 0; idUzluOtce 1; vzdalenost otce 2
+Halda: 
+1(2)  
+3(2) 5(10)  
+4(4) 0(-)  2(-) 6(-)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 10 do 6 = 7(7)
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 7
+ ++ indexOtceVHalde 2; idUzluOtce 5; vzdalenost otce 10
+ ++ indexOtceVHalde 0; idUzluOtce 1; vzdalenost otce 2
+ + oprav pozici 2; id uzlu 6; hodnota Uzlu 7
+ ++ indexOtceVHalde 0; idUzluOtce 1; vzdalenost otce 2
+Halda: 
+1(2)  
+3(2) 6(7)  
+4(4) 0(-)  2(-) 5(10)  
+7(-) 8(-)  9(-) 
+   nova vzdalenost z 10 do 7 = 9(9)
+ + oprav pozici 7; id uzlu 7; hodnota Uzlu 9
+ ++ indexOtceVHalde 3; idUzluOtce 4; vzdalenost otce 4
+ + oprav pozici 7; id uzlu 7; hodnota Uzlu 9
+ ++ indexOtceVHalde 3; idUzluOtce 4; vzdalenost otce 4
+Halda: 
+1(2)  
+3(2) 6(7)  
+4(4) 0(-)  2(-) 5(10)  
+7(9) 8(-)  9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 2
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 3; vzdalenostNejmensiho 4
+ +       indexOtce 3;      indexLeveho 7;      indexPraveho 8
+ ++ vzdalenostOtce -; indexNejmensiho 7; vzdalenostNejmensiho 9
+ +       indexOtce 7;      indexLeveho 15;      indexPraveho 16
+ ++ vzdalenostOtce -; indexNejmensiho 7; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 1
+Halda: 
+3(2)  
+4(4) 6(7)  
+7(9) 0(-)  2(-) 5(10)  
+9(-) 8(-)  
+   nova vzdalenost z 1 do 0 = 10(12)
+ + oprav pozici 4; id uzlu 0; hodnota Uzlu 12
+ ++ indexOtceVHalde 1; idUzluOtce 4; vzdalenost otce 4
+ + oprav pozici 4; id uzlu 0; hodnota Uzlu 12
+ ++ indexOtceVHalde 1; idUzluOtce 4; vzdalenost otce 4
+Halda: 
+3(2)  
+4(4) 6(7)  
+7(9) 0(12)  2(-) 5(10)  
+9(-) 8(-)  
+   nova vzdalenost z 1 do 2 = 11(13)
+ + oprav pozici 5; id uzlu 2; hodnota Uzlu 13
+ ++ indexOtceVHalde 2; idUzluOtce 6; vzdalenost otce 7
+ + oprav pozici 5; id uzlu 2; hodnota Uzlu 13
+ ++ indexOtceVHalde 2; idUzluOtce 6; vzdalenost otce 7
+Halda: 
+3(2)  
+4(4) 6(7)  
+7(9) 0(12)  2(13) 5(10)  
+9(-) 8(-)  
+   nova vzdalenost z 1 do 5 = 3(5)
+ + oprav pozici 6; id uzlu 5; hodnota Uzlu 5
+ ++ indexOtceVHalde 2; idUzluOtce 6; vzdalenost otce 7
+ ++ indexOtceVHalde 0; idUzluOtce 3; vzdalenost otce 2
+ + oprav pozici 2; id uzlu 5; hodnota Uzlu 5
+ ++ indexOtceVHalde 0; idUzluOtce 3; vzdalenost otce 2
+Halda: 
+3(2)  
+4(4) 5(5)  
+7(9) 0(12)  2(13) 6(7)  
+9(-) 8(-)  
+   nova vzdalenost z 1 do 6 = 2(4)
+ + oprav pozici 6; id uzlu 6; hodnota Uzlu 4
+ ++ indexOtceVHalde 2; idUzluOtce 5; vzdalenost otce 5
+ ++ indexOtceVHalde 0; idUzluOtce 3; vzdalenost otce 2
+ + oprav pozici 2; id uzlu 6; hodnota Uzlu 4
+ ++ indexOtceVHalde 0; idUzluOtce 3; vzdalenost otce 2
+Halda: 
+3(2)  
+4(4) 6(4)  
+7(9) 0(12)  2(13) 5(5)  
+9(-) 8(-)  
+   nova vzdalenost z 1 do 8 = 14(16)
+ + oprav pozici 8; id uzlu 8; hodnota Uzlu 16
+ ++ indexOtceVHalde 3; idUzluOtce 7; vzdalenost otce 9
+ + oprav pozici 8; id uzlu 8; hodnota Uzlu 16
+ ++ indexOtceVHalde 3; idUzluOtce 7; vzdalenost otce 9
+Halda: 
+3(2)  
+4(4) 6(4)  
+7(9) 0(12)  2(13) 5(5)  
+9(-) 8(16)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 16; indexNejmensiho 1; vzdalenostNejmensiho 4
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce 16; indexNejmensiho 3; vzdalenostNejmensiho 9
+ +       indexOtce 3;      indexLeveho 7;      indexPraveho 8
+ ++ vzdalenostOtce 16; indexNejmensiho 3; vzdalenostNejmensiho 16
+
+zpracovavam uzel 3
+Halda: 
+4(4)  
+7(9) 6(4)  
+8(16) 0(12)  2(13) 5(5)  
+9(-) 
+   nova vzdalenost z 3 do 0 = 4(6)
+ + oprav pozici 4; id uzlu 0; hodnota Uzlu 6
+ ++ indexOtceVHalde 1; idUzluOtce 7; vzdalenost otce 9
+ ++ indexOtceVHalde 0; idUzluOtce 4; vzdalenost otce 4
+ + oprav pozici 1; id uzlu 0; hodnota Uzlu 6
+ ++ indexOtceVHalde 0; idUzluOtce 4; vzdalenost otce 4
+Halda: 
+4(4)  
+0(6) 6(4)  
+8(16) 7(9)  2(13) 5(5)  
+9(-) 
+   nova vzdalenost z 3 do 4 = 1(3)
+ + oprav pozici 0; id uzlu 4; hodnota Uzlu 3
+ + oprav pozici 0; id uzlu 4; hodnota Uzlu 3
+Halda: 
+4(3)  
+0(6) 6(4)  
+8(16) 7(9)  2(13) 5(5)  
+9(-) 
+   nova vzdalenost z 3 do 7 = 4(6)
+ + oprav pozici 4; id uzlu 7; hodnota Uzlu 6
+ ++ indexOtceVHalde 1; idUzluOtce 0; vzdalenost otce 6
+ + oprav pozici 4; id uzlu 7; hodnota Uzlu 6
+ ++ indexOtceVHalde 1; idUzluOtce 0; vzdalenost otce 6
+Halda: 
+4(3)  
+0(6) 6(4)  
+8(16) 7(6)  2(13) 5(5)  
+9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 2; vzdalenostNejmensiho 4
+ +       indexOtce 2;      indexLeveho 5;      indexPraveho 6
+ ++ vzdalenostOtce -; indexNejmensiho 6; vzdalenostNejmensiho 5
+ +       indexOtce 6;      indexLeveho 13;      indexPraveho 14
+ ++ vzdalenostOtce -; indexNejmensiho 6; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 4
+Halda: 
+6(4)  
+0(6) 5(5)  
+8(16) 7(6)  2(13) 9(-)  
+   nova vzdalenost z 4 do 2 = 8(11)
+ + oprav pozici 5; id uzlu 2; hodnota Uzlu 11
+ ++ indexOtceVHalde 2; idUzluOtce 5; vzdalenost otce 5
+ + oprav pozici 5; id uzlu 2; hodnota Uzlu 11
+ ++ indexOtceVHalde 2; idUzluOtce 5; vzdalenost otce 5
+Halda: 
+6(4)  
+0(6) 5(5)  
+8(16) 7(6)  2(11) 9(-)  
+   nova vzdalenost z 4 do 7 = 2(5)
+ + oprav pozici 4; id uzlu 7; hodnota Uzlu 5
+ ++ indexOtceVHalde 1; idUzluOtce 0; vzdalenost otce 6
+ ++ indexOtceVHalde 0; idUzluOtce 6; vzdalenost otce 4
+ + oprav pozici 1; id uzlu 7; hodnota Uzlu 5
+ ++ indexOtceVHalde 0; idUzluOtce 6; vzdalenost otce 4
+Halda: 
+6(4)  
+7(5) 5(5)  
+8(16) 0(6)  2(11) 9(-)  
+   nova vzdalenost z 4 do 8 = 8(11)
+ + oprav pozici 3; id uzlu 8; hodnota Uzlu 11
+ ++ indexOtceVHalde 1; idUzluOtce 7; vzdalenost otce 5
+ + oprav pozici 3; id uzlu 8; hodnota Uzlu 11
+ ++ indexOtceVHalde 1; idUzluOtce 7; vzdalenost otce 5
+Halda: 
+6(4)  
+7(5) 5(5)  
+8(11) 0(6)  2(11) 9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 5
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 4; vzdalenostNejmensiho 6
+ +       indexOtce 4;      indexLeveho 9;      indexPraveho 10
+ ++ vzdalenostOtce -; indexNejmensiho 4; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 6
+Halda: 
+7(5)  
+0(6) 5(5)  
+8(11) 9(-)  2(11) 
+   nova vzdalenost z 6 do 8 = 3(7)
+ + oprav pozici 3; id uzlu 8; hodnota Uzlu 7
+ ++ indexOtceVHalde 1; idUzluOtce 0; vzdalenost otce 6
+ + oprav pozici 3; id uzlu 8; hodnota Uzlu 7
+ ++ indexOtceVHalde 1; idUzluOtce 0; vzdalenost otce 6
+Halda: 
+7(5)  
+0(6) 5(5)  
+8(7) 9(-)  2(11) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce 11; indexNejmensiho 2; vzdalenostNejmensiho 5
+ +       indexOtce 2;      indexLeveho 5;      indexPraveho 6
+ ++ vzdalenostOtce 11; indexNejmensiho 2; vzdalenostNejmensiho 11
+
+zpracovavam uzel 7
+Halda: 
+5(5)  
+0(6) 2(11)  
+8(7) 9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 6
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 3; vzdalenostNejmensiho 7
+ +       indexOtce 3;      indexLeveho 7;      indexPraveho 8
+ ++ vzdalenostOtce -; indexNejmensiho 3; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 5
+Halda: 
+0(6)  
+8(7) 2(11)  
+9(-) 
+   nova vzdalenost z 5 do 2 = 1(6)
+ + oprav pozici 2; id uzlu 2; hodnota Uzlu 6
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce 6
+ + oprav pozici 2; id uzlu 2; hodnota Uzlu 6
+ ++ indexOtceVHalde 0; idUzluOtce 0; vzdalenost otce 6
+Halda: 
+0(6)  
+8(7) 2(6)  
+9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 2; vzdalenostNejmensiho 6
+ +       indexOtce 2;      indexLeveho 5;      indexPraveho 6
+ ++ vzdalenostOtce -; indexNejmensiho 2; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 0
+Halda: 
+2(6)  
+8(7) 9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 7
+ +       indexOtce 1;      indexLeveho 3;      indexPraveho 4
+ ++ vzdalenostOtce -; indexNejmensiho 1; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 2
+Halda: 
+8(7)  
+9(-) 
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 8
+Halda: 
+9(-)  
+ +       indexOtce 0;      indexLeveho 1;      indexPraveho 2
+ ++ vzdalenostOtce -; indexNejmensiho 0; vzdalenostNejmensiho 4294967295
+
+zpracovavam uzel 9
+Halda: 
+
+preskakuji 9 vzd.: 4294967295
+id uzlu:       0  1  2  3  4  5  6  7  8  9 10 
+Vzdalenosti:   6  2  6  2  3  5  4  5  7  -  0 
+Predchudci:    3 10  5 10  3  1  1  4  6  -  - 

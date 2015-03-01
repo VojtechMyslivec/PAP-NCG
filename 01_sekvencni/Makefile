@@ -2,20 +2,22 @@ CC=g++
 RM=rm -f
 FLAGS=-Wall -pedantic
 LIBS=
+DEFINE=
 
-OUTPUT=./dijkstra.out
+DIJKSTRA=./dijkstra
 
-all: 
-	$(CC) $(FLAGS) $(LIBS) dijkstra.cpp -o $(OUTPUT)
+all: dijkstra
 
-debug: 
-	$(CC) -D DEBUG $(FLAGS) $(LIBS) dijkstra.cpp -o $(OUTPUT)
+dijkstra: funkce cDijkstra
+	$(CC) -c $(DEFINE) $(FLAGS) $(LIBS) -o dijkstra.o dijkstra.cpp
+	$(CC)    $(DEFINE) $(FLAGS) $(LIBS) -o $(DIJKSTRA) dijkstra.o funkceSpolecne.o cDijkstra.o
 
-debug2: 
-	$(CC) -D DEBUG2 $(FLAGS) $(LIBS) dijkstra.cpp -o $(OUTPUT)
+funkce:
+	$(CC) -c $(DEFINE) $(FLAGS) $(LIBS) -o funkceSpolecne.o funkceSpolecne.cpp
 
-valgrind: 
-	$(CC) -g $(FLAGS) $(LIBS) dijkstra.cpp -o $(OUTPUT)
+cDijkstra:
+	$(CC) -c $(DEFINE) $(FLAGS) $(LIBS) -o cDijkstra.o cDijkstra.cpp
 
 clean:
-	$(RM) $(OUTPUT)
+	$(RM) funkceSpolecne.o cDijkstra.o dijkstra.o $(DIJKSTRA)
+
