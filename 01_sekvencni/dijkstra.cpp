@@ -32,8 +32,8 @@
 #define NACTI_ERR_CISLO    4
 #define NACTI_ERR_TEXT     5
 
-#define GRAF_ORIENTOVANY    true
-#define GRAF_NEORIENTOVANY  false
+#define GRAF_ORIENTOVANY    0
+#define GRAF_NEORIENTOVANY  1
 
 #define DIJKSTRA_NEKONECNO    UINT_MAX
 #define DIJKSTRA_NEDEFINOVANO UINT_MAX
@@ -487,7 +487,7 @@ bool nactiData( char * jmenoSouboru ) {
    return nactiGraf( ifs );
 }
 
-bool kontrolaGrafu( ) { // const unsigned ** graf, unsigned pocetUzlu ) {
+unsigned kontrolaGrafu( ) { // const unsigned ** graf, unsigned pocetUzlu ) {
    for ( unsigned i = 0 ; i < pocetUzlu - 1; i++ ) {
       for ( unsigned j = i + 1; j < pocetUzlu ; j++ ) {
          if ( graf[i][j] != graf[j][i] ) {
