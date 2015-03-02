@@ -151,8 +151,8 @@ int main( int argc, char ** argv ) {
 
    cFloyd_Warshall* floyd_warshall = new cFloyd_Warshall( graf, pocetUzlu );
    floyd_warshall->spustVypocet();
-   floyd_warshall->vypisVysledekPoUzlech();
-   //floyd_warshall->vypisVysledekMaticove();
+   //floyd_warshall->vypisVysledekPoUzlech();
+   floyd_warshall->vypisVysledekMaticove();
    
    delete floyd_warshall;
    uklid( graf, pocetUzlu );

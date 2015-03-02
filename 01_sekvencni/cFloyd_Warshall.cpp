@@ -91,7 +91,7 @@ void cFloyd_Warshall::vypisVysledekPoUzlech() const {
     unsigned hodnota;
 
     for (unsigned i = 0; i < pocetUzlu; i++) {
-        cout << "\nDijkstra pro uzel id = " << i << endl;
+        cout << "\nFloyd-Warshall pro uzel id = " << i << endl;
         cout << "id uzlu:         ";
         for (unsigned j = 0; j < pocetUzlu; j++) {
             cout << setw(2) << j << " ";
@@ -118,4 +118,5 @@ void cFloyd_Warshall::vypisVysledekPoUzlech() const {
         cout << endl;
     }
 }
+
 
