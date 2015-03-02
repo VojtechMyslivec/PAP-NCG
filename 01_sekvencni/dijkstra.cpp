@@ -36,7 +36,7 @@ void dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu ) {
       if ( dijkstra->spustVypocet( i ) != true )
          cerr << "problem s vypoctem pro id = " << i << endl;
       else
-      dijkstra->vypisVysledek( );
+      dijkstra->vypisVysledekPoUzlech( i );
    }
 
    delete dijkstra;
@@ -80,9 +80,9 @@ int main( int argc, char ** argv ) {
       case GRAF_CHYBA:
       default:
          return MAIN_ERR_GRAF;
-         break;
    }
-
+   cout << endl;
+   
    // n krat volany Dijkstra
    dijkstraNtoN( graf, pocetUzlu );
 

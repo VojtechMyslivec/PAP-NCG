@@ -261,14 +261,14 @@ bool cDijkstra::jePrazdnaHalda( ) const {
    return velikostHaldy == 0;
 }
 
-void cDijkstra::vypisVysledek( ) const {
+void cDijkstra::vypisVysledekPoUzlech( unsigned uzelId ) const {
    unsigned hodnota;
-   cout << "id uzlu:      ";
+   cout << "id uzlu:         ";
    for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
          cout << setw(2) << i << " ";
    }
    cout << "\n"
-           "Vzdalenosti:  ";
+           "Vzdalenosti["<<uzelId<<"]:  ";
    for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
       hodnota = vzdalenost[i];
       if ( hodnota == DIJKSTRA_NEKONECNO )
@@ -277,7 +277,7 @@ void cDijkstra::vypisVysledek( ) const {
          cout << setw(2) << hodnota << " ";
    }
    cout << "\n"
-           "Predchudci:   ";
+           "Predchudci["<<uzelId<<"]:   ";
    for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
       hodnota = predchudce[i];
       if ( hodnota == DIJKSTRA_NEDEFINOVANO )

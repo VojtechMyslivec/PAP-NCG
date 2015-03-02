@@ -14,6 +14,7 @@
  */
 
 #include "funkceSpolecne.h"
+#include "cFloyd_Warshall.h"
 
 #include <iostream>
 #include <fstream>
@@ -32,7 +33,7 @@
 #define min(a,b) ((a) < (b)) ? (a) : (b)
 
 using namespace std;
-
+/*
 void floydWarshall( unsigned ** graf, unsigned pocetUzlu ) {   
 
    // inicializace ----------------------------------------
@@ -106,11 +107,11 @@ void floydWarshall( unsigned ** graf, unsigned pocetUzlu ) {
    delete [] predchudcePredchozi;
    delete []  predchudceAktualni;
 
-}
+}*/
 
 // main =======================================================================
 int main( int argc, char ** argv ) {
-//   cout << "Hello Dijkstra" << endl;
+//   cout << "Hello Floyd-Warshall" << endl;
    unsigned ** graf      = NULL;
    unsigned    pocetUzlu = 0;
 
@@ -145,13 +146,17 @@ int main( int argc, char ** argv ) {
       case GRAF_CHYBA:
       default:
          return MAIN_ERR_GRAF;
-         break;
    }
    cout << endl;
 
-   floydWarshall( graf, pocetUzlu );
-
+   cFloyd_Warshall* floyd_warshall = new cFloyd_Warshall( graf, pocetUzlu );
+   floyd_warshall->spustVypocet();
+   floyd_warshall->vypisVysledekPoUzlech();
+   //floyd_warshall->vypisVysledekMaticove();
+   
+   delete floyd_warshall;
    uklid( graf, pocetUzlu );
+   
    return MAIN_OK;
 }
 

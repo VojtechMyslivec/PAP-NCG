@@ -48,8 +48,7 @@ class cDijkstra {
       bool spustVypocet( unsigned idVychozihoUzlu );
 //      unsigned * getPredchudci( ) const;
 //      unsigned * getVzdalenosti( ) const;
-      void vypisVysledek( ) const;
-
+      void vypisVysledekPoUzlech( unsigned uzelId ) const;
       void vypisHaldu( ) const;
 
    protected:
