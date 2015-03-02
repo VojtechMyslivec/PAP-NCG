@@ -305,7 +305,7 @@ void cDijkstra::vypisVysledekPoUzlech(unsigned uzelId) const {
         cout << setw(2) << i << " ";
     }
     cout << "\n"
-                                                                                        "Vzdalenosti[" << uzelId << "]:  ";
+            "Vzdalenosti[" << uzelId << "]:  ";
     for (unsigned i = 0; i < pocetUzlu; i++) {
         hodnota = vzdalenost[i];
         if (hodnota == DIJKSTRA_NEKONECNO)
@@ -314,7 +314,7 @@ void cDijkstra::vypisVysledekPoUzlech(unsigned uzelId) const {
             cout << setw(2) << hodnota << " ";
     }
     cout << "\n"
-                                                                                        "Predchudci[" << uzelId << "]:   ";
+            "Predchudci[" << uzelId << "]:   ";
     for (unsigned i = 0; i < pocetUzlu; i++) {
         hodnota = predchudce[i];
         if (hodnota == DIJKSTRA_NEDEFINOVANO)
@@ -326,8 +326,9 @@ void cDijkstra::vypisVysledekPoUzlech(unsigned uzelId) const {
 }
 
 void cDijkstra::vypisVysledekMaticove( ) const {
+    cout << "Vzdalenosti:" << endl;
     vypisGrafu(cout, vzdalenostM, pocetUzlu);
-    cout << endl;
+    cout << endl << "Predchudci:" << endl;
     vypisGrafu(cout, predchudceM, pocetUzlu);
 }
 

@@ -49,7 +49,6 @@ class cDijkstra {
 //      unsigned * getPredchudci( ) const;
 //      unsigned * getVzdalenosti( ) const;
       void vypisVysledekPoUzlech( unsigned uzelId ) const;
-      void vypisVysledekMaticove( ) const;
       void vypisHaldu( ) const;
 
    protected:
@@ -95,11 +94,8 @@ class cDijkstra {
       unsigned * predchudce;
       // odpovida hodnote (neni v halde)
       bool     * uzavreny;
-      
-      // Pridane matice uchovavajici vsechny vysledky napric vsemi uzly
-      unsigned** vzdalenostM;
-      unsigned** predchudceM;
-      unsigned idInstance;
+
+
 };
 
 #endif // CDIJKSTRA_kljnef29kjdsnf02

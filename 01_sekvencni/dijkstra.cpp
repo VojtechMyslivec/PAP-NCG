@@ -33,7 +33,7 @@ void dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu ) {
 
    
    for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
-      cout << "\nDijkstra pro uzel id = " << i << endl;      
+      //cout << "\nDijkstra pro uzel id = " << i << endl;      
       if ( dijkstra->spustVypocet( i ) != true )
          cerr << "problem s vypoctem pro id = " << i << endl;
       //else

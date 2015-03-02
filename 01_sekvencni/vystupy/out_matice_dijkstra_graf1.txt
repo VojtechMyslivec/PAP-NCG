@@ -12,26 +12,7 @@
  9 | -  2  -  2  4 10  7  9  -  0 
 Graf je neorientovany
 
-
-Dijkstra pro uzel id = 0
-
-Dijkstra pro uzel id = 1
-
-Dijkstra pro uzel id = 2
-
-Dijkstra pro uzel id = 3
-
-Dijkstra pro uzel id = 4
-
-Dijkstra pro uzel id = 5
-
-Dijkstra pro uzel id = 6
-
-Dijkstra pro uzel id = 7
-
-Dijkstra pro uzel id = 8
-
-Dijkstra pro uzel id = 9
+Vzdalenosti:
    | 0  1  2  3  4  5  6  7  8  9 
 ---------------------------------
  0 | 0  6  3  4  5  4  4  7  1  6 
@@ -45,6 +26,7 @@ Dijkstra pro uzel id = 9
  8 | 1  5  4  5  6  3  3  8  0  7 
  9 | 6  2  6  2  3  5  4  5  7  0 
 
+Predchudci:
    | 0  1  2  3  4  5  6  7  8  9 
 ---------------------------------
  0 | -  3  0  0  3  8  8  4  0  3 
