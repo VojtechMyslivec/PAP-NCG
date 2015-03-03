@@ -27,13 +27,13 @@ make
 
 # Spousteni pro ruzne vstupni soubory
 for file in "$data"/* ; do
-   file=`basename "$file"`
-   vystupD="${vystupy}/out_${metoda}_dijkstra_${file}"
-   vystupF="${vystupy}/out_${metoda}_floyd_${file}"
-   vystupDiff="${rozdily}/diff_${metoda}_${file}"
+   filename=${file##*/}
+   vystupD="${vystupy}/out_${metoda}_dijkstra_${filename}"
+   vystupF="${vystupy}/out_${metoda}_floyd_${filename}"
+   vystupDiff="${rozdily}/diff_${metoda}_${filename}"
 
-   "$dijkstra" "${data}/${file}" > "${vystupD}"
-   "$floyd" "${data}/${file}" > "${vystupF}"
+   "$dijkstra" "${file}" > "${vystupD}"
+   "$floyd" "${file}" > "${vystupF}"
    diff "${vystupD}" "${vystupF}" > "${vystupDiff}"
 done
 
