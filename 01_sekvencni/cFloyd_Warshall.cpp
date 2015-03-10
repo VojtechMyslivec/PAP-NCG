@@ -46,7 +46,6 @@ cFloyd_Warshall::~cFloyd_Warshall() {
 }
 
 void cFloyd_Warshall::spustVypocet() {
-    unsigned ** pomocny;
     unsigned novaVzdalenost;
 
     for (unsigned k = 0; k < pocetUzlu; k++) {
@@ -70,11 +69,26 @@ void cFloyd_Warshall::spustVypocet() {
             }
         }
 
-        // posunuti okenka predchozi se stane aktualnim
-        delkaPredchozi = delkaAktualni;
-        predchudcePredchozi = predchudceAktualni;
+        // prohozeni predchozi a aktualni
+        prohodPredchoziAAktualni();
     }
+
+    // prohozeni predchozi a aktualni, aby vysledky byly v aktualnim (po skonceni cyklu jsou vysledky v predchozim)
+    prohodPredchoziAAktualni();
 }
+
+void cFloyd_Warshall::prohodPredchoziAAktualni() {
+    unsigned ** pomocny;
+    
+    pomocny = delkaPredchozi;
+    delkaPredchozi = delkaAktualni;
+    delkaAktualni = pomocny;
+
+    pomocny = predchudcePredchozi;
+    predchudcePredchozi = predchudceAktualni;
+    predchudceAktualni = pomocny;
+}
+
 
 void cFloyd_Warshall::vypisVysledekMaticove() const {
     vypisGrafu(cout, delkaAktualni, pocetUzlu);
@@ -92,7 +106,7 @@ void cFloyd_Warshall::vypisVysledekPoUzlech() const {
             cout << setw(2) << j << " ";
         }
         cout << "\n"
-            "Vzdalenosti[" << i << "]:  ";
+                "Vzdalenosti[" << i << "]:  ";
         for (unsigned j = 0; j < pocetUzlu; j++) {
             hodnota = delkaAktualni[i][j];
             if (hodnota == FW_NEKONECNO)
@@ -100,9 +114,9 @@ void cFloyd_Warshall::vypisVysledekPoUzlech() const {
             else
                 cout << setw(2) << hodnota << " ";
         }
-        
+
         cout << "\n"
-            "Predchudci["<<i<<"]:   ";
+                "Predchudci[" << i << "]:   ";
         for (unsigned j = 0; j < pocetUzlu; j++) {
             hodnota = predchudceAktualni[i][j];
             if (hodnota == FW_NEDEFINOVANO)
