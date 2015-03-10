@@ -25,6 +25,10 @@ public:
   // (cesty od vsech uzlu do kazdheo uzlu pres jakykoliv uzel)
   void spustVypocet();
   
+  // prohodi dva pointery mezi sebou pres pomocny pointer
+  // slozitost je O(1)
+  void prohodPredchoziAAktualni();
+  
   // vypise vysledek po startovnich uzlech ve tvaru
   // id uzlu  X, uzly, jejich vzdalenosti a predchudci
   void vypisVysledekPoUzlech() const;
