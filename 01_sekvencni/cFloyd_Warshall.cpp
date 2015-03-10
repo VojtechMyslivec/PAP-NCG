@@ -70,14 +70,9 @@ void cFloyd_Warshall::spustVypocet() {
             }
         }
 
-        // prohozeni predchozi a aktualni
-        pomocny = delkaPredchozi;
+        // posunuti okenka predchozi se stane aktualnim
         delkaPredchozi = delkaAktualni;
-        delkaAktualni = pomocny;
-
-        pomocny = predchudcePredchozi;
         predchudcePredchozi = predchudceAktualni;
-        predchudceAktualni = pomocny;
     }
 }
 
