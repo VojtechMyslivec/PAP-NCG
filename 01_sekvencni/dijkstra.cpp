@@ -56,7 +56,7 @@ void dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu ) {
    }
    
    // dijkstra->vypisVysledekPoUzlech( i );
-   //dijkstra->vypisVysledekMaticove();
+	 // Vypis vysledku jako matici vzdalenosti
    cout << "Vzdalenosti:" << endl;
    vypisGrafu(cout, mVzdalenosti, pocetUzlu);
    

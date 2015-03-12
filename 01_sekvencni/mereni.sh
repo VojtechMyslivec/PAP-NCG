@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # metoda vystupu z programu uzly | matice
-metoda="uzly"
+metoda="matice"
 
 data="../data"
 vystupy="./vystupy"
