@@ -91,9 +91,10 @@ void cFloyd_Warshall::prohodPredchoziAAktualni() {
 
 
 void cFloyd_Warshall::vypisVysledekMaticove() const {
+    cout << "Vzdalenosti: " << endl;
     vypisGrafu(cout, delkaAktualni, pocetUzlu);
-    cout << endl;
-    vypisGrafu(cout, predchudceAktualni, pocetUzlu);
+    //cout << endl;
+    //vypisGrafu(cout, predchudceAktualni, pocetUzlu);
 }
 
 void cFloyd_Warshall::vypisVysledekPoUzlech() const {

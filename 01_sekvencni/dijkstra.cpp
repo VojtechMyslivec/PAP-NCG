@@ -27,22 +27,47 @@
 
 using namespace std;
 
+void zkopirujPole(unsigned *from, unsigned **to, unsigned index, unsigned pocetUzlu) {
+    for (unsigned i=0 ; i<pocetUzlu ; i++) {
+        to[index][i] = from[i];
+    }
+}
+
 void dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu ) {
-   
    cDijkstra * dijkstra = new cDijkstra( graf, pocetUzlu );
+   
+   unsigned *pomocny;
+   unsigned ** mPredchudcu = new unsigned*[pocetUzlu];
+   unsigned ** mVzdalenosti = new unsigned*[pocetUzlu];
+   for (unsigned i=0 ; i<pocetUzlu ; i++) {
+       mPredchudcu[i] = new unsigned[pocetUzlu];
+       mVzdalenosti[i] = new unsigned[pocetUzlu];
+   }
 
    
    for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
       //cout << "\nDijkstra pro uzel id = " << i << endl;      
-      if ( dijkstra->spustVypocet( i ) != true )
-         cerr << "problem s vypoctem pro id = " << i << endl;
-      //else
-      //  dijkstra->vypisVysledekPoUzlech( i );
+      pomocny = dijkstra->spustVypocet( i );
+      if (pomocny==NULL) {
+          cerr << "problem s vypoctem pro id = " << i << endl;
+      } else {
+        zkopirujPole(pomocny, mVzdalenosti, i, pocetUzlu);
+      }
    }
    
-   dijkstra->vypisVysledekMaticove();
+   // dijkstra->vypisVysledekPoUzlech( i );
+   //dijkstra->vypisVysledekMaticove();
+   cout << "Vzdalenosti:" << endl;
+   vypisGrafu(cout, mVzdalenosti, pocetUzlu);
+   
    delete dijkstra;
-
+   
+   for (unsigned i=0 ; i<pocetUzlu ; i++) {
+       delete [] mPredchudcu[i];
+       delete [] mVzdalenosti[i];
+   }
+   delete [] mPredchudcu;
+   delete [] mVzdalenosti;
 }
 
 // main =======================================================================

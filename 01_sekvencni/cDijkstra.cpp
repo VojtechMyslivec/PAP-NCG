@@ -29,17 +29,9 @@ cDijkstra::cDijkstra(unsigned ** graf, unsigned pocetUzlu) {
     halda = new unsigned[pocetUzlu];
     indexyVHalde = new unsigned[pocetUzlu];
     vzdalenost = new unsigned[pocetUzlu];
-    vzdalenostM = new unsigned*[pocetUzlu];
     predchudce = new unsigned[pocetUzlu];
-    predchudceM = new unsigned*[pocetUzlu];
     uzavreny = new bool[pocetUzlu];
     velikostHaldy = 0;
-
-    idInstance = 0;
-    for (unsigned i = 0; i < pocetUzlu; i++) {
-        vzdalenostM[i] = new unsigned[pocetUzlu];
-        predchudceM[i] = new unsigned[pocetUzlu];
-    }
 }
 
 cDijkstra::~cDijkstra() {
@@ -53,23 +45,15 @@ cDijkstra::~cDijkstra() {
         delete [] predchudce;
     if (uzavreny != NULL)
         delete [] uzavreny;
-
-    for (unsigned i = 0; i < pocetUzlu; i++) {
-        delete [] vzdalenostM[i];
-        delete [] predchudceM[i];
-    }
-    delete [] vzdalenostM;
-    delete [] predchudceM;
 }
 
-bool cDijkstra::spustVypocet(unsigned idVychozihoUzlu) {
+unsigned* cDijkstra::spustVypocet(unsigned idVychozihoUzlu) {
     unsigned idUzlu;
     unsigned vzdalenostUzlu, vzdalenostSouseda, vzdalenostHrany, novaVzdalenost;
-    idInstance = idVychozihoUzlu;
     
     // inicializace haldy, vzalenosti, predchudcu
     if (inicializace(idVychozihoUzlu) != true) {
-        return false;
+        return NULL;
     }
 
 
@@ -116,7 +100,6 @@ bool cDijkstra::spustVypocet(unsigned idVychozihoUzlu) {
                 cerr << "   nova vzdalenost z " << idUzlu << " do " << idSouseda << " = " << vzdalenostHrany << '(' << novaVzdalenost << ')' << endl;
 #endif // DEBUG
                 predchudce[idSouseda] = idUzlu;
-                predchudceM[idInstance][idSouseda] = idUzlu;
                 nastavVzdalenostUzlu(idSouseda, novaVzdalenost);
 
                 // oprava haldy dle nove hodnoty
@@ -128,7 +111,7 @@ bool cDijkstra::spustVypocet(unsigned idVychozihoUzlu) {
         }
     }
 
-    return true;
+    return vzdalenost;
 }
 
 bool cDijkstra::inicializace(unsigned idVychozihoUzlu) {
@@ -140,9 +123,7 @@ bool cDijkstra::inicializace(unsigned idVychozihoUzlu) {
     velikostHaldy = 0;
     for (unsigned idUzlu = 0; idUzlu < pocetUzlu; idUzlu++) {
         vzdalenost[idUzlu] = DIJKSTRA_NEKONECNO;
-        vzdalenostM[idVychozihoUzlu][idUzlu] = DIJKSTRA_NEKONECNO;
         predchudce[idUzlu] = DIJKSTRA_NEDEFINOVANO;
-        predchudceM[idVychozihoUzlu][idUzlu] = DIJKSTRA_NEDEFINOVANO;
         uzavreny[idUzlu] = false;
         pridejPrvekDoHaldy(idUzlu);
     }
@@ -154,7 +135,6 @@ bool cDijkstra::inicializace(unsigned idVychozihoUzlu) {
 
 void cDijkstra::nastavVzdalenostUzlu(unsigned idUzlu, unsigned novaVzdalenost) {
     vzdalenost[idUzlu] = novaVzdalenost;
-    vzdalenostM[idInstance][idUzlu] = novaVzdalenost;
     opravPoziciVHalde(indexyVHalde[idUzlu]);
 }
 
@@ -325,10 +305,4 @@ void cDijkstra::vypisVysledekPoUzlech(unsigned uzelId) const {
     cout << endl;
 }
 
-void cDijkstra::vypisVysledekMaticove( ) const {
-    cout << "Vzdalenosti:" << endl;
-    vypisGrafu(cout, vzdalenostM, pocetUzlu);
-    cout << endl << "Predchudci:" << endl;
-    vypisGrafu(cout, predchudceM, pocetUzlu);
-}
 

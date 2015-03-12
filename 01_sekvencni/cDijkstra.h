@@ -45,7 +45,7 @@ class cDijkstra {
       // Fronta hran je implementovana binarni haldou
       // slozitost vypoctu je tedy O( |H|.log(|U|) + |U|.log(|U|) ) = 
       // = O( |U|^2 . log(|U|) )
-      bool spustVypocet( unsigned idVychozihoUzlu );
+      unsigned* spustVypocet( unsigned idVychozihoUzlu );
 //      unsigned * getPredchudci( ) const;
 //      unsigned * getVzdalenosti( ) const;
       void vypisVysledekPoUzlech( unsigned uzelId ) const;
@@ -95,12 +95,6 @@ class cDijkstra {
       unsigned * predchudce;
       // odpovida hodnote (neni v halde)
       bool     * uzavreny;
-      
-      // Pridane matice uchovavajici vsechny vysledky napric vsemi uzly
-      unsigned** vzdalenostM;
-      unsigned** predchudceM;
-      unsigned idInstance;
-
 };
 
 #endif // CDIJKSTRA_kljnef29kjdsnf02
