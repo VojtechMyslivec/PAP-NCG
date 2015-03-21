@@ -13,9 +13,9 @@ dijkstra: funkce cDijkstra
 	$(CC) -c $(DEFINE) $(FLAGS) $(LIBS) -o dijkstra.o dijkstra.cpp
 	$(CC)    $(DEFINE) $(FLAGS) $(LIBS) -o $(DIJKSTRA) dijkstra.o funkceSpolecne.o cDijkstra.o 
 
-floyd: funkce cFloyd_Warshall
+floyd: funkce cFloydWarshall
 	$(CC) -c $(DEFINE) $(FLAGS) $(LIBS) -o floyd-warshall.o floyd-warshall.cpp 
-	$(CC)    $(DEFINE) $(FLAGS) $(LIBS) -o $(FLOYD) floyd-warshall.o funkceSpolecne.o cFloyd_Warshall.o
+	$(CC)    $(DEFINE) $(FLAGS) $(LIBS) -o $(FLOYD) floyd-warshall.o funkceSpolecne.o cFloydWarshall.o
 
 funkce:
 	$(CC) -c $(DEFINE) $(FLAGS) $(LIBS) -o funkceSpolecne.o funkceSpolecne.cpp
@@ -23,9 +23,9 @@ funkce:
 cDijkstra:
 	$(CC) -c $(DEFINE) $(FLAGS) $(LIBS) -o cDijkstra.o cDijkstra.cpp
 
-cFloyd_Warshall:
-	$(CC) -c $(DEFINE) $(FLAGS) $(LIBS) -o cFloyd_Warshall.o cFloyd_Warshall.cpp
+cFloydWarshall:
+	$(CC) -c $(DEFINE) $(FLAGS) $(LIBS) -o cFloydWarshall.o cFloydWarshall.cpp
 
 clean:
-	$(RM) funkceSpolecne.o cDijkstra.o dijkstra.o $(DIJKSTRA) cFloyd_Warshall.o floyd-warshall.o $(FLOYD)
+	$(RM) funkceSpolecne.o cDijkstra.o dijkstra.o $(DIJKSTRA) cFloydWarshall.o floyd-warshall.o $(FLOYD)
 

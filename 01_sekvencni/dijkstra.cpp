@@ -31,15 +31,8 @@ void dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu ) {
    
    cDijkstra * dijkstra = new cDijkstra( graf, pocetUzlu );
 
-   
-   for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
-      //cout << "\nDijkstra pro uzel id = " << i << endl;      
-      if ( dijkstra->spustVypocet( i ) != true )
-         cerr << "problem s vypoctem pro id = " << i << endl;
-      //else
-      //  dijkstra->vypisVysledekPoUzlech( i );
-   }
-   
+   dijkstra->spustVypocet( );
+  
    dijkstra->vypisVysledekMaticove();
    delete dijkstra;
 
@@ -85,7 +78,6 @@ int main( int argc, char ** argv ) {
    }
    cout << endl;
    
-   // n krat volany Dijkstra
    dijkstraNtoN( graf, pocetUzlu );
 
    uklid( graf, pocetUzlu );

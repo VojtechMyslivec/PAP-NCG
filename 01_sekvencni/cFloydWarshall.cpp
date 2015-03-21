@@ -1,13 +1,22 @@
-/* 
- * File:   cFloyd_Warshall.cpp
- * Author: novy
- * 
- * Created on 2. březen 2015, 7:15
+/** cFloydWarshall.cpp
+ *
+ * Autori:      Vojtech Myslivec <vojtech.myslivec@fit.cvut.cz>,  FIT CVUT v Praze
+ *              Zdenek  Novy     <novyzde3@fit.cvut.cz>,          FIT CVUT v Praze
+ *              
+ * Datum:       unor-brezen 2015
+ *
+ * Popis:       Semestralni prace z predmetu MI-PAP:
+ *              Hledani nejkratsich cest v grafu 
+ *                 sekvencni cast
+ *                 trida cFloydWarshall pro algoritmus Floyd-Warshall
+ *
+ *
  */
 
-#include "cFloyd_Warshall.h"
+#include "cFloydWarshall.h"
+#include <iomanip>
 
-cFloyd_Warshall::cFloyd_Warshall(unsigned ** graf, unsigned pocetUzlu) {
+cFloydWarshall::cFloydWarshall(unsigned ** graf, unsigned pocetUzlu) {
     this->pocetUzlu = pocetUzlu;
     delkaPredchozi = new unsigned*[pocetUzlu];
     delkaAktualni = new unsigned*[pocetUzlu];
@@ -29,10 +38,7 @@ cFloyd_Warshall::cFloyd_Warshall(unsigned ** graf, unsigned pocetUzlu) {
     }
 }
 
-cFloyd_Warshall::cFloyd_Warshall(const cFloyd_Warshall& orig) {
-}
-
-cFloyd_Warshall::~cFloyd_Warshall() {
+cFloydWarshall::~cFloydWarshall() {
     for (unsigned i = 0; i < pocetUzlu; i++) {
         delete [] delkaPredchozi[i];
         delete [] delkaAktualni[i];
@@ -45,7 +51,7 @@ cFloyd_Warshall::~cFloyd_Warshall() {
     delete [] predchudceAktualni;
 }
 
-void cFloyd_Warshall::spustVypocet() {
+void cFloydWarshall::spustVypocet() {
     unsigned novaVzdalenost;
 
     for (unsigned k = 0; k < pocetUzlu; k++) {
@@ -77,7 +83,7 @@ void cFloyd_Warshall::spustVypocet() {
     prohodPredchoziAAktualni();
 }
 
-void cFloyd_Warshall::prohodPredchoziAAktualni() {
+void cFloydWarshall::prohodPredchoziAAktualni() {
     unsigned ** pomocny;
     
     pomocny = delkaPredchozi;
@@ -90,17 +96,17 @@ void cFloyd_Warshall::prohodPredchoziAAktualni() {
 }
 
 
-void cFloyd_Warshall::vypisVysledekMaticove() const {
+void cFloydWarshall::vypisVysledekMaticove() const {
     vypisGrafu(cout, delkaAktualni, pocetUzlu);
     cout << endl;
     vypisGrafu(cout, predchudceAktualni, pocetUzlu);
 }
 
-void cFloyd_Warshall::vypisVysledekPoUzlech() const {
+void cFloydWarshall::vypisVysledekPoUzlech() const {
     unsigned hodnota;
 
     for (unsigned i = 0; i < pocetUzlu; i++) {
-        cout << "\nDijkstra pro uzel id = " << i << endl;
+        cout << "\nFloyd-Warshall pro uzel id = " << i << endl;
         cout << "id uzlu:         ";
         for (unsigned j = 0; j < pocetUzlu; j++) {
             cout << setw(2) << j << " ";

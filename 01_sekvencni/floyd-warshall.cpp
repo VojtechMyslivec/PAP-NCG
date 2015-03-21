@@ -14,7 +14,7 @@
  */
 
 #include "funkceSpolecne.h"
-#include "cFloyd_Warshall.h"
+#include "cFloydWarshall.h"
 
 #include <iostream>
 #include <fstream>
@@ -33,81 +33,16 @@
 #define min(a,b) ((a) < (b)) ? (a) : (b)
 
 using namespace std;
-/*
-void floydWarshall( unsigned ** graf, unsigned pocetUzlu ) {   
 
-   // inicializace ----------------------------------------
-   unsigned ** delkaPredchozi  = new unsigned*[pocetUzlu];
-   unsigned ** delkaAktualni   = new unsigned*[pocetUzlu];
-   unsigned ** predchudcePredchozi = new unsigned*[pocetUzlu];
-   unsigned ** predchudceAktualni  = new unsigned*[pocetUzlu];
-   unsigned ** pomocny;
-   unsigned novaVzdalenost;
+void floydWarshallNtoN( unsigned ** graf, unsigned pocetUzlu ) {   
+   cFloydWarshall* floydWarshall = new cFloydWarshall( graf, pocetUzlu );
 
-   for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
-      delkaPredchozi[i]  = new unsigned[pocetUzlu];
-      delkaAktualni[i]   = new unsigned[pocetUzlu];
-      predchudcePredchozi[i] = new unsigned[pocetUzlu];
-      predchudceAktualni[i]  = new unsigned[pocetUzlu];
-      for ( unsigned j = 0 ; j < pocetUzlu ; j++ ) {
-         delkaPredchozi[i][j]  = graf[i][j];
-         if ( i == j || graf[i][j] == FW_NEKONECNO ) 
-            predchudcePredchozi[i][j] = FW_NEDEFINOVANO;
-         else
-            predchudcePredchozi[i][j] = i;
-      }
-   }
+   floydWarshall->spustVypocet();
 
-   // vypocet ---------------------------------------------
-   for ( unsigned k = 0 ; k < pocetUzlu ; k++ ) {
-      for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
-         for ( unsigned j = 0 ; j < pocetUzlu ; j++ ) {
-            // osetreni nekonecna
-            if ( delkaPredchozi[i][k] == FW_NEKONECNO ||
-                 delkaPredchozi[k][j] == FW_NEKONECNO )
-               novaVzdalenost = FW_NEKONECNO;
-            else
-               novaVzdalenost = delkaPredchozi[i][k] + delkaPredchozi[k][j];
+   floydWarshall->vypisVysledekMaticove();
 
-            // pokud nalezne kratsi cestu, zapise ji a zmeni predchudcePredchozi
-            if ( novaVzdalenost < delkaPredchozi[i][j] ) {
-               delkaAktualni[i][j]      = novaVzdalenost;
-               predchudceAktualni[i][j] = predchudcePredchozi[k][j];
-            }
-            // jinak delka i predchudce zustavaji
-            else {
-               delkaAktualni[i][j]      = delkaPredchozi[i][j];
-               predchudceAktualni[i][j] = predchudcePredchozi[i][j];
-            }
-         }
-      }
-      // prohozeni predchozi a aktualni
-      pomocny        = delkaPredchozi;
-      delkaPredchozi = delkaAktualni;
-      delkaAktualni  = pomocny;
-      pomocny             = predchudcePredchozi;
-      predchudcePredchozi = predchudceAktualni;
-      predchudceAktualni  = pomocny;
-   }
-
-   // vypis -----------------------------------------------
-   vypisGrafu( cout,      delkaAktualni, pocetUzlu );
-   cout << endl;
-   vypisGrafu( cout, predchudceAktualni, pocetUzlu );
-
-   // cleanup ---------------------------------------------
-   for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
-      delete []      delkaPredchozi[i];
-      delete []       delkaAktualni[i];
-      delete [] predchudcePredchozi[i];
-      delete []  predchudceAktualni[i];
-   }
-   delete []      delkaPredchozi;
-   delete []       delkaAktualni;
-   delete [] predchudcePredchozi;
-   delete []  predchudceAktualni;
-
-}*/
+   delete floydWarshall;
+}
 
 // main =======================================================================
 int main( int argc, char ** argv ) {
@@ -149,12 +84,8 @@ int main( int argc, char ** argv ) {
    }
    cout << endl;
 
-   cFloyd_Warshall* floyd_warshall = new cFloyd_Warshall( graf, pocetUzlu );
-   floyd_warshall->spustVypocet();
-   floyd_warshall->vypisVysledekPoUzlech();
-   //floyd_warshall->vypisVysledekMaticove();
-   
-   delete floyd_warshall;
+   floydWarshallNtoN( graf, pocetUzlu );
+
    uklid( graf, pocetUzlu );
    
    return MAIN_OK;

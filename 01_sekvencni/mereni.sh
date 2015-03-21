@@ -19,7 +19,7 @@ floyd="./floyd-warshall"
 
 
 # Buildovani programu pres make
-make
+make > /dev/null
 [[ $? -ne 0 ]] && {
    echo "Chyba (make)! Nelze provest prikaz make, chybi Makefile!" >&2
    exit 1
@@ -32,13 +32,14 @@ for file in "$data"/* ; do
    vystupF="${vystupy}/out_${metoda}_floyd_${filename}"
    vystupDiff="${rozdily}/diff_${metoda}_${filename}"
 
+   echo "Zpracovavam soubor '$filename'"
    "$dijkstra" "${file}" > "${vystupD}"
    "$floyd" "${file}" > "${vystupF}"
    diff "${vystupD}" "${vystupF}" > "${vystupDiff}"
 done
 
 # Uklid souboru
-make clean
+make clean > /dev/null
 [[ $? -ne 0 ]] && {
    echo "Chyba (make clean)! Nepodarilo se smazat vsechny vystupni soubory" >&2
    exit 2

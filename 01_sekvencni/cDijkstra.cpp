@@ -8,7 +8,9 @@
  * Popis:       Semestralni prace z predmetu MI-PAP:
  *              Hledani nejkratsich cest v grafu 
  *                 sekvencni cast
- *                 trida cDijkstra pro Dijkstruc algoritmus
+ *                 trida cDijkstra pro Dijkstruv algoritmus
+ *                    upraven vypocet prioritni fronty -- misto haldy for cylky, 
+ *                    aby slo paralelizovat
  *
  *
  */
@@ -21,32 +23,31 @@
 using namespace std;
 // ============================================================================
 
-cDijkstra::cDijkstra(unsigned ** graf, unsigned pocetUzlu) {
+cDijkstra::cDijkstra( unsigned ** graf, unsigned pocetUzlu ) {
     // TODO melka kopie
     this->graf = graf;
     this->pocetUzlu = pocetUzlu;
 
-    halda = new unsigned[pocetUzlu];
-    indexyVHalde = new unsigned[pocetUzlu];
     vzdalenost = new unsigned[pocetUzlu];
-    vzdalenostM = new unsigned*[pocetUzlu];
     predchudce = new unsigned[pocetUzlu];
-    predchudceM = new unsigned*[pocetUzlu];
-    uzavreny = new bool[pocetUzlu];
-    velikostHaldy = 0;
+    uzavreny   = new bool[pocetUzlu];
+    pocetUzavrenychUzlu = 0;
 
     idInstance = 0;
-    for (unsigned i = 0; i < pocetUzlu; i++) {
+    vzdalenostM = new unsigned*[pocetUzlu];
+    predchudceM = new unsigned*[pocetUzlu];
+    for ( unsigned i = 0; i < pocetUzlu; i++ ) {
         vzdalenostM[i] = new unsigned[pocetUzlu];
         predchudceM[i] = new unsigned[pocetUzlu];
+        for ( unsigned j = 0; j < pocetUzlu; j++ ) {
+           vzdalenostM[i][j] = DIJKSTRA_NEKONECNO;
+           predchudceM[i][j] = DIJKSTRA_NEDEFINOVANO;
+        }
+
     }
 }
 
 cDijkstra::~cDijkstra() {
-    if (halda != NULL)
-        delete [] halda;
-    if (indexyVHalde != NULL)
-        delete [] indexyVHalde;
     if (vzdalenost != NULL)
         delete [] vzdalenost;
     if (predchudce != NULL)
@@ -62,33 +63,57 @@ cDijkstra::~cDijkstra() {
     delete [] predchudceM;
 }
 
-bool cDijkstra::spustVypocet(unsigned idVychozihoUzlu) {
+bool cDijkstra::spustVypocet( ) {
+   bool returnFlag = true;
+   for ( unsigned idUzlu = 0 ; idUzlu < pocetUzlu ; idUzlu++ ) {
+
+#ifdef DEBUG
+      cout << "\nDijkstra pro uzel id = " << idUzlu << endl;      
+#endif // DEBUG
+      
+      if ( vypoctiProUzel( idUzlu ) != true ) {
+         cerr << "problem s vypoctem pro id = " << idUzlu<< endl;
+         returnFlag = false;
+      }
+      else {
+         // zkopiruje vysledek do matice
+         for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
+            vzdalenostM[idUzlu][i] = vzdalenost[i];
+            predchudceM[idUzlu][i] = predchudce[i];
+         }
+      }
+
+   }
+   return returnFlag;
+}
+
+bool cDijkstra::vypoctiProUzel( unsigned idVychozihoUzlu ) {
     unsigned idUzlu;
     unsigned vzdalenostUzlu, vzdalenostSouseda, vzdalenostHrany, novaVzdalenost;
     idInstance = idVychozihoUzlu;
     
-    // inicializace haldy, vzalenosti, predchudcu
-    if (inicializace(idVychozihoUzlu) != true) {
+    if ( inicializace( idVychozihoUzlu ) != true ) {
         return false;
     }
 
-
 #ifdef DEBUG
-    vypisHaldu();
+        vypisFrontu( );
 #endif // DEBUG
 
     // dokud nenavstivi vsechny uzly
-    while (jePrazdnaHalda() != true) {
+    while ( pocetUzavrenychUzlu < pocetUzlu ) {
         // uzly navstevuje podle nejmensi vzdalenosti
-        vemMinimumZHaldy(idUzlu);
+        if ( ! vyberMinimumZFronty( idUzlu ) ) 
+           return false;
         uzavreny[idUzlu] = true;
+        pocetUzavrenychUzlu++;
 #ifdef DEBUG
         cerr << "\nzpracovavam uzel " << idUzlu << endl;
-        vypisHaldu();
+        vypisFrontu( );
 #endif // DEBUG
         vzdalenostUzlu = vzdalenost[idUzlu];
         // pokud je stale nekonecna, znamena to nedostupny uzel;
-        if (vzdalenostUzlu >= DIJKSTRA_NEKONECNO) {
+        if ( vzdalenostUzlu >= DIJKSTRA_NEKONECNO ) {
 #ifdef DEBUG
             cerr << "preskakuji " << idUzlu << " vzd.: " << vzdalenostUzlu << endl;
 #endif // DEBUG
@@ -96,33 +121,30 @@ bool cDijkstra::spustVypocet(unsigned idVychozihoUzlu) {
         }
 
         // pro vsechny sousedy, tedy for cyklus pres matici vzdalenosti
-        for (unsigned idSouseda = 0; idSouseda < pocetUzlu; idSouseda++) {
+        for ( unsigned idSouseda = 0; idSouseda < pocetUzlu; idSouseda++ ) {
             // pokud je uzavreny, preskocim
-            if (uzavreny[idSouseda] == true) {
+            if ( uzavreny[idSouseda] == true ) {
                 continue;
             }
 
             vzdalenostSouseda = vzdalenost[idSouseda];
             vzdalenostHrany = graf[idUzlu][idSouseda];
             // kontrola, aby nepretekla hodnota
-            if (vzdalenostHrany >= DIJKSTRA_NEKONECNO)
+            if ( vzdalenostHrany >= DIJKSTRA_NEKONECNO )
                 novaVzdalenost = DIJKSTRA_NEKONECNO;
             else
                 novaVzdalenost = vzdalenostUzlu + vzdalenostHrany;
 
             // nalezeni kratsi vzdalenosti
-            if (novaVzdalenost < vzdalenostSouseda) {
+            if ( novaVzdalenost < vzdalenostSouseda ) {
 #ifdef DEBUG
                 cerr << "   nova vzdalenost z " << idUzlu << " do " << idSouseda << " = " << vzdalenostHrany << '(' << novaVzdalenost << ')' << endl;
 #endif // DEBUG
                 predchudce[idSouseda] = idUzlu;
-                predchudceM[idInstance][idSouseda] = idUzlu;
-                nastavVzdalenostUzlu(idSouseda, novaVzdalenost);
+                vzdalenost[idSouseda] = novaVzdalenost;
 
-                // oprava haldy dle nove hodnoty
-                opravPoziciVHalde(indexyVHalde[idSouseda]);
 #ifdef DEBUG
-                vypisHaldu();
+                vypisFrontu( );
 #endif // DEBUG
             }
         }
@@ -132,170 +154,60 @@ bool cDijkstra::spustVypocet(unsigned idVychozihoUzlu) {
 }
 
 bool cDijkstra::inicializace(unsigned idVychozihoUzlu) {
-    if (idVychozihoUzlu >= pocetUzlu) {
+    if ( idVychozihoUzlu >= pocetUzlu ) {
         cerr << "inicializace(): Chyba! id uzlu je vyssi nez pocet uzlu.";
         return false;
     }
 
-    velikostHaldy = 0;
-    for (unsigned idUzlu = 0; idUzlu < pocetUzlu; idUzlu++) {
+    pocetUzavrenychUzlu = 0;
+    for ( unsigned idUzlu = 0; idUzlu < pocetUzlu; idUzlu++ ) {
         vzdalenost[idUzlu] = DIJKSTRA_NEKONECNO;
-        vzdalenostM[idVychozihoUzlu][idUzlu] = DIJKSTRA_NEKONECNO;
         predchudce[idUzlu] = DIJKSTRA_NEDEFINOVANO;
-        predchudceM[idVychozihoUzlu][idUzlu] = DIJKSTRA_NEDEFINOVANO;
         uzavreny[idUzlu] = false;
-        pridejPrvekDoHaldy(idUzlu);
     }
-    // zde neni kontrola navratove hodnoty -- zbytecne, uz je zkontrolovana
-    nastavVzdalenostUzlu(idVychozihoUzlu, 0);
+    vzdalenost[idVychozihoUzlu] = 0;
 
     return true;
 }
 
-void cDijkstra::nastavVzdalenostUzlu(unsigned idUzlu, unsigned novaVzdalenost) {
-    vzdalenost[idUzlu] = novaVzdalenost;
-    vzdalenostM[idInstance][idUzlu] = novaVzdalenost;
-    opravPoziciVHalde(indexyVHalde[idUzlu]);
-}
-
-void cDijkstra::opravPoziciVHalde(unsigned pozice) {
-    // nalezne misto, kam ma uzel na pozici patrit
-    // indexDoHaldy ukazuje na opravovane misto, indexOtceVHalde na otce tohoto mista
-    // idUzluOtce je hodnota v halde na pozici otce a hodnotaUzlu je vzdalenost uzlu na pozici
-    unsigned idUzlu = halda[pozice];
-    unsigned hodnotaUzlu = vzdalenost[idUzlu];
-#ifdef DEBUG2
-    cerr << " + oprav pozici " << pozice << "; id uzlu " << idUzlu << "; hodnota Uzlu " << hodnotaUzlu << endl;
-#endif // DEBUG2
-
-    unsigned indexDoHaldy, indexOtceVHalde, idUzluOtce;
-    for (indexDoHaldy = pozice; indexDoHaldy > 0; indexDoHaldy = otec(indexDoHaldy)) {
-        indexOtceVHalde = otec(indexDoHaldy);
-        idUzluOtce = halda[indexOtceVHalde];
-#ifdef DEBUG2
-        cerr << " ++ indexOtceVHalde " << indexOtceVHalde << "; idUzluOtce " << idUzluOtce << "; vzdalenost otce ";
-        if (vzdalenost[idUzluOtce] == DIJKSTRA_NEKONECNO)
-            cerr << " - ";
-        else
-            cerr << vzdalenost[idUzluOtce];
-        cerr << endl;
-#endif // DEBUG2
-
-        // pokud je vzdalenost otce mensi nez hodnota uzlu, skonci a indexDoHaldy ukazuje 
-        // na spravnou pozici
-        if (vzdalenost[idUzluOtce] <= hodnotaUzlu)
-            break;
-
-        // presun otce indexu na nizsi pozici
-        halda[indexDoHaldy] = idUzluOtce;
-        indexyVHalde[idUzluOtce] = indexDoHaldy;
-    }
-
-    // na nalezene (uvolnene) misto ulozi id puvodniho uzlu
-    halda[indexDoHaldy] = idUzlu;
-    indexyVHalde[idUzlu] = indexDoHaldy;
-
-}
-
-bool cDijkstra::pridejPrvekDoHaldy(unsigned idUzlu) {
-    if (velikostHaldy >= pocetUzlu) {
-        cerr << "vemMinimumZHaldy(): Chyba! Preteceni haldy!" << endl;
+bool cDijkstra::vyberMinimumZFronty( unsigned & idMinima ) const {
+    if (pocetUzavrenychUzlu == pocetUzlu) {
+        cerr << "vyberMinimumZFronty(): Chyba! Prazdna fronta!" << endl;
         return false;
     }
 
-    // prida idUzlu na prvni volne misto v halde, opravi haldu a zvysi pocet prvku v halde
-    halda[velikostHaldy] = idUzlu;
-    indexyVHalde[idUzlu] = velikostHaldy;
-    opravPoziciVHalde(velikostHaldy);
-    velikostHaldy++;
-
-    return true;
-}
-
-void cDijkstra::haldujRekurzivne(unsigned indexOtce) {
-    unsigned indexLeveho = levy(indexOtce);
-    unsigned indexPraveho = pravy(indexOtce);
-
-    unsigned vzdalenostOtce = vzdalenost[halda[indexOtce]];
-#ifdef DEBUG2
-    cerr << " +       indexOtce " << indexOtce << ";      indexLeveho " << indexLeveho << ";      indexPraveho " << indexPraveho << endl;
-#endif //DEBUG2
-    // nejmensi ze tri
-    unsigned indexNejmensiho, vzdalenostNejmensiho, pomocny;
-    if (indexLeveho < velikostHaldy && vzdalenost[halda[indexLeveho]] < vzdalenostOtce)
-        indexNejmensiho = indexLeveho;
-    else
-        indexNejmensiho = indexOtce;
-    vzdalenostNejmensiho = vzdalenost[halda[indexNejmensiho]];
-
-    if (indexPraveho < velikostHaldy && vzdalenost[halda[indexPraveho]] < vzdalenostNejmensiho)
-        indexNejmensiho = indexPraveho;
-    vzdalenostNejmensiho = vzdalenost[halda[indexNejmensiho]];
-
-#ifdef DEBUG2
-    cerr << " ++ vzdalenostOtce ";
-    if (vzdalenostOtce == DIJKSTRA_NEKONECNO)
-        cerr << '-';
-    else
-        cerr << vzdalenostOtce;
-    cerr << "; indexNejmensiho " << indexNejmensiho << "; vzdalenostNejmensiho " << vzdalenostNejmensiho << endl;
-#endif //DEBUG2
-
-    // pokud je pod otcem mensi prvek, prohod je a zavolej se rekurzivne
-    if (indexNejmensiho != indexOtce) {
-        pomocny = halda[indexOtce];
-        halda[indexOtce] = halda[indexNejmensiho];
-        halda[indexNejmensiho] = pomocny;
-
-        indexyVHalde[halda[indexOtce]] = indexOtce;
-        indexyVHalde[halda[indexNejmensiho]] = indexNejmensiho;
-
-        // prvek byl presunut na pozici nejmensi (pravy ci levy syn), halduj tam
-        haldujRekurzivne(indexNejmensiho);
+    unsigned minimum = DIJKSTRA_NEKONECNO;
+    // pro kontrolu, zda se nejaky uzel najde
+    idMinima = pocetUzlu;
+    // ze vsech neuzavrenych uzlu vybere minimum
+    for ( unsigned idUzlu = 0 ; idUzlu < pocetUzlu ; idUzlu++ ) {
+       if ( uzavreny[idUzlu] == true ) 
+          continue;
+       if ( vzdalenost[idUzlu] <= minimum ) {
+          minimum  = vzdalenost[idUzlu];
+          idMinima = idUzlu;
+       }
     }
-    // jinak je otec na spravnem miste
-}
-
-bool cDijkstra::vemMinimumZHaldy(unsigned & idUzlu) {
-    if (velikostHaldy == 0) {
-        cerr << "vemMinimumZHaldy(): Chyba! Podteceni haldy!" << endl;
+    // pro kontrolu, zda se nejaky uzel nasel
+    if ( idMinima == pocetUzlu ) {
+        cerr << "vyberMinimumZFronty(): Neocekavana chyba! Fronta neni prazdna, minimum se ale nenalezlo!" << endl;
         return false;
     }
-    // minimum je na vrchu haldy
-    idUzlu = halda[0];
-    indexyVHalde[idUzlu] = DIJKSTRA_NEDEFINOVANO;
-    // posledni prvek ulozi na vrchol, zmensi pocet prvku a opravi haldu
-    velikostHaldy--;
-    halda[0] = halda[velikostHaldy];
-    indexyVHalde[halda[0]] = 0;
-
-    haldujRekurzivne(0);
 
     return true;
 }
 
-bool cDijkstra::jePrazdnaHalda() const {
-    return velikostHaldy == 0;
-}
-
-void cDijkstra::vypisHaldu() const {
-    cerr << "Halda: \n";
-    unsigned pravy = 0;
-    for (unsigned i = 0; i < velikostHaldy; i++) {
-        if (i > pravy) {
-            cerr << '\n';
-            pravy = pravy(pravy);
-        }
-        cerr << halda[i] << '(';
-        if (vzdalenost[halda[i]] == DIJKSTRA_NEKONECNO)
-            cerr << '-';
-        else
-            cerr << vzdalenost[halda[i]];
-        cerr << ") ";
-        if (i % 2 == 0)
-            cerr << ' ';
-    }
-    cerr << endl;
+void cDijkstra::vypisFrontu( ) const {
+   cerr << "Fronta:\n";
+   for ( unsigned idUzlu = 0 ; idUzlu < pocetUzlu ; idUzlu++ ) {
+      if      ( uzavreny[idUzlu] ) 
+         cerr << " z ";
+      else if ( vzdalenost[idUzlu] == DIJKSTRA_NEKONECNO ) 
+         cerr << " - ";
+      else
+         cerr << setw(2) << vzdalenost[idUzlu] << " ";
+   }
+   cerr << endl;
 }
 
 void cDijkstra::vypisVysledekPoUzlech(unsigned uzelId) const {
