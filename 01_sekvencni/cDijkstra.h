@@ -34,25 +34,35 @@
 
 class cDijkstra {
    public:
-      cDijkstra( unsigned ** graf, unsigned pocetUzlu );
+      cDijkstra( unsigned idVychozihoUzlu );
+      static void inicializace( unsigned ** graf, unsigned pocetUzlu );
       ~cDijkstra( );
 
-      // Vypocte nejkratsi cesty od vsech uzlu ke vsem ostatnim uzlum
+      // Vypocte nejkratsi cesty od daneho uzlu ke vsem ostatnim uzlum
       // Fronta hran je implementovana prostym prohledavanim pole (uzly
       // jsou oznacene jako otevrene/zavrene, zda se ve fronte jeste 
       // vyskytuji ci nikoliv
       //
       // Slozitost vypoctu 1 -> n je O( |H|.|U| + |U|.|U| ) = 
-      // = O( |U|^3 ). Celkova slozitost vypoctu N -> N je tedy O( |U|^4 )
+      // = O( |U|^3 ).
       bool spustVypocet( );
-      void vypisVysledekPoUzlech( unsigned uzelId ) const;
+      
+      // navrat poli s vysledky
+      unsigned * getPredchudce( ) const;
+      unsigned * getVzdalenost( ) const;
+
+      void vypisVysledekPoUzlech( ) const;
+/* TODO static
       void vypisVysledekMaticove( ) const;
+*/
 
    protected:
+/* TODO static
       // inicializace fronty, vzalenosti, predchudcu
       bool inicializace( unsigned idVychozihoUzlu );
       // Vypocte nejkratsi cesty od jednoho uzlu ke vsem ostatnim
       bool vypoctiProUzel( unsigned idVychozihoUzlu );
+*/
 
       // nalezne mimimum z fronty (neboli z otevrenych uzlu)
       // false v pripade prazdne fronty
@@ -61,8 +71,10 @@ class cDijkstra {
 
       // ukazatel na matici vzdalenosti -- ohodnocenych hran
       // POZOR !! melka kopie !!
-      unsigned ** graf;
-      unsigned    pocetUzlu;
+      static unsigned ** graf;
+      static unsigned    pocetUzlu;
+
+      unsigned idVychozihoUzlu;
 
       unsigned * vzdalenost;
       unsigned * predchudce;
@@ -72,9 +84,11 @@ class cDijkstra {
       unsigned   pocetUzavrenychUzlu;
       
       // Pridane matice uchovavajici vsechny vysledky napric vsemi uzly
+/* TODO static
       unsigned** vzdalenostM;
       unsigned** predchudceM;
       unsigned idInstance;
+*/
 
 };
 

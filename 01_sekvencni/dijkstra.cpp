@@ -27,16 +27,85 @@
 
 using namespace std;
 
-void dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu ) {
-   
-   cDijkstra * dijkstra = new cDijkstra( graf, pocetUzlu );
+void inicializaceNtoN( unsigned ** graf, unsigned pocetUzlu, 
+                       unsigned *& vzdalenost, unsigned **& vzdalenostM,
+                       unsigned *& predchudce, unsigned **& predchudceM ) {
+   // inicializace matic vysledku
+   vzdalenost  = new unsigned[pocetUzlu];
+   vzdalenostM = new unsigned*[pocetUzlu];
+   predchudce  = new unsigned[pocetUzlu];
+   predchudceM = new unsigned*[pocetUzlu];
+   for ( unsigned i = 0; i < pocetUzlu; i++ ) {
+      vzdalenostM[i] = new unsigned[pocetUzlu];
+      predchudceM[i] = new unsigned[pocetUzlu];
+      for ( unsigned j = 0; j < pocetUzlu; j++ ) {
+         vzdalenostM[i][j] = DIJKSTRA_NEKONECNO;
+         predchudceM[i][j] = DIJKSTRA_NEDEFINOVANO;
+      }
+   }
 
-   dijkstra->spustVypocet( );
-  
-   dijkstra->vypisVysledekMaticove();
-   delete dijkstra;
+   // staticka inicializace
+   cDijkstra::inicializace( graf, pocetUzlu );
+}
+
+void uklidUkazatelu( unsigned *& jednaDimenze, unsigned **& dveDimenze, unsigned rozmer ) {
+   if ( jednaDimenze != NULL ) {
+      delete [] jednaDimenze;
+      jednaDimenze = NULL;
+   }
+   if ( dveDimenze != NULL ) {
+      for ( unsigned i = 0; i < rozmer; i++ ) {
+         if ( dveDimenze[i] != NULL ) {
+            delete [] dveDimenze[i];
+            dveDimenze[i] = NULL;
+         }
+      }
+      delete [] dveDimenze;
+      dveDimenze = NULL;
+   }
 
 }
+
+bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu ) {
+   bool returnFlag = true;
+   unsigned * vzdalenost, ** vzdalenostM, * predchudce, ** predchudceM;
+   inicializaceNtoN( graf, pocetUzlu, vzdalenost, vzdalenostM, predchudce, predchudceM );
+
+   for ( unsigned idUzlu = 0 ; idUzlu < pocetUzlu ; idUzlu++ ) {
+
+      cDijkstra * dijkstra = new cDijkstra( idUzlu );
+#ifdef DEBUG
+      cout << "\nDijkstra pro uzel id = " << idUzlu << endl;      
+#endif // DEBUG
+      
+      if ( dijkstra->spustVypocet( ) != true ) {
+         cerr << "problem s vypoctem pro id = " << idUzlu<< endl;
+         returnFlag = false;
+      }
+      else {
+         // zkopiruje vysledek do matice
+         vzdalenost = dijkstra->getVzdalenost( );
+         predchudce = dijkstra->getPredchudce( );
+         for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
+            vzdalenostM[idUzlu][i] = vzdalenost[i];
+            predchudceM[idUzlu][i] = predchudce[i];
+         }
+      }
+
+      delete dijkstra;
+   }
+
+   cout << "Vzdalenosti:" << endl;
+   vypisGrafu(cout, vzdalenostM, pocetUzlu);
+   cout << endl << "Predchudci:" << endl;
+   vypisGrafu(cout, predchudceM, pocetUzlu);
+
+   uklidUkazatelu( predchudce, predchudceM, pocetUzlu );
+   uklidUkazatelu( vzdalenost, vzdalenostM, pocetUzlu );
+
+   return returnFlag;
+}
+
 
 // main =======================================================================
 int main( int argc, char ** argv ) {
