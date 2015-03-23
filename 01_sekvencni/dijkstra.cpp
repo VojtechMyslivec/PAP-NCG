@@ -28,12 +28,9 @@
 using namespace std;
 
 void inicializaceNtoN( unsigned ** graf, unsigned pocetUzlu, 
-                       unsigned *& vzdalenost, unsigned **& vzdalenostM,
-                       unsigned *& predchudce, unsigned **& predchudceM ) {
+                       unsigned **& vzdalenostM, unsigned **& predchudceM ) {
    // inicializace matic vysledku
-   vzdalenost  = new unsigned[pocetUzlu];
    vzdalenostM = new unsigned*[pocetUzlu];
-   predchudce  = new unsigned[pocetUzlu];
    predchudceM = new unsigned*[pocetUzlu];
    for ( unsigned i = 0; i < pocetUzlu; i++ ) {
       vzdalenostM[i] = new unsigned[pocetUzlu];
@@ -48,11 +45,7 @@ void inicializaceNtoN( unsigned ** graf, unsigned pocetUzlu,
    cDijkstra::inicializace( graf, pocetUzlu );
 }
 
-void uklidUkazatelu( unsigned *& jednaDimenze, unsigned **& dveDimenze, unsigned rozmer ) {
-   if ( jednaDimenze != NULL ) {
-      delete [] jednaDimenze;
-      jednaDimenze = NULL;
-   }
+void uklidUkazatelu( unsigned **& dveDimenze, unsigned rozmer ) {
    if ( dveDimenze != NULL ) {
       for ( unsigned i = 0; i < rozmer; i++ ) {
          if ( dveDimenze[i] != NULL ) {
@@ -69,7 +62,7 @@ void uklidUkazatelu( unsigned *& jednaDimenze, unsigned **& dveDimenze, unsigned
 bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu ) {
    bool returnFlag = true;
    unsigned * vzdalenost, ** vzdalenostM, * predchudce, ** predchudceM;
-   inicializaceNtoN( graf, pocetUzlu, vzdalenost, vzdalenostM, predchudce, predchudceM );
+   inicializaceNtoN( graf, pocetUzlu, vzdalenostM, predchudceM );
 
    for ( unsigned idUzlu = 0 ; idUzlu < pocetUzlu ; idUzlu++ ) {
 
@@ -100,8 +93,8 @@ bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu ) {
    cout << endl << "Predchudci:" << endl;
    vypisGrafu(cout, predchudceM, pocetUzlu);
 
-   uklidUkazatelu( predchudce, predchudceM, pocetUzlu );
-   uklidUkazatelu( vzdalenost, vzdalenostM, pocetUzlu );
+   uklidUkazatelu( predchudceM, pocetUzlu );
+   uklidUkazatelu( vzdalenostM, pocetUzlu );
 
    return returnFlag;
 }
