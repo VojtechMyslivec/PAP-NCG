@@ -52,18 +52,8 @@ class cDijkstra {
       unsigned * getVzdalenost( ) const;
 
       void vypisVysledekPoUzlech( ) const;
-/* TODO static
-      void vypisVysledekMaticove( ) const;
-*/
 
    protected:
-/* TODO static
-      // inicializace fronty, vzalenosti, predchudcu
-      bool inicializace( unsigned idVychozihoUzlu );
-      // Vypocte nejkratsi cesty od jednoho uzlu ke vsem ostatnim
-      bool vypoctiProUzel( unsigned idVychozihoUzlu );
-*/
-
       // nalezne mimimum z fronty (neboli z otevrenych uzlu)
       // false v pripade prazdne fronty
       bool vyberMinimumZFronty( unsigned & idMinima ) const;
@@ -82,14 +72,6 @@ class cDijkstra {
       // zaroven urcije, jestli je jeste v prioritni fronte
       bool     * uzavreny;
       unsigned   pocetUzavrenychUzlu;
-      
-      // Pridane matice uchovavajici vsechny vysledky napric vsemi uzly
-/* TODO static
-      unsigned** vzdalenostM;
-      unsigned** predchudceM;
-      unsigned idInstance;
-*/
-
 };
 
 #endif // CDIJKSTRA_kljnef29kjdsnf02

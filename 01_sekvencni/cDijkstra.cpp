@@ -46,18 +46,6 @@ cDijkstra::cDijkstra( unsigned idVychozihoUzlu ) {
     }
     vzdalenost[idVychozihoUzlu] = 0;
 
-/* TODO static
-    vzdalenostM = new unsigned*[pocetUzlu];
-    predchudceM = new unsigned*[pocetUzlu];
-    for ( unsigned i = 0; i < pocetUzlu; i++ ) {
-        vzdalenostM[i] = new unsigned[pocetUzlu];
-        predchudceM[i] = new unsigned[pocetUzlu];
-        for ( unsigned j = 0; j < pocetUzlu; j++ ) {
-           vzdalenostM[i][j] = DIJKSTRA_NEKONECNO;
-           predchudceM[i][j] = DIJKSTRA_NEDEFINOVANO;
-        }
-    }
-*/
 }
 
 cDijkstra::~cDijkstra() {
@@ -68,14 +56,6 @@ cDijkstra::~cDijkstra() {
     if (uzavreny != NULL)
         delete [] uzavreny;
 
-/* TODO static
-    for (unsigned i = 0; i < pocetUzlu; i++) {
-        delete [] vzdalenostM[i];
-        delete [] predchudceM[i];
-    }
-    delete [] vzdalenostM;
-    delete [] predchudceM;
-*/
 }
 
 void cDijkstra::inicializace( unsigned ** graf, unsigned pocetUzlu ) {
@@ -85,42 +65,8 @@ void cDijkstra::inicializace( unsigned ** graf, unsigned pocetUzlu ) {
 }
 
 bool cDijkstra::spustVypocet( ) {
-/* TODO static
-   bool returnFlag = true;
-   for ( unsigned idUzlu = 0 ; idUzlu < pocetUzlu ; idUzlu++ ) {
-
-#ifdef DEBUG
-      cout << "\nDijkstra pro uzel id = " << idUzlu << endl;      
-#endif // DEBUG
-      
-      if ( vypoctiProUzel( idUzlu ) != true ) {
-         cerr << "problem s vypoctem pro id = " << idUzlu<< endl;
-         returnFlag = false;
-      }
-      else {
-         // zkopiruje vysledek do matice
-         for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
-            vzdalenostM[idUzlu][i] = vzdalenost[i];
-            predchudceM[idUzlu][i] = predchudce[i];
-         }
-      }
-
-   }
-   return returnFlag;
-}
-*/
-
-/* TODO static
-bool cDijkstra::vypoctiProUzel( unsigned idVychozihoUzlu ) {
-*/
     unsigned idUzlu;
     unsigned vzdalenostUzlu, vzdalenostSouseda, vzdalenostHrany, novaVzdalenost;
-    
-/* TODO static
-    if ( inicializace( idVychozihoUzlu ) != true ) {
-        return false;
-    }
-*/
 
 #ifdef DEBUG
         vypisFrontu( );
@@ -178,25 +124,6 @@ bool cDijkstra::vypoctiProUzel( unsigned idVychozihoUzlu ) {
 
     return true;
 }
-
-/* TODO static
-bool cDijkstra::inicializace(unsigned idVychozihoUzlu) {
-    if ( idVychozihoUzlu >= pocetUzlu ) {
-        cerr << "inicializace(): Chyba! id uzlu je vyssi nez pocet uzlu.";
-        return false;
-    }
-
-    pocetUzavrenychUzlu = 0;
-    for ( unsigned idUzlu = 0; idUzlu < pocetUzlu; idUzlu++ ) {
-        vzdalenost[idUzlu] = DIJKSTRA_NEKONECNO;
-        predchudce[idUzlu] = DIJKSTRA_NEDEFINOVANO;
-        uzavreny[idUzlu] = false;
-    }
-    vzdalenost[idVychozihoUzlu] = 0;
-
-    return true;
-}
-*/
 
 bool cDijkstra::vyberMinimumZFronty( unsigned & idMinima ) const {
     if (pocetUzavrenychUzlu == pocetUzlu) {
@@ -272,13 +199,4 @@ void cDijkstra::vypisVysledekPoUzlech( ) const {
     }
     cout << endl;
 }
-
-/* TODO static
-void cDijkstra::vypisVysledekMaticove( ) const {
-    cout << "Vzdalenosti:" << endl;
-    vypisGrafu(cout, vzdalenostM, pocetUzlu);
-    cout << endl << "Predchudci:" << endl;
-    vypisGrafu(cout, predchudceM, pocetUzlu);
-}
-*/
 
