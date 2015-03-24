@@ -27,16 +27,16 @@ unsigned ** cDijkstra::graf      = NULL;
 unsigned    cDijkstra::pocetUzlu = 0;
 
 cDijkstra::cDijkstra( unsigned idVychozihoUzlu ) {
+    if ( idVychozihoUzlu >= pocetUzlu ) {
+        cerr << "inicializace(): Chyba! id uzlu je vyssi nez pocet uzlu.";
+        throw "inicializace(): Chyba! id uzlu je vyssi nez pocet uzlu.";
+    }
+
     vzdalenost = new unsigned[pocetUzlu];
     predchudce = new unsigned[pocetUzlu];
     uzavreny   = new bool[pocetUzlu];
     pocetUzavrenychUzlu = 0;
     this->idVychozihoUzlu = idVychozihoUzlu;
-
-    if ( idVychozihoUzlu >= pocetUzlu ) {
-        cerr << "inicializace(): Chyba! id uzlu je vyssi nez pocet uzlu.";
-        throw "inicializace(): Chyba! id uzlu je vyssi nez pocet uzlu.";
-    }
 
     pocetUzavrenychUzlu = 0;
     for ( unsigned idUzlu = 0; idUzlu < pocetUzlu; idUzlu++ ) {
@@ -45,7 +45,6 @@ cDijkstra::cDijkstra( unsigned idVychozihoUzlu ) {
         uzavreny[idUzlu] = false;
     }
     vzdalenost[idVychozihoUzlu] = 0;
-
 }
 
 cDijkstra::~cDijkstra() {
