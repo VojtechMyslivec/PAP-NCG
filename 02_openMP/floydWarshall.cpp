@@ -20,24 +20,35 @@
 void floydWarshall( unsigned ** graf, unsigned pocetUzlu ) {
    unsigned ** delkaPredchozi = NULL;
    unsigned ** delkaAktualni  = NULL;
-   inicializace( pocetUzlu, graf, delkaPredchozi, delkaAktualni );
+   unsigned ** predchudcePredchozi = NULL;
+   unsigned ** predchudceAktualni  = NULL;
+   inicializace( pocetUzlu, graf, delkaPredchozi, delkaAktualni, predchudcePredchozi, predchudceAktualni );
 
-   spustVypocet( pocetUzlu, graf, delkaPredchozi, delkaAktualni );
+   spustVypocet( pocetUzlu, graf, delkaPredchozi, delkaAktualni, predchudcePredchozi, predchudceAktualni );
 
-   vypisGrafu( cout, delkaAktualni, pocetUzlu );
+   vypisVysledekMaticove( pocetUzlu, delkaAktualni, predchudceAktualni );
 
-   uklid( pocetUzlu, delkaPredchozi, delkaAktualni );
+   uklid( pocetUzlu, delkaPredchozi, delkaAktualni, predchudcePredchozi, predchudceAktualni );
 }
 
-void inicializace( unsigned pocetUzlu, unsigned ** graf, unsigned ** delkaPredchozi, unsigned ** delkaAktualni ) {
-   delkaPredchozi = new unsigned*[pocetUzlu];
-   delkaAktualni = new unsigned*[pocetUzlu];
+void inicializace( unsigned pocetUzlu, unsigned ** graf, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned **& predchudcePredchozi, unsigned **& predchudceAktualni ) {
+   delkaPredchozi      = new unsigned*[pocetUzlu];
+   delkaAktualni       = new unsigned*[pocetUzlu];
+   predchudcePredchozi = new unsigned*[pocetUzlu];
+   predchudceAktualni  = new unsigned*[pocetUzlu];
 
    for ( unsigned i = 0; i < pocetUzlu; i++ ) {
-      delkaPredchozi[i] = new unsigned[pocetUzlu];
-      delkaAktualni[i] = new unsigned[pocetUzlu];
+      delkaPredchozi[i]      = new unsigned[pocetUzlu];
+      delkaAktualni[i]       = new unsigned[pocetUzlu];
+      predchudcePredchozi[i] = new unsigned[pocetUzlu];
+      predchudceAktualni[i]  = new unsigned[pocetUzlu];
+
       for ( unsigned j = 0; j < pocetUzlu; j++ ) {
          delkaPredchozi[i][j] = graf[i][j];
+         if ( i == j || graf[i][j] == FW_NEKONECNO )
+            predchudcePredchozi[i][j] = FW_NEDEFINOVANO;
+         else
+            predchudcePredchozi[i][j] = i;
       }
    }
 }
@@ -66,13 +77,20 @@ cFloydWarshall::cFloydWarshall( unsigned ** graf, unsigned pocetUzlu ) {
 }
 */
 
-void uklid( unsigned pocetUzlu, unsigned ** delkaPredchozi, unsigned ** delkaAktualni ) {
+void uklid( unsigned pocetUzlu, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned **& predchudcePredchozi, unsigned **& predchudceAktualni ) {
    for ( unsigned i = 0; i < pocetUzlu; i++ ) {
       delete [] delkaPredchozi[i];
       delete [] delkaAktualni[i];
+      delete [] predchudcePredchozi[i];
+      delete [] predchudceAktualni[i];
    }
    delete [] delkaPredchozi;
    delete [] delkaAktualni;
+   delete [] predchudcePredchozi;
+   delete [] predchudceAktualni;
+
+   delkaPredchozi      = delkaAktualni      = NULL;
+   predchudcePredchozi = predchudceAktualni = NULL;
 }
 
 /* TODO classless
@@ -90,12 +108,14 @@ cFloydWarshall::~cFloydWarshall( ) {
 }
 */
 
-void spustVypocet( unsigned pocetUzlu, unsigned ** graf, unsigned ** delkaPredchozi, unsigned ** delkaAktualni ) {
+void spustVypocet( unsigned pocetUzlu, unsigned ** graf, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned **& predchudcePredchozi, unsigned **& predchudceAktualni ) {
    unsigned novaVzdalenost;
+   //TODO premistit do inicializace
+   omp_set_num_threads( 5 );
 
    for ( unsigned k = 0; k < pocetUzlu; k++ ) {
       unsigned i;
-#pragma omp parallel for private( i, novaVzdalenost ) shared( delkaPredchozi, delkaAktualni )
+#pragma omp parallel for private( i, novaVzdalenost ) shared( delkaPredchozi, delkaAktualni, predchudcePredchozi, predchudceAktualni )
       for ( i = 0; i < pocetUzlu; i++ ) {
          for ( unsigned j = 0; j < pocetUzlu; j++ ) {
             // osetreni nekonecna
@@ -106,21 +126,25 @@ void spustVypocet( unsigned pocetUzlu, unsigned ** graf, unsigned ** delkaPredch
 
             // pokud nalezne kratsi cestu, zapise ji a zmeni predchudcePredchozi
             if ( novaVzdalenost < delkaPredchozi[i][j] ) {
-                delkaAktualni[i][j] = novaVzdalenost;
+                delkaAktualni[i][j]      = novaVzdalenost;
+                predchudceAktualni[i][j] = predchudcePredchozi[k][j];
             }// jinak delka i predchudce zustavaji
             else {
-                delkaAktualni[i][j] = delkaPredchozi[i][j];
+                delkaAktualni[i][j]      = delkaPredchozi[i][j];
+                predchudceAktualni[i][j] = predchudcePredchozi[i][j];
             }
          }
       }
 
       // prohozeni predchozi a aktualni
-      prohodUkazatele( delkaPredchozi, delkaAktualni );
+      prohodUkazatele( delkaPredchozi,      delkaAktualni );
+      prohodUkazatele( predchudcePredchozi, predchudceAktualni );
    }
 
    // prohozeni predchozi a aktualni, aby vysledky byly v aktualnim ( po skonceni cyklu jsou vysledky v predchozim )
-   prohodUkazatele( delkaPredchozi, delkaAktualni );
-}
+   prohodUkazatele( delkaPredchozi,      delkaAktualni );
+   prohodUkazatele( predchudcePredchozi, predchudceAktualni );
+   }
 
 /* TODO classless
 void cFloydWarshall::spustVypocet( ) {
@@ -128,7 +152,6 @@ void cFloydWarshall::spustVypocet( ) {
 
    for ( unsigned k = 0; k < pocetUzlu; k++ ) {
       unsigned i;
-#pragma omp parallel for private( i, novaVzdalenost ) shared( delkaPredchozi, delkaAktualni, predchudcePredchozi, predchudceAktualni )
       for ( i = 0; i < pocetUzlu; i++ ) {
          for ( unsigned j = 0; j < pocetUzlu; j++ ) {
             // osetreni nekonecna
@@ -158,7 +181,7 @@ void cFloydWarshall::spustVypocet( ) {
 }
 */
 
-void prohodUkazatele( unsigned ** ukazatel1, unsigned ** ukazatel2 ) {
+void prohodUkazatele( unsigned **& ukazatel1, unsigned **& ukazatel2 ) {
    unsigned ** pomocny;
    pomocny   = ukazatel1;
    ukazatel1 = ukazatel2;
@@ -178,6 +201,12 @@ void cFloydWarshall::prohodPredchoziAAktualni( ) {
    predchudceAktualni = pomocny;
 }
 */
+
+void vypisVysledekMaticove( unsigned pocetUzlu, unsigned ** delka, unsigned ** predchudce ) {
+   vypisGrafu( cout, delka, pocetUzlu );
+   cout << endl;
+   vypisGrafu( cout, predchudce, pocetUzlu );
+}
 
 /* TODO classless
 void cFloydWarshall::vypisVysledekMaticove( ) const {

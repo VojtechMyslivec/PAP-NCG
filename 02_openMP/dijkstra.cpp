@@ -66,6 +66,7 @@ bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu ) {
    unsigned idUzlu;
    cDijkstra * dijkstra;
 
+   // TODO nastavit dle parametru...
    omp_set_num_threads( 5 );
 
 #pragma omp parallel for private( idUzlu, vzdalenost, predchudce, dijkstra ) shared( vzdalenostM, predchudceM, returnFlag, pocetUzlu )

@@ -25,10 +25,11 @@
 #define FW_NEDEFINOVANO    UINT_MAX
 
 void floydWarshall( unsigned ** graf, unsigned pocetUzlu );
-void inicializace( unsigned pocetUzlu, unsigned ** graf, unsigned ** delkaPredchozi, unsigned ** delkaAktualni );
-void uklid( unsigned pocetUzlu, unsigned ** delkaPredchozi, unsigned ** delkaAktualni );
-void spustVypocet( unsigned pocetUzlu, unsigned ** graf, unsigned ** delkaPredchozi, unsigned ** delkaAktualni );
-void prohodUkazatele( unsigned ** ukazatel1, unsigned ** ukazatel2 );
+void inicializace( unsigned pocetUzlu, unsigned ** graf, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned **& predchudcePredchozi, unsigned **& predchudceAktualni );
+void uklid( unsigned pocetUzlu, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned **& predchudcePredchozi, unsigned **& predchudceAktualni );
+void spustVypocet( unsigned pocetUzlu, unsigned ** graf, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned **& predchudcePredchozi, unsigned **& predchudceAktualni );
+void prohodUkazatele( unsigned **& ukazatel1, unsigned **& ukazatel2 );
+void vypisVysledekMaticove( unsigned pocetUzlu, unsigned ** delka, unsigned ** predchudce );
 
 
 /* TODO classless
