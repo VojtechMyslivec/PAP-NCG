@@ -1,4 +1,4 @@
-/** floyd-warshall.cpp
+/** floyd.cpp
  *
  * Autori:      Vojtech Myslivec <vojtech.myslivec@fit.cvut.cz>,  FIT CVUT v Praze
  *              Zdenek  Novy     <novyzde3@fit.cvut.cz>,          FIT CVUT v Praze
@@ -7,14 +7,14 @@
  *
  * Popis:       Semestralni prace z predmetu MI-PAP:
  *              Hledani nejkratsich cest v grafu 
- *                 sekvencni cast
- *                 algoritmus Floyd-Warshall
+ *                 paralelni cast
+ *                 algoritmus Floyd-Warshall, main
  *
  *
  */
 
 #include "funkceSpolecne.h"
-#include "cFloydWarshall.h"
+#include "floydWarshall.h"
 
 #include <iostream>
 #include <fstream>
@@ -33,16 +33,6 @@
 #define min(a,b) ((a) < (b)) ? (a) : (b)
 
 using namespace std;
-
-void floydWarshallNtoN( unsigned ** graf, unsigned pocetUzlu ) {   
-   cFloydWarshall* floydWarshall = new cFloydWarshall( graf, pocetUzlu );
-
-   floydWarshall->spustVypocet();
-
-   floydWarshall->vypisVysledekMaticove();
-
-   delete floydWarshall;
-}
 
 // main =======================================================================
 int main( int argc, char ** argv ) {
@@ -84,7 +74,7 @@ int main( int argc, char ** argv ) {
    }
    cout << endl;
 
-   floydWarshallNtoN( graf, pocetUzlu );
+   floydWarshall( graf, pocetUzlu );
 
    uklid( graf, pocetUzlu );
    
