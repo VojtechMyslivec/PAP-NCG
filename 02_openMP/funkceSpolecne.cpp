@@ -23,15 +23,18 @@ using namespace std;
 // funkce programu ============================================================
 void vypisUsage( ostream & os, const char * jmenoProgramu ) {
    os << "USAGE\n"
-         "   " << jmenoProgramu << " vstupni_soubor\n"
-         "   " << jmenoProgramu << " " PARAMETER_HELP1 " | " PARAMETER_HELP2 "\n"
+         "   " << jmenoProgramu << " [-t #pocet_vlaken] -f vstupni_soubor\n"
+         "   " << jmenoProgramu << " " PARAMETER_HELP1 "\n"
          "\n"
          "      vstupni_soubor   Soubor s daty grafu ve formatu ohodnocene incidencni\n"
          "                       matice (hrany ohodnocene vahami).\n"
          "                       Jedna se o n^2 + 1 unsigned hodnot, kde prvni hodnota\n"
          "                       udava cislo n (pocet uzlu, ruzny od nuly).\n"
          "\n"
-         "      " PARAMETER_HELP1 ", " PARAMETER_HELP2  "       Vypise tuto napovedu a skonci."
+         "      #pocet_vlaken    Pocet vlaken pro paralelni cast vypoctu."
+         "                       Defaultni hodnota: 5"
+         "\n"
+         "      " PARAMETER_HELP1 "       Vypise tuto napovedu a skonci."
       << endl;
 }
 

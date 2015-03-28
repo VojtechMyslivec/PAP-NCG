@@ -17,12 +17,12 @@
 #include <iomanip>
 #include <omp.h>
 
-void floydWarshall( unsigned ** graf, unsigned pocetUzlu ) {
+void floydWarshall( unsigned ** graf, unsigned pocetUzlu, unsigned pocetVlaken ) {
    unsigned ** delkaPredchozi = NULL;
    unsigned ** delkaAktualni  = NULL;
    unsigned ** predchudcePredchozi = NULL;
    unsigned ** predchudceAktualni  = NULL;
-   inicializace( pocetUzlu, graf, delkaPredchozi, delkaAktualni, predchudcePredchozi, predchudceAktualni );
+   inicializace( pocetUzlu, graf, delkaPredchozi, delkaAktualni, predchudcePredchozi, predchudceAktualni, pocetVlaken );
 
    spustVypocet( pocetUzlu, graf, delkaPredchozi, delkaAktualni, predchudcePredchozi, predchudceAktualni );
 
@@ -31,7 +31,12 @@ void floydWarshall( unsigned ** graf, unsigned pocetUzlu ) {
    uklid( pocetUzlu, delkaPredchozi, delkaAktualni, predchudcePredchozi, predchudceAktualni );
 }
 
-void inicializace( unsigned pocetUzlu, unsigned ** graf, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned **& predchudcePredchozi, unsigned **& predchudceAktualni ) {
+void inicializace( unsigned pocetUzlu, unsigned ** graf, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned **& predchudcePredchozi, unsigned **& predchudceAktualni, unsigned pocetVlaken ) {
+#ifdef DEBUG
+      cout << "\nNastavuji pocet vlaken na " << pocetVlaken << endl;      
+#endif // DEBUG
+   omp_set_num_threads( pocetVlaken );
+
    delkaPredchozi      = new unsigned*[pocetUzlu];
    delkaAktualni       = new unsigned*[pocetUzlu];
    predchudcePredchozi = new unsigned*[pocetUzlu];
@@ -110,9 +115,7 @@ cFloydWarshall::~cFloydWarshall( ) {
 
 void spustVypocet( unsigned pocetUzlu, unsigned ** graf, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned **& predchudcePredchozi, unsigned **& predchudceAktualni ) {
    unsigned novaVzdalenost;
-   //TODO premistit do inicializace
-   omp_set_num_threads( 5 );
-
+   
    for ( unsigned k = 0; k < pocetUzlu; k++ ) {
       unsigned i;
 #pragma omp parallel for private( i, novaVzdalenost ) shared( delkaPredchozi, delkaAktualni, predchudcePredchozi, predchudceAktualni )

@@ -24,8 +24,8 @@
 #define FW_NEKONECNO       UNSIGNED_NEKONECNO
 #define FW_NEDEFINOVANO    UINT_MAX
 
-void floydWarshall( unsigned ** graf, unsigned pocetUzlu );
-void inicializace( unsigned pocetUzlu, unsigned ** graf, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned **& predchudcePredchozi, unsigned **& predchudceAktualni );
+void floydWarshall( unsigned ** graf, unsigned pocetUzlu, unsigned pocetVlaken );
+void inicializace( unsigned pocetUzlu, unsigned ** graf, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned **& predchudcePredchozi, unsigned **& predchudceAktualni, unsigned pocetVlaken );
 void uklid( unsigned pocetUzlu, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned **& predchudcePredchozi, unsigned **& predchudceAktualni );
 void spustVypocet( unsigned pocetUzlu, unsigned ** graf, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned **& predchudcePredchozi, unsigned **& predchudceAktualni );
 void prohodUkazatele( unsigned **& ukazatel1, unsigned **& ukazatel2 );

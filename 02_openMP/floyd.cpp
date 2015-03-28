@@ -20,6 +20,8 @@
 #include <fstream>
 #include <iomanip>
 #include <cstring>
+#include <unistd.h>
+#include <stdlib.h>
 
 #define MAIN_OK            0
 #define MAIN_ERR_VSTUP     1
@@ -34,24 +36,68 @@
 
 using namespace std;
 
+// Mozne parametry -h -f soubor -t pocet_vlaken
+bool parsujArgumenty( int argc, char ** argv, unsigned & pocetVlaken, char *& souborSGrafem ) {
+   int o = 0;
+
+   if ( argc < 2 ) {
+      cerr << "Nedostatecny pocet parametru" << endl;
+      vypisUsage(cerr, argv[0]);
+      return false;
+   }
+
+   while ( (o = getopt( argc, argv, "hf:t:" )) != -1 )
+   switch (o) {
+      case 'h':
+         vypisUsage( cout, argv[0] );
+         exit( MAIN_OK );
+      case 'f':
+         souborSGrafem = optarg;
+         break;
+      case 't':
+         if ( atoi(optarg) < 0 ) {
+            cerr << "Pocet vlaken nemuze byt mensi nez 0" << endl;
+            return false;
+         }
+         pocetVlaken = atoi(optarg);
+         break;
+      case '?':
+         if (optopt == 'c')
+            cerr << "Option -" << optopt << " requires an argument." << endl;
+         else if ( isprint (optopt) )
+            cerr << "Unknown option '-" << optopt << "'." << endl;
+         else
+            cerr << "Unknown option character '\\x" << optopt << "'." << endl;
+         vypisUsage( cerr, argv[0] );
+         return false;
+      default:
+         abort( );
+   }
+   return true;
+}
+
 // main =======================================================================
 int main( int argc, char ** argv ) {
 //   cout << "Hello Floyd-Warshall" << endl;
    unsigned ** graf      = NULL;
+   char     *  souborSGrafem = NULL;
    unsigned    pocetUzlu = 0;
+   unsigned    pocetVlaken = 5;
 
+   parsujArgumenty( argc, argv, pocetVlaken, souborSGrafem );
+   /*
    if ( argc != 2 ) {
       vypisUsage( cerr, argv[0] );
       return MAIN_ERR_VSTUP;
    }
    // help ?
-   if ( 
+   if (
          strncmp( argv[1], PARAMETER_HELP1, sizeof(PARAMETER_HELP1) ) == 0 || 
          strncmp( argv[1], PARAMETER_HELP2, sizeof(PARAMETER_HELP2) ) == 0 
       ) {
       vypisUsage( cout, argv[0] );
       return MAIN_OK;
-   }
+   }*/
 
    // nacteni dat
    if ( nactiData( argv[1], graf, pocetUzlu ) != true ) {
@@ -74,7 +120,7 @@ int main( int argc, char ** argv ) {
    }
    cout << endl;
 
-   floydWarshall( graf, pocetUzlu );
+   floydWarshall( graf, pocetUzlu, pocetVlaken );
 
    uklid( graf, pocetUzlu );
    
