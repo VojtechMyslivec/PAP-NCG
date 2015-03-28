@@ -19,13 +19,16 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-#include <cstring>
-#include <unistd.h>
-#include <stdlib.h>
+//#include <string>
+//#include <cstring>
+#include <unistd.h> // getopts()
+#include <cstdlib> // atoi()
 
 #define MAIN_OK            0
-#define MAIN_ERR_VSTUP     1
-#define MAIN_ERR_GRAF      2
+#define MAIN_ERR_USAGE     1
+#define MAIN_ERR_VSTUP     2
+#define MAIN_ERR_GRAF      3
+#define MAIN_ERR_NEOCEKAVANA 10
 
 // define pro floyd-warshall
 #define FW_NEKONECNO       UNSIGNED_NEKONECNO
@@ -36,71 +39,85 @@
 
 using namespace std;
 
-// Mozne parametry -h -f soubor -t pocet_vlaken
-bool parsujArgumenty( int argc, char ** argv, unsigned & pocetVlaken, char *& souborSGrafem ) {
-   int o = 0;
-
+// souborSGrafem bude pointer na nejaky prvek pole argv, napr argv[2]
+bool parsujArgumenty( int argc, char ** argv, unsigned & pocetVlaken, char *& souborSGrafem, unsigned & navrat ) {
    if ( argc < 2 ) {
-      cerr << "Nedostatecny pocet parametru" << endl;
-      vypisUsage(cerr, argv[0]);
+      cerr << "Nedostatecny pocet argumentu" << endl;
+      vypisUsage( cerr, argv[0] );
+      navrat = MAIN_ERR_USAGE;
       return false;
    }
 
-   while ( (o = getopt( argc, argv, "hf:t:" )) != -1 )
-   switch (o) {
-      case 'h':
-         vypisUsage( cout, argv[0] );
-         exit( MAIN_OK );
-      case 'f':
-         souborSGrafem = optarg;
-         break;
-      case 't':
-         if ( atoi(optarg) < 0 ) {
-            cerr << "Pocet vlaken nemuze byt mensi nez 0" << endl;
+   int o = 0;
+   souborSGrafem = NULL;
+   int tmp;
+   opterr = 0; // zabrani getopt, aby vypisovala chyby
+   // + zajisti POSIX zadavani prepinacu, : pro rozliseni neznameho prepinace od chybejiciho argumentu
+   while ( ( o = getopt( argc, argv, "+:hf:t:" ) ) != -1 ) {
+      switch ( o ) {
+         case 'h':
+            vypisUsage( cout, argv[0] );
+            navrat = MAIN_OK;
             return false;
-         }
-         pocetVlaken = atoi(optarg);
-         break;
-      case '?':
-         if (optopt == 'c')
-            cerr << "Option -" << optopt << " requires an argument." << endl;
-         else if ( isprint (optopt) )
-            cerr << "Unknown option '-" << optopt << "'." << endl;
-         else
-            cerr << "Unknown option character '\\x" << optopt << "'." << endl;
-         vypisUsage( cerr, argv[0] );
-         return false;
-      default:
-         abort( );
+
+         case 'f':
+            souborSGrafem = optarg;
+            break;
+
+         case 't':
+            tmp = atoi( optarg );
+            if ( tmp < 1 ) {
+               cerr << argv[0] << ": Pocet vlaken musi byt kladne cele cislo" << endl;
+               navrat = MAIN_ERR_VSTUP;
+               return false;
+            }
+            pocetVlaken = (unsigned)tmp;
+            break;
+
+         case ':':
+            cerr << argv[0] << ": Prepinac '-" << (char)optopt << "' vyzaduje argument." << endl;
+            navrat = MAIN_ERR_VSTUP;
+            return false;
+
+         case '?':
+            cerr << argv[0] << ": Neznamy prepinac '-" << (char)optopt << "'." << endl;
+            navrat = MAIN_ERR_VSTUP;
+            return false;
+
+         default:
+            navrat = MAIN_ERR_NEOCEKAVANA;
+            return false;
+      }
    }
+   if ( souborSGrafem == NULL ) {
+      cerr << argv[0] << ": Musi byt urceno jmeno souboru s grafem (prepinac '-f')" << endl;
+      navrat = MAIN_ERR_VSTUP;
+      return false;
+   }
+   if ( optind != argc ) {
+      cerr << argv[0] << ": Chyba pri zpracovani parametru, nejsou dovoleny zadne argumenty." << endl;
+      navrat = MAIN_ERR_VSTUP;
+      return false;
+   }
+
    return true;
 }
 
 // main =======================================================================
 int main( int argc, char ** argv ) {
 //   cout << "Hello Floyd-Warshall" << endl;
-   unsigned ** graf      = NULL;
+   unsigned ** graf          = NULL;
    char     *  souborSGrafem = NULL;
-   unsigned    pocetUzlu = 0;
-   unsigned    pocetVlaken = 5;
+   unsigned    pocetUzlu     = 0;
+   unsigned    pocetVlaken   = 5;
+   unsigned    navrat;
 
-   parsujArgumenty( argc, argv, pocetVlaken, souborSGrafem );
-   /*
-   if ( argc != 2 ) {
-      vypisUsage( cerr, argv[0] );
-      return MAIN_ERR_VSTUP;
+   if ( parsujArgumenty( argc, argv, pocetVlaken, souborSGrafem, navrat ) != true ) {
+      return navrat;
    }
-   // help ?
-   if (
-         strncmp( argv[1], PARAMETER_HELP1, sizeof(PARAMETER_HELP1) ) == 0 || 
-         strncmp( argv[1], PARAMETER_HELP2, sizeof(PARAMETER_HELP2) ) == 0 
-      ) {
-      vypisUsage( cout, argv[0] );
-      return MAIN_OK;
-   }*/
 
    // nacteni dat
-   if ( nactiData( argv[1], graf, pocetUzlu ) != true ) {
+   if ( nactiData( souborSGrafem, graf, pocetUzlu ) != true ) {
       uklid( graf, pocetUzlu );
       return MAIN_ERR_VSTUP;
    }

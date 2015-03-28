@@ -79,7 +79,7 @@ bool nactiGraf( istream & is, unsigned ** & graf, unsigned & pocetUzlu );
 //
 //   true   uspesne nacteni dat ze souboru
 //   false  chyba souboru ci chyba vstupu
-bool nactiData( char * jmenoSouboru, unsigned ** & graf, unsigned & pocetUzlu );
+bool nactiData( const char * jmenoSouboru, unsigned ** & graf, unsigned & pocetUzlu );
 
 // funkce, ktera zkontroluje graf, zda je orientovany ci neorientovany 
 // a ve spravnem formatu

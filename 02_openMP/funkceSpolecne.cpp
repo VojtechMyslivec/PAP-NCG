@@ -23,18 +23,19 @@ using namespace std;
 // funkce programu ============================================================
 void vypisUsage( ostream & os, const char * jmenoProgramu ) {
    os << "USAGE\n"
-         "   " << jmenoProgramu << " [-t #pocet_vlaken] -f vstupni_soubor\n"
-         "   " << jmenoProgramu << " " PARAMETER_HELP1 "\n"
+         "   " << jmenoProgramu << " [-t pocet_vlaken] -f vstupni_soubor\n"
+         "   " << jmenoProgramu << " -h\n"
          "\n"
          "      vstupni_soubor   Soubor s daty grafu ve formatu ohodnocene incidencni\n"
          "                       matice (hrany ohodnocene vahami).\n"
          "                       Jedna se o n^2 + 1 unsigned hodnot, kde prvni hodnota\n"
-         "                       udava cislo n (pocet uzlu, ruzny od nuly).\n"
+         "                       udava cislo n (pocet uzlu, ruzny od nuly). Hodnota -\n"
+         "                       urcuje neexistujici hranu\n"
          "\n"
-         "      #pocet_vlaken    Pocet vlaken pro paralelni cast vypoctu."
-         "                       Defaultni hodnota: 5"
+         "      pocet_vlaken     Pocet vlaken pro paralelni cast vypoctu.\n"
+         "                       Vychozi hodnota: 5\n"
          "\n"
-         "      " PARAMETER_HELP1 "       Vypise tuto napovedu a skonci."
+         "      -h               Vypise tuto napovedu a skonci."
       << endl;
 }
 
@@ -148,7 +149,7 @@ bool nactiGraf( istream & is, unsigned ** & graf, unsigned & pocetUzlu ) {
    return true;
 }
 
-bool nactiData( char * jmenoSouboru, unsigned ** & graf, unsigned & pocetUzlu ) {
+bool nactiData( const char * jmenoSouboru, unsigned ** & graf, unsigned & pocetUzlu ) {
    ifstream ifs( jmenoSouboru );
    if ( ifs.fail( ) ) {
       cerr << "nactiData(): Chyba! Nelze otevrit soubor '" << jmenoSouboru << "' pro cteni." << endl;
