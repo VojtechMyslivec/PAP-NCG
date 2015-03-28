@@ -33,8 +33,8 @@ for file in "$data"/*.txt ; do
    vystupDiff="${rozdily}/diff_${metoda}_${filename}"
 
    echo "Zpracovavam soubor '$filename'"
-   "$dijkstra" "${file}" > "${vystupD}"
-   "$floyd" "${file}" > "${vystupF}"
+   "$dijkstra" -f "${file}" > "${vystupD}"
+   "$floyd" -f "${file}" > "${vystupF}"
    diff "${vystupD}" "${vystupF}" > "${vystupDiff}"
 done
 

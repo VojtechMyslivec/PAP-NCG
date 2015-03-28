@@ -13,6 +13,7 @@
  *
  */
 
+#include "dijkstra.h"
 #include "cDijkstra.h"
 #include "funkceSpolecne.h"
 
@@ -22,14 +23,12 @@
 #include <cstring>
 #include <omp.h>
 
-#define MAIN_OK            0
-#define MAIN_ERR_VSTUP     1
-#define MAIN_ERR_GRAF      2
-
 using namespace std;
 
 void inicializaceNtoN( unsigned ** graf, unsigned pocetUzlu, 
-                       unsigned **& vzdalenostM, unsigned **& predchudceM ) {
+                       unsigned **& vzdalenostM, unsigned **& predchudceM,
+                       unsigned pocetVlaken
+                     ) {
    // inicializace matic vysledku
    vzdalenostM = new unsigned*[pocetUzlu];
    predchudceM = new unsigned*[pocetUzlu];
@@ -44,6 +43,19 @@ void inicializaceNtoN( unsigned ** graf, unsigned pocetUzlu,
 
    // staticka inicializace
    cDijkstra::inicializace( graf, pocetUzlu );
+   
+   // nastaveni poctu vlaken
+   if ( pocetVlaken > pocetUzlu ) {
+      cerr << "Varovani: pozadovany pocet vlaken (" << pocetVlaken 
+           << ") je vetsi nez pocet uzlu (" << pocetUzlu 
+           << "). Nastavuji na maximum (pocet uzlu)." << endl;
+      pocetVlaken = pocetUzlu;
+   }
+#ifdef DEBUG
+   cerr << "\nNastavuji pocet vlaken na " << pocetVlaken << endl;      
+#endif // DEBUG
+   omp_set_num_threads( pocetVlaken );
+
 }
 
 void uklidUkazatelu( unsigned **& dveDimenze, unsigned rozmer ) {
@@ -59,15 +71,13 @@ void uklidUkazatelu( unsigned **& dveDimenze, unsigned rozmer ) {
    }
 }
 
-bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu ) {
+bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu, unsigned pocetVlaken ) {
    bool returnFlag = true;
    unsigned * vzdalenost, ** vzdalenostM, * predchudce, ** predchudceM;
-   inicializaceNtoN( graf, pocetUzlu, vzdalenostM, predchudceM );
    unsigned idUzlu;
    cDijkstra * dijkstra;
 
-   // TODO nastavit dle parametru...
-   omp_set_num_threads( 5 );
+   inicializaceNtoN( graf, pocetUzlu, vzdalenostM, predchudceM, pocetVlaken );
 
 #pragma omp parallel for private( idUzlu, vzdalenost, predchudce, dijkstra ) shared( vzdalenostM, predchudceM, returnFlag, pocetUzlu )
    for ( idUzlu = 0 ; idUzlu < pocetUzlu ; idUzlu++ ) {
@@ -94,10 +104,7 @@ bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu ) {
       delete dijkstra;
    }
 
-   cout << "Vzdalenosti:" << endl;
-   vypisGrafu(cout, vzdalenostM, pocetUzlu);
-   cout << endl << "Predchudci:" << endl;
-   vypisGrafu(cout, predchudceM, pocetUzlu);
+   vypisVysledekMaticove( pocetUzlu, vzdalenostM, predchudceM );
 
    uklidUkazatelu( predchudceM, pocetUzlu );
    uklidUkazatelu( vzdalenostM, pocetUzlu );
@@ -105,50 +112,10 @@ bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu ) {
    return returnFlag;
 }
 
-
-// main =======================================================================
-int main( int argc, char ** argv ) {
-//   cout << "Hello Dijkstra" << endl;
-   unsigned ** graf      = NULL;
-   unsigned    pocetUzlu = 0;
-
-   if ( argc != 2 ) {
-      vypisUsage( cerr, argv[0] );
-      return MAIN_ERR_VSTUP;
-   }
-   // help ?
-   if ( 
-         strncmp( argv[1], PARAMETER_HELP1, sizeof(PARAMETER_HELP1) ) == 0 || 
-         strncmp( argv[1], PARAMETER_HELP2, sizeof(PARAMETER_HELP2) ) == 0 
-      ) {
-      vypisUsage( cout, argv[0] );
-      return MAIN_OK;
-   }
-
-   // nacteni dat
-   if ( nactiData( argv[1], graf, pocetUzlu ) != true ) {
-      uklid( graf, pocetUzlu );
-      return MAIN_ERR_VSTUP;
-   }
-
-   // vypis a kontrola grafu
-   vypisGrafu( cout, graf, pocetUzlu );
-   switch ( kontrolaGrafu( graf, pocetUzlu ) ) {
-      case GRAF_NEORIENTOVANY:
-         cout << "Graf je neorientovany" << endl;
-         break;
-      case GRAF_ORIENTOVANY:
-         cout << "Graf je orientovany" << endl;
-         break;
-      case GRAF_CHYBA:
-      default:
-         return MAIN_ERR_GRAF;
-   }
-   cout << endl;
-   
-   dijkstraNtoN( graf, pocetUzlu );
-
-   uklid( graf, pocetUzlu );
-   return MAIN_OK;
+void vypisVysledekMaticove( unsigned pocetUzlu, unsigned ** delka, unsigned ** predchudce ) {
+   cout << "Vzdalenosti:" << endl;
+   vypisGrafu( cout, delka, pocetUzlu );
+   cout << "\nPredchudci:" << endl;
+   vypisGrafu( cout, predchudce, pocetUzlu );
 }
 

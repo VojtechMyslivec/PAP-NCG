@@ -21,9 +21,6 @@
 
 #define UNSIGNED_NEKONECNO  UINT_MAX
 
-#define PARAMETER_HELP1 "--help"
-#define PARAMETER_HELP2 "-h"
-
 #define MAIN_OK            0
 #define MAIN_ERR_USAGE     1
 #define MAIN_ERR_VSTUP     2

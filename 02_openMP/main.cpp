@@ -1,4 +1,4 @@
-/** floyd.cpp
+/** main.cpp
  *
  * Autori:      Vojtech Myslivec <vojtech.myslivec@fit.cvut.cz>,  FIT CVUT v Praze
  *              Zdenek  Novy     <novyzde3@fit.cvut.cz>,          FIT CVUT v Praze
@@ -8,13 +8,32 @@
  * Popis:       Semestralni prace z predmetu MI-PAP:
  *              Hledani nejkratsich cest v grafu 
  *                 paralelni cast
- *                 algoritmus Floyd-Warshall, main
- *
+ *                 main
  *
  */
 
+// Zvoli algoritmus pro preklad
+// vychozi je dijkstra
+
+#ifndef DIJKSTRA
+   #define DIJKSTRA
+#endif // DIJKSTRA
+
+#ifdef FLOYDWARSHALL
+   #undef DIJKSTRA
+#endif // FLOYDWARSHALL
+// zbytecne, ale symetricke
+// #ifdef DIJKSTRA
+//    #undef FLOYDWARSHALL
+// #endif // DIJKSTRA
+
 #include "funkceSpolecne.h"
-#include "floydWarshall.h"
+#ifdef FLOYDWARSHALL
+   #include "floydWarshall.h"
+#endif // FLOYDWARSHALL
+#ifdef DIJKSTRA
+   #include "dijkstra.h"
+#endif // DIJKSTRA
 
 #include <iostream>
 #include <fstream>
@@ -24,7 +43,6 @@ using namespace std;
 
 // main =======================================================================
 int main( int argc, char ** argv ) {
-//   cout << "Hello Floyd-Warshall" << endl;
    unsigned ** graf          = NULL;
    char     *  souborSGrafem = NULL;
    unsigned    pocetUzlu     = 0;
@@ -56,7 +74,12 @@ int main( int argc, char ** argv ) {
    }
    cout << endl;
 
+#ifdef DIJKSTRA
+   dijkstraNtoN(  graf, pocetUzlu, pocetVlaken );
+#endif // DIJKSTRA
+#ifdef FLOYDWARSHALL
    floydWarshall( graf, pocetUzlu, pocetVlaken );
+#endif // FLOYDWARSHALL
 
    uklid( graf, pocetUzlu );
    

@@ -32,11 +32,6 @@ void floydWarshall( unsigned ** graf, unsigned pocetUzlu, unsigned pocetVlaken )
 }
 
 void inicializace( unsigned pocetUzlu, unsigned ** graf, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned **& predchudcePredchozi, unsigned **& predchudceAktualni, unsigned pocetVlaken ) {
-#ifdef DEBUG
-      cout << "\nNastavuji pocet vlaken na " << pocetVlaken << endl;      
-#endif // DEBUG
-   omp_set_num_threads( pocetVlaken );
-
    delkaPredchozi      = new unsigned*[pocetUzlu];
    delkaAktualni       = new unsigned*[pocetUzlu];
    predchudcePredchozi = new unsigned*[pocetUzlu];
@@ -56,6 +51,19 @@ void inicializace( unsigned pocetUzlu, unsigned ** graf, unsigned **& delkaPredc
             predchudcePredchozi[i][j] = i;
       }
    }
+   
+   // nastaveni poctu vlaken
+   if ( pocetVlaken > pocetUzlu ) {
+      cerr << "Varovani: pozadovany pocet vlaken (" << pocetVlaken 
+           << ") je vetsi nez pocet uzlu (" << pocetUzlu 
+           << "). Nastavuji na maximum (pocet uzlu)." << endl;
+      pocetVlaken = pocetUzlu;
+   }
+#ifdef DEBUG
+   cerr << "\nNastavuji pocet vlaken na " << pocetVlaken << endl;      
+#endif // DEBUG
+   omp_set_num_threads( pocetVlaken );
+
 }
 
 void uklid( unsigned pocetUzlu, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned **& predchudcePredchozi, unsigned **& predchudceAktualni ) {

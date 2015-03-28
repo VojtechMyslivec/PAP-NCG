@@ -1,11 +1,13 @@
 #!/bin/bash
 USAGE="USAGE
-   $0 soubor_s_grafem"
-# $1 -- pocet vlaken
-# $2 -- soubor se vstupnimi daty
+   $0 program soubor_s_grafem"
+
+# $1 -- program
+# $2 -- pocet vlaken
+# $3 -- soubor se vstupnimi daty
 zmerVypocet() {
    {
-      time ./floyd-warshall -t "$1" -f "$2" >/dev/null
+      time "$1" -t "$2" -f "$3" >/dev/null #2>&1
    } 2>&1
 }
 
@@ -13,19 +15,25 @@ vypis() {
    echo "vlaken: $1	cas: $2	zrychleni: $3	efektivita: $4"
 }
 
-[[ -f "$1" && -r "$1" ]] || {
+[[ -f "$1" && -x "$1" ]] || {
    echo "$USAGE"
    exit 1
 }
 
-data=$1
+[[ -f "$2" && -r "$2" ]] || {
+   echo "$USAGE"
+   exit 1
+}
+
+program=$1
+data=$2
 TIMEFORMAT=%R
 
-sekvencniCas=`zmerVypocet 1 "$data"`
+sekvencniCas=`zmerVypocet "$program" 1 "$data"`
 vypis 1 "$sekvencniCas" 1 1
 
 for pocet in 2 3 4 5 8 10 15 20 25 30; do 
-   cas=`zmerVypocet "$pocet" "$data"`
+   cas=`zmerVypocet "$program" "$pocet" "$data"`
    [[ $cas =~ ^[0-9]+.[0-9]+$ ]]  || {
       echo "Vypocet skoncil s chybou (vycerpane prostredky)"
       exit 2

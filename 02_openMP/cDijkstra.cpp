@@ -68,7 +68,7 @@ bool cDijkstra::spustVypocet( ) {
     unsigned vzdalenostUzlu, vzdalenostSouseda, vzdalenostHrany, novaVzdalenost;
 
 #ifdef DEBUG
-        vypisFrontu( );
+   vypisFrontu( );
 #endif // DEBUG
 
     // dokud nenavstivi vsechny uzly
