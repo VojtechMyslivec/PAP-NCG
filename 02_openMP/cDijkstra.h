@@ -7,7 +7,7 @@
  *
  * Popis:       Semestralni prace z predmetu MI-PAP:
  *              Hledani nejkratsich cest v grafu 
- *                 sekvencni cast
+ *                 paralelni cast
  *                 trida cDijkstra pro Dijkstruv algoritmus
  *                    upraven vypocet prioritni fronty -- misto haldy for cylky, 
  *                    aby slo paralelizovat

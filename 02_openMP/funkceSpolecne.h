@@ -24,6 +24,12 @@
 #define PARAMETER_HELP1 "--help"
 #define PARAMETER_HELP2 "-h"
 
+#define MAIN_OK            0
+#define MAIN_ERR_USAGE     1
+#define MAIN_ERR_VSTUP     2
+#define MAIN_ERR_GRAF      3
+#define MAIN_ERR_NEOCEKAVANA 10
+
 #define NACTI_OK           0
 #define NACTI_NEKONECNO    1
 #define NACTI_ERR_PRAZDNO  2
@@ -37,7 +43,6 @@
 
 using namespace std;
 
-// funkce programu ============================================================
 // vypise usage na vystupni stream os, vola se s argumentem argv[0] 
 // jako jmenem programu
 void vypisUsage( ostream & os, const char * jmenoProgramu );
@@ -51,6 +56,21 @@ void uklid( unsigned ** graf, unsigned pocetUzlu );
 //   true   stream je prazdny
 //   false  stream neni/nebyl prazdny
 bool zkontrolujPrazdnyVstup( istream & is );
+
+// Funkce zajisti nacteni a kontrolu parametru.
+// Do vystupnich promenych uklada:
+//    pocetVlaken      pocet pozadovanych vlaken       -- prepinac -t
+//    souborSGrafem    jmeno souboru se vstupnimi daty -- prepinac -f (povinny!)
+//    navrat           navratovy kod v pripade selhani / chyby
+//                     tedy  v pripade vraceni false
+//
+// Navratove hodnoty
+//    false  Chyba vstupu -- prepinacu. Danou chybu vrati na stderr 
+//           a ulozu navratovou hodnotu do parametru navrat.
+//           Prepinac -h prinuti funkci skoncit s chybou, ale navratova
+//           hodnota bude MAIN_OK.
+//    true   Vse v poradku, parametry byly uspesne nacteny
+bool parsujArgumenty( int argc, char ** argv, unsigned & pocetVlaken, char *& souborSGrafem, unsigned & navrat );
 
 // nacte jednu unsigned hodnotu ze vstupu
 // pokud misto unsigned cisla nalezne - (nasledovanou prazdnym znakem)
@@ -79,7 +99,7 @@ bool nactiGraf( istream & is, unsigned ** & graf, unsigned & pocetUzlu );
 //
 //   true   uspesne nacteni dat ze souboru
 //   false  chyba souboru ci chyba vstupu
-bool nactiData( char * jmenoSouboru, unsigned ** & graf, unsigned & pocetUzlu );
+bool nactiData( const char * jmenoSouboru, unsigned ** & graf, unsigned & pocetUzlu );
 
 // funkce, ktera zkontroluje graf, zda je orientovany ci neorientovany 
 // a ve spravnem formatu
