@@ -16,11 +16,12 @@
 #include "funkceSpolecne.h"
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <iomanip>
+#include <unistd.h> // getopts()
 
 using namespace std;
 
-// funkce programu ============================================================
 void vypisUsage( ostream & os, const char * jmenoProgramu ) {
    os << "USAGE\n"
          "   " << jmenoProgramu << " [-t pocet_vlaken] -f vstupni_soubor\n"
@@ -60,6 +61,95 @@ bool zkontrolujPrazdnyVstup( istream & is ) {
       if ( ! ( c == ' ' || c == '\t' || c == '\n' || c == '\r' ) )
          return false;
    }
+   return true;
+}
+      
+bool nactiPocetVlaken( const char * vstup, unsigned & pocetVlaken ) {
+   istringstream iss( vstup );
+   int tmp;
+   iss >> tmp;
+   if ( tmp < 1         ||
+        iss.fail( )     ||
+        zkontrolujPrazdnyVstup( iss ) != true 
+      ) {
+      return false;
+   }
+   pocetVlaken = (unsigned)tmp;
+   return true;
+}
+
+bool zkontrolujSoubor( const char * optarg ) {
+   ifstream f( optarg );
+   bool navrat = true;
+   if ( f.fail() ) 
+      navrat = false;
+   f.close();
+   return navrat;
+}
+
+bool parsujArgumenty( int argc, char ** argv, unsigned & pocetVlaken, char *& souborSGrafem, unsigned & navrat ) {
+   if ( argc < 2 ) {
+      cerr << "Nedostatecny pocet argumentu" << endl;
+      vypisUsage( cerr, argv[0] );
+      navrat = MAIN_ERR_USAGE;
+      return false;
+   }
+
+   int o = 0;
+   souborSGrafem = NULL;
+   opterr = 0; // zabrani getopt, aby vypisovala chyby
+   // optstring '+' zajisti POSIX zadavani prepinacu, 
+   //           ':' pro rozliseni neznameho prepinace od chybejiciho argumentu
+   while ( ( o = getopt( argc, argv, "+:hf:t:" ) ) != -1 ) {
+      switch ( o ) {
+         case 'h':
+            vypisUsage( cout, argv[0] );
+            navrat = MAIN_OK;
+            return false;
+
+         case 'f':
+            if ( zkontrolujSoubor( optarg ) != true ) {
+               cerr << argv[0] << ": Soubor s daty neexistuje nebo neni citelny!" << endl;
+               navrat = MAIN_ERR_VSTUP;
+               return false;
+            }
+            souborSGrafem = optarg;
+            break;
+
+         case 't':
+            if ( nactiPocetVlaken( optarg, pocetVlaken ) != true ) {
+               cerr << argv[0] << ": Pocet vlaken musi byt kladne cele cislo" << endl;
+               navrat = MAIN_ERR_VSTUP;
+               return false;
+            }
+            break;
+
+         case ':':
+            cerr << argv[0] << ": Prepinac '-" << (char)optopt << "' vyzaduje argument." << endl;
+            navrat = MAIN_ERR_VSTUP;
+            return false;
+
+         case '?':
+            cerr << argv[0] << ": Neznamy prepinac '-" << (char)optopt << "'." << endl;
+            navrat = MAIN_ERR_VSTUP;
+            return false;
+
+         default:
+            navrat = MAIN_ERR_NEOCEKAVANA;
+            return false;
+      }
+   }
+   if ( souborSGrafem == NULL ) {
+      cerr << argv[0] << ": Musi byt urceno jmeno souboru s grafem (prepinac '-f')" << endl;
+      navrat = MAIN_ERR_VSTUP;
+      return false;
+   }
+   if ( optind != argc ) {
+      cerr << argv[0] << ": Chyba pri zpracovani parametru, nejsou dovoleny zadne argumenty." << endl;
+      navrat = MAIN_ERR_VSTUP;
+      return false;
+   }
+
    return true;
 }
 
