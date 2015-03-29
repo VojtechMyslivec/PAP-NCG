@@ -38,8 +38,28 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <omp.h>
 
 using namespace std;
+
+void mereni( unsigned ** graf, unsigned pocetUzlu, unsigned pocetVlaken ) {
+   
+   double t1, t2;
+   t1 = omp_get_wtime( );
+#ifdef DIJKSTRA
+   dijkstraNtoN(  graf, pocetUzlu, pocetVlaken );
+#endif // DIJKSTRA
+#ifdef FLOYDWARSHALL
+   floydWarshall( graf, pocetUzlu, pocetVlaken );
+#endif // FLOYDWARSHALL
+   t2 = omp_get_wtime( );
+
+#ifdef DEBUG
+   cerr << " t1 = " << t1 << "; t2 = " << t2 << "; t = " << t2 - t1 << endl;
+#endif // DEBUG
+
+   cerr << pocetUzlu << '	' << pocetVlaken << '	' << t2 - t1 << endl;
+}
 
 // main =======================================================================
 int main( int argc, char ** argv ) {
@@ -74,12 +94,7 @@ int main( int argc, char ** argv ) {
    }
    cout << endl;
 
-#ifdef DIJKSTRA
-   dijkstraNtoN(  graf, pocetUzlu, pocetVlaken );
-#endif // DIJKSTRA
-#ifdef FLOYDWARSHALL
-   floydWarshall( graf, pocetUzlu, pocetVlaken );
-#endif // FLOYDWARSHALL
+   mereni( graf, pocetUzlu, pocetVlaken );
 
    uklid( graf, pocetUzlu );
    

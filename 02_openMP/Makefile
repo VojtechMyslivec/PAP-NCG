@@ -1,6 +1,6 @@
 CC=g++
 RM=rm
-FLAGS=-Wall -pedantic
+FLAGS=-Wall -pedantic -O3
 LIBS=-fopenmp
 DEFINE=
 

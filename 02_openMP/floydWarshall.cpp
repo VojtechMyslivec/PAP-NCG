@@ -116,7 +116,7 @@ void spustVypocet( unsigned pocetUzlu, unsigned ** graf, unsigned **& delkaPredc
    // prohozeni predchozi a aktualni, aby vysledky byly v aktualnim ( po skonceni cyklu jsou vysledky v predchozim )
    prohodUkazatele( delkaPredchozi,      delkaAktualni );
    prohodUkazatele( predchudcePredchozi, predchudceAktualni );
-   }
+}
 
 void prohodUkazatele( unsigned **& ukazatel1, unsigned **& ukazatel2 ) {
    unsigned ** pomocny;

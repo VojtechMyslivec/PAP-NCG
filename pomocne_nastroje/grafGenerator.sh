@@ -42,19 +42,23 @@ PRIKLADY
    pro matici hran
       $0 -c 1"
 
+chyba() {
+   echo "$*" >&2
+}
 
 # argument $1 porovna jako desitkove cislo, pokud selze
 # vypise chybu s nazvem parametru jako $2 a skonci 
 # exit $3
 cislo() {
    [[ "$1" =~ ^[1-9][0-9]*$ ]] || {
-      echo "$2 musi byt cele kladne desitkove cislo!"
+      chyba "$2 musi byt cele kladne desitkove cislo!"
       exit $3
    }
 }
 
 # zpracovani prikazove radky
-while getopts "n:c:oh" OPT; do
+# + pro POSIX, : pro potlaceni chybovych hlasek
+while getopts ":n:c:oh" OPT; do
    case $OPT in
       n) 
          cislo "$OPTARG" "Pocet uzlu" 2
@@ -72,13 +76,15 @@ while getopts "n:c:oh" OPT; do
          exit 0;
          ;;
       *)
-
+         chyba "$0: Neplatny prepinac '-$OPTARG'"
+         exit 1;
+         ;;
    esac
 done
 shift $(( OPTIND - 1 ))
 
 [[ $# -eq 0 ]] || {
-   echo "$USAGE" >&2
+   chyba "$USAGE"
    exit 1
 }
 

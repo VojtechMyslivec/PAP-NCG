@@ -2,13 +2,14 @@
 USAGE="USAGE
    $0 program soubor_s_grafem"
 
+TIMEFORMAT=%R
+merenyPocetVlaken="2 4 6 8 12 24"
+
 # $1 -- program
 # $2 -- pocet vlaken
 # $3 -- soubor se vstupnimi daty
 zmerVypocet() {
-   {
-      time "$1" -t "$2" -f "$3" >/dev/null #2>&1
-   } 2>&1
+   "$1" -t "$2" -f "$3" 2>&1 >/dev/null | awk -F '\t' '{print $3}'
 }
 
 vypis() {
@@ -27,12 +28,11 @@ vypis() {
 
 program=$1
 data=$2
-TIMEFORMAT=%R
 
 sekvencniCas=`zmerVypocet "$program" 1 "$data"`
 vypis 1 "$sekvencniCas" 1 1
 
-for pocet in 2 3 4 5 8 10 15 20 25 30; do 
+for pocet in $merenyPocetVlaken; do 
    cas=`zmerVypocet "$program" "$pocet" "$data"`
    [[ $cas =~ ^[0-9]+.[0-9]+$ ]]  || {
       echo "Vypocet skoncil s chybou (vycerpane prostredky)"
