@@ -7,7 +7,7 @@ USAGE="USAGE
       program s temito parametry
 "
 chyba () {
-   echo "$*" >&2
+   echo "$0: Chyba:" "$*" >&2
 }
 
 typeset -A nahrazeni
@@ -34,7 +34,7 @@ done
    exit 0
 }
 [[ $# -eq 2 ]] || {
-   chyba "$USAGE"
+   echo "$USAGE" >&2
    exit 1
 }
 [[ -f "$1" && -x "$1" ]] || {

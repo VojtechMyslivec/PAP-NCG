@@ -15,7 +15,7 @@ pravdepodobnostHrany=50
 prepinacOrientace="-o"
 
 chyba() {
-   echo "$*" >&2
+   echo "$0: Chyba:" "$*" >&2
 }
 
 [[ -f "$generator" && -x "$generator" ]] || {
@@ -24,7 +24,7 @@ chyba() {
 }
 
 [[ $# -eq 1 ]] || {
-   chyba "$USAGE"
+   echo "$USAGE" >&2
    exit 1
 }
 

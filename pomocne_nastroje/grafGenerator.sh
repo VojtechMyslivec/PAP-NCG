@@ -43,7 +43,7 @@ PRIKLADY
       $0 -c 1"
 
 chyba() {
-   echo "$*" >&2
+   echo "$0:" "$*" >&2
 }
 
 # argument $1 porovna jako desitkove cislo, pokud selze
