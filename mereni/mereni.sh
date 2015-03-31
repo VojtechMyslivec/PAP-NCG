@@ -1,11 +1,15 @@
 #!/bin/bash
 USAGE="USAGE
-   $0 program adresar_s_daty
+   $0 program adresar_s_daty stitek
 
       Pro vsechna data s koncovkou .txt v tomto adresari_s_daty
       a pro vsechny merene pocty vlaken zaradi do fronty qsub 
-      program s temito parametry
-"
+      program s temito parametry.
+
+      Skript vytvori podadresar stitek s casovou znackou, do
+      ktereho se budou ukladat soubory fronty a vystupy programu
+      spoustenych pres frontu."
+
 chyba () {
    echo "$0: Chyba:" "$*" >&2
 }
@@ -33,21 +37,22 @@ done
    echo "$USAGE"
    exit 0
 }
-[[ $# -eq 2 ]] || {
+[[ $# -eq 3 ]] || {
    echo "$USAGE" >&2
    exit 1
 }
 [[ -f "$1" && -x "$1" ]] || {
-   chyba "Soubor '$1' musi byt spustitelny program"
+   chyba "Soubor '$1' musi byt spustitelny program."
    exit 1
 }
 [[ -d "$2" && -r "$2" ]] || {
-   chyba "Adresar '$2' musi byt citelny"
+   chyba "Adresar '$2' musi byt citelny."
    exit 1
 }
 
 program=$1
 data=$2
+stitek=$3
 vstupy=`ls "$data/"*.txt 2> /dev/null`
 # test, jesltli existuje alespon jeden soubor
 [[ -z "$vstupy" ]] && {
@@ -72,7 +77,7 @@ while true; do
 done
 
 cas=`date "+%Y-%m-%d_%H-%M-%S"`
-adrPracovni="${program##*/}_$cas"
+adrPracovni="${stitek}_${program##*/}_$cas"
 adrVystupy="$adrPracovni/vystupy"
 adrMereni="$adrPracovni/mereni"
 adrFronty="$adrPracovni/fronty"
