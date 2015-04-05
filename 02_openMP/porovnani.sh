@@ -3,7 +3,7 @@
 # metoda vystupu z programu uzly | matice
 metoda="uzly"
 
-data="../data"
+data="../data/male-grafy"
 vystupy="./vystupy"
 rozdily="$vystupy/diff"
 dijkstra="./dijkstra"
@@ -33,8 +33,8 @@ for file in "$data"/*.txt ; do
    vystupDiff="${rozdily}/diff_${metoda}_${filename}"
 
    echo "Zpracovavam soubor '$filename'"
-   "$dijkstra" -f "${file}" > "${vystupD}"
-   "$floyd" -f "${file}" > "${vystupF}"
+   "$dijkstra" -f "${file}" > "${vystupD}" 2> /dev/null
+   "$floyd" -f "${file}" > "${vystupF}" 2> /dev/null
    diff "${vystupD}" "${vystupF}" > "${vystupDiff}"
 done
 
