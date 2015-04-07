@@ -10,12 +10,12 @@ USAGE="USAGE
    Vysledky ulozi do podadresare adresar_s_merenim/vysledky
    do souboru vysledky-pocet_uzlu.txt ve formatu
    ---------------
-   pocet_vlaken	prumerny_cas" #	zrychleni	efektivita
-#   ---------------
-#   Kde zrychleni  = (prumerny_cas) / (prumerny_cas pro 1 vlakno)
-#       efektivita =    (zrychleni) / (pocet_vlaken)
-#
-#"
+   pocet_vlaken	prumerny_cas	zrychleni	efektivita
+   ---------------
+   Kde zrychleni  = (prumerny_cas pro 1 vlakno) / (prumerny_cas)
+       efektivita =                 (zrychleni) / (pocet_vlaken)
+
+"
 
 varovani() {
    echo "$0: Varovani:" "$*" >&2
@@ -63,12 +63,32 @@ cat "$adrMereni"/*.e* | awk \
       pocet[i]++
    }
 END {
-   for ( j  in cas ) {
+   # pro predvypocet prumeru sekvencniho casu
+   for ( j in cas ) {
+      split( j, hodnota, " " )
+      if ( hodnota[2] != 1 )
+         continue
+
+      uzlu            = hodnota[1]
+      sekvencni[uzlu] = cas[j] / pocet[j]
+   }
+
+   # pro celkovou statistiku dle poctu uzlu
+   for ( j in cas ) {
       split( j, hodnota, " " )
 
-      soubor = adr "/" predpona hodnota[1] pripona
+      uzlu          = hodnota[1]
+      vlaken        = hodnota[2]
+      prumer        = cas[j] / pocet[j]
 
-      print hodnota[2] "\t" cas[j]/pocet[j] >> soubor
+      if ( sekvencni[uzlu] != 0 )
+         zrychleni  = sekvencni[uzlu] / prumer
+      else
+         zrychleni  = 0
+      efektivita    = zrychleni / vlaken
+
+      soubor = adr "/" predpona uzlu pripona
+      print vlaken "\t" prumer "\t" zrychleni "\t" efektivita   >> soubor
       close( soubor )
    }
 }'
