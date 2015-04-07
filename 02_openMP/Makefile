@@ -1,5 +1,5 @@
 CC=g++
-RM=rm
+RM=rm -f
 FLAGS=-Wall -pedantic -O3
 LIBS=-fopenmp
 DEFINE=
