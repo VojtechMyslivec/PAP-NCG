@@ -1,0 +1,187 @@
+% !TeX spellcheck = cs_CZ
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% University Assignment Title Page 
+% LaTeX Template
+% Version 1.0 (27/12/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% WikiBooks (http://en.wikibooks.org/wiki/LaTeX/Title_Creation)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+% 
+% Instructions for using this template:
+% This title page is capable of being compiled as is. This is not useful for 
+% including it in another document. To do this, you have two options: 
+%
+% 1) Copy/paste everything between \begin{document} and \end{document} 
+% starting at \begin{titlepage} and paste this into another LaTeX file where you 
+% want your title page.
+% OR
+% 2) Remove everything outside the \begin{titlepage} and \end{titlepage} and 
+% move this file to the same directory as the LaTeX file you wish to add it to. 
+% Then add \input{./title_page_1.tex} to your LaTeX file where you want your
+% title page.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+\documentclass[czech,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+%----------------------------------------------------------------------------------------
+\begin{document}
+
+\begin{titlepage}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+\center
+
+\textsc{\LARGE Fakulta informačních technologií}\\[1.5cm] % Jmeno fakulty (university)
+\textsc{\Large Paralelní architektury počítačů}\\[0.5cm] % Nazev predmetu
+\textsc{\large technická zpráva}\\[0.5cm] % Druh zpravy
+
+
+% TITLE
+\HRule \\[0.4cm]
+{ \huge \bfseries Hledání nejkratších cest v grafu}\\[0.4cm] % Nazev dokumentu (prace)
+\HRule \\[1.5cm]
+
+% AUTOR
+\Large \emph{Autoři:}\\
+Vojtěch \textsc{Myslivec}\\
+Zdeněk \textsc{Nový}\\[2cm]	% Jmeno
+
+% DATUM
+{\large \today}\\[3cm] % Datum zmeny jako dnesek
+
+% LOGO
+\includegraphics{cvut-logo-bw.pdf}\\[1cm] % Vlozene logo (nutny balik graphicx)
+
+\vfill % Zbytek stranky neni nic
+\end{titlepage}
+
+%--- Abstrakt ---
+\renewcommand\abstractname{\begin{flushright}\begin{LARGE}\textbf{Abstrakt}\end
+{LARGE}\end{flushright}}
+\newcommand{\keywords}[1]{\vspace{0.8cm}\textbf{Klíčová slova\hspace{0.2cm}} #1}
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
+\begin{abstract}
+Účelem této práce je sumarizovat výsledky měření řešení problému hledání nejkratších cest v grafu (NCG). Práce se zaměřuje na řešení problému Dijkstrovým a Floyd-Warshallovým algoritmem a porovnání sekvenční a několika paralelních implementací.
+\end{abstract}
+
+% --- Klicova slova ---
+\keywords{Dijkstra, Floyd, Warshall, nejkratší cesty, NCG, OpenMP, Cuda}
+
+\clearpage
+
+
+%-------------------------------
+%---		   Uvod		 	 ---
+%-------------------------------
+\section{Úvod}
+Tato práce se zabývá implementací dvou algoritmů hledání nejkratších cest v grafu. Jedná se o implementaci sekvenčním algoritmem, který je poté paralelizován pro procesor a pro grafickou kartu. Pro jednotlivé algoritmy je provedeno měření, které si klade za cíl určit zrychlení paralelních algoritmů proti sekvenčnímu.
+
+%-------------------------------
+%---			NCG			 ---
+%-------------------------------
+\section{Hledání nejkratších cest v grafu} \label{ncg}
+\subsection{Definice} \label{l:clondike:ncgdef}
+Hledání nejkratších cest v grafu je NP-úplná grafová úloha, jejímž cílem je nalézt v zadaném grafu nejkratší cesty mezi všemi možnými dvojicemi uzlů A a B \cite{w:ncg}.
+
+\subsection{Algoritmy}
+\subsubsection{Dijkstrův algoritmus}
+Dijkstrův algoritmus slouží k nalezení všech nejkratších cest ze zadaného uzlu do všech ostatních uzlů grafu. Graf nesmí obsahovat hrany se zápornou délkou \cite{w:dij:def}.
+
+\paragraph{Princip}
+Dijkstrův algoritmus je zobecněné prohledávání grafu do šířky, při kterém se vlna šíří na základě vzdálenosti od zdrojového uzlu. K uchovávání uzlů slouží prioritní fronta, která je řazena podle vzrůstající vzdálenosti od zdroje. V každém kroku algoritmu je vybrán uzel s nejmenší vzdáleností a pro každého souseda je vypočítána jeho vzdálenost od zdrojového uzlu \cite{w:dij:def}.
+
+\subsubsection{Floyd-Warshallův algoritmus}
+Floyd-Warshallův algoritmus slouží k nalezení nejkratších cest mezi všemi dvojicemi uzlů v grafu. Graf může obsahovat hrany, ale nikoliv cykly, záporné délky \cite{w:fw:def}.
+
+\paragraph{Princip} \label{l:fw:princip}
+Floyd-Warhsallův algoritmus pracuje s maticí sousednosti, kde hrana je ohodnocena vahou. Na počátku tato matice obsahuje pouze vzdálenosti dvou uzlů, mezi kterými je vedena hrana. V každém kroku je vybrán jeden uzel jako prostředník. Prvek matice sousednosti se přepočítá, pokud je vzdálenost z počátečního do koncového uzlu kratší přes nového prostředníka než bez něj \cite{w:fw:def}.
+
+
+%-------------------------------
+%---		Sekvencni		 ---
+%-------------------------------
+\section{Sekvenční algoritmus}
+\subsection{Společná implementace}
+Oba algoritmy vycházejí z obecněho principu, který je popsán v kapitole \ref{l:fw:princip}. Algoritmy pracují s grafem, který je programu předložen jako soubor, ve kterém je graf ve formě matice sousednosti. Společnou částí je tedy načítání vstupu a jeho kontrola.
+
+\subsection{Dijkstrův algoritmus}
+Protože Dijkstrův algoritmus slouží k hledání nejkratších cest od jednoho zdrojového uzlu, je nutné jej spouštět pro každý uzel grafu. To zajišťuje funkce \textit{dijkstraNtoN}.
+
+\subsubsection{Dijkstrův algoritmus z jednoho zdroje}
+Pro výpočet Dijkstrova algoritmu z jednoho zdrojového uzlu se alokují tři pole o velikosti počtu uzlů. V jednom je uložena vzdálenost daného uzlu od zdrojového, ve druhém předchozí uzel v nalezené nejkratší cestě. Třetí pole určuje, jestli je už uzel uzavřený pro výpočty.
+
+Algoritmus prochází postupně, podle nejmenší vzdálenosti, všechny uzly, které se nacházejí v prioritní frontě. Z daného uzlu vypočítá pro každého svého souseda novou cestu, která by vedla přes uzel samotný a porovná ji s dosavadní vzdáleností souseda. Menší vzdálenost je zapsána do pole vzdáleností a algoritmus pokračuje.
+
+
+\subsection{Floyd-Warshallův algoritmus}
+Floyd-Warshallův algoritmus obsahuje tři vnořené for cykly a funguje na principu popsaném v \ref{l:fw:princip}. Jako datové struktury používá čtyři pole o velikosti počtu uzlů. Pro každý uzel si algoritmus udržuje aktuální vzdálenosti ke všem uzlům a navíc vzdálenosti z předchozí iterace. Další dvě pole obsahují předchozí uzel v nalezené cestě. 
+
+\subsection{Implementace}
+Aktuální implementace je k nahlédnutí i ke stažení na adrese \url{https://github.com/VojtechMyslivec/PAP-NCG}. Sekvenční algoritmus se nachází ve složce \textit{01\_sekvencni}.
+
+
+%-------------------------------
+%---		OpenMP			 ---
+%-------------------------------
+\section{Paralelní algoritmus pomocí knihovny OpenMP}
+\subsection{Dijkstrův algoritmus}
+\subsubsection{Úprava algoritmu}
+\subsubsection{Vektorizace}
+\subsubsection{Optimalizace}
+
+
+\subsection{Floyd-Warshallův algoritmus}
+\subsubsection{Úprava algoritmu}
+\subsubsection{Vektorizace}
+\subsubsection{Optimalizace}
+
+\subsection{Měření}
+\subsubsection{Analýza}
+\subsubsection{Zhodnocení}
+
+
+
+
+%-------------------------------
+%---		CUDA			 ---
+%-------------------------------
+\section{Paralelní algoritmus pomocí technologie CUDA}
+\subsection{Dijkstrův algoritmus}
+\subsubsection{Úprava algoritmu}
+\subsubsection{Optimalizace}
+
+\subsection{Floyd-Warshallův algoritmus}
+\subsubsection{Úprava algoritmu}
+\subsubsection{Optimalizace}
+
+\subsection{Měření}
+\subsubsection{Analýza}
+\subsubsection{Zhodnocení}
+
+
+\section{Závěr}
+
+
+
+
+
+
+
+
+\clearpage
+\bibliographystyle{czechiso} % nutny soubor czechiso.bst
+\bibliography{citace}
+
+\end{document}
