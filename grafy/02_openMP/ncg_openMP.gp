@@ -2,10 +2,11 @@
 
 reset
 adresar = "../../mereni/"
-podadresarDynamicDijkstraHuste = adresar."dynamic_huste_dijkstra_2015-04-05_10-18-04/"."vysledky/"
-podadresarDynamicDijkstraRidke = adresar."dynamic_ridke_dijkstra_2015-04-05_10-18-19/"."vysledky/"
-podadresarDynamicFloydHuste    = adresar."dynamic_huste_floyd-warshall_2015-04-05_10-19-06/"."vysledky/"
-podadresarDynamicFloydRidke    = adresar."dynamic_ridke_floyd-warshall_2015-04-05_10-18-45/"."vysledky/"
+
+podadresarDynamicDijkstraHuste = adresar."dynamic_huste_dijkstra_2015-04-05_20-53-14/"."vysledky/"
+podadresarDynamicDijkstraRidke = adresar."dynamic_ridke_dijkstra_2015-04-06_10-53-00/"."vysledky/"
+podadresarDynamicFloydHuste    = adresar."dynamic_huste_floyd-warshall_2015-04-06_09-51-41/"."vysledky/"
+podadresarDynamicFloydRidke    = adresar."dynamic_ridke_floyd-warshall_2015-04-06_11-34-51/"."vysledky/"
 podadresarStaticDijkstraHuste  = adresar."static_huste_dijkstra_2015-03-29_23-07-08/"."vysledky/"
 podadresarStaticDijkstraRidke  = adresar."static_ridke_dijkstra_2015-03-30_20-34-20/"."vysledky/"
 podadresarStaticFloydHuste     = adresar."static_huste_floyd-warshall_2015-03-29_23-07-20/"."vysledky/"
@@ -20,9 +21,6 @@ set style line 91 linecolor rgb '#000000' linetype 1 linewidth 2
 set border 3 back linestyle 91
 set tics nomirror
 
-set key top right box 0
-# set key outside bottom center
-
 # mrizka
 set style line 92 linecolor rgb '#808080' linetype 0 linewidth 1
 set grid back linestyle 92
@@ -31,8 +29,10 @@ set grid back linestyle 92
 set style line 01 linecolor rgb '#8b8b00' linetype 5 linewidth 2
 set style line 11 linecolor rgb '#8b1a0e' linetype 1 linewidth 4
 set style line 12 linecolor rgb '#aa4020' linetype 1 linewidth 4
+set style line 13 linecolor rgb '#191970' linetype 1 linewidth 3
 set style line 21 linecolor rgb '#5e9c36' linetype 2 linewidth 4
 set style line 22 linecolor rgb '#20aa40' linetype 2 linewidth 4
+set style line 23 linecolor rgb '#FFB90F' linetype 2 linewidth 3
 set style line 31 linecolor rgb '#191970' linetype 3 linewidth 2
 set style line 32 linecolor rgb '#3D59AB' linetype 3 linewidth 2
 set style line 33 linecolor rgb '#0000FF' linetype 3 linewidth 2
@@ -49,6 +49,8 @@ set style line 63 linecolor rgb '#666666' linetype 8 linewidth 2
 # ======================================================================
 # rychlost vypoctu v zavislosti na poctu vlaken
 # ======================================================================
+
+set key top right box 0
 
 set xrange [0:25]
 set xlabel 'Pocet vlaken'
@@ -159,5 +161,83 @@ plot \
    podadresar."vysledky-3000.txt" using 1:4 linestyle 31 title "n = 3000", \
    podadresar."vysledky-4000.txt" using 1:4 linestyle 41 title "n = 4000", \
    podadresar."vysledky-5000.txt" using 1:4 linestyle 51 title "n = 5000";
+
+
+# ======================================================================
+# Porovnani ridke huste grafy 
+# ======================================================================
+
+set key top right 
+
+set ylabel 'Cas [s]'
+set yrange [0:500]
+
+nadpis    = "Porovnani rychlosti vypoctu v zavislosti na hustote grafu"
+podnadpis = "Algoritmus Dijsktra, staticke planovani"
+set title nadpis."\n{/*0.8 ".podnadpis."}"
+
+podadresar1 = podadresarStaticDijkstraHuste
+podadresar2 = podadresarStaticDijkstraRidke
+set output "02-04-Dijsktra_hustota.png"
+
+plot \
+   podadresar1."vysledky-3000.txt" using 1:2 linestyle 11 title "huste grafy, n = 3000", \
+   podadresar2."vysledky-3000.txt" using 1:2 linestyle 13 title "ridke grafy, n = 3000", \
+   podadresar1."vysledky-5000.txt" using 1:2 linestyle 21 title "huste grafy, n = 5000", \
+   podadresar2."vysledky-5000.txt" using 1:2 linestyle 23 title "ridke grafy, n = 5000";
+
+
+podnadpis = "Algoritmus Floyd-Warshall, staticke planovani"
+set title nadpis."\n{/*0.8 ".podnadpis."}"
+
+podadresar1 = podadresarStaticFloydHuste
+podadresar2 = podadresarStaticFloydRidke
+set output "02-04-Floyd_hustota.png"
+
+plot \
+   podadresar1."vysledky-3000.txt" using 1:2 linestyle 11 title "huste grafy, n = 3000", \
+   podadresar2."vysledky-3000.txt" using 1:2 linestyle 13 title "ridke grafy, n = 3000", \
+   podadresar1."vysledky-5000.txt" using 1:2 linestyle 21 title "huste grafy, n = 5000", \
+   podadresar2."vysledky-5000.txt" using 1:2 linestyle 23 title "ridke grafy, n = 5000";
+
+
+
+# ======================================================================
+# Porovnani dynamicke, staticke planovani
+# ======================================================================
+
+set key top right 
+
+set ylabel 'Cas [s]'
+set yrange [0:500]
+
+nadpis    = "Porovnani rychlosti vypoctu v zavislosti na planovani uloh"
+podnadpis = "Algoritmus Dijsktra, huste grafy"
+set title nadpis."\n{/*0.8 ".podnadpis."}"
+
+podadresar1 = podadresarStaticDijkstraHuste
+podadresar2 = podadresarDynamicDijkstraHuste
+set output "02-05-Dijsktra_schedule.png"
+
+plot \
+   podadresar1."vysledky-3000.txt" using 1:2 linestyle 11 title "staticke, n = 3000", \
+   podadresar2."vysledky-3000.txt" using 1:2 linestyle 13 title "dynamicke, n = 3000", \
+   podadresar1."vysledky-5000.txt" using 1:2 linestyle 21 title "staticke, n = 5000", \
+   podadresar2."vysledky-5000.txt" using 1:2 linestyle 23 title "dynamicke, n = 5000";
+
+
+podnadpis = "Algoritmus Floyd-Warshall, huste grafy"
+set title nadpis."\n{/*0.8 ".podnadpis."}"
+
+podadresar1 = podadresarStaticFloydHuste
+podadresar2 = podadresarDynamicFloydHuste
+set output "02-05-Floyd_schedule.png"
+
+plot \
+   podadresar1."vysledky-3000.txt" using 1:2 linestyle 11 title "staticke, n = 3000", \
+   podadresar2."vysledky-3000.txt" using 1:2 linestyle 13 title "dynamicke, n = 3000", \
+   podadresar1."vysledky-5000.txt" using 1:2 linestyle 21 title "staticke, n = 5000", \
+   podadresar2."vysledky-5000.txt" using 1:2 linestyle 23 title "dynamicke, n = 5000";
+
 
 
