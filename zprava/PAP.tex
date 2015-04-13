@@ -139,6 +139,8 @@ Aktuální implementace je k nahlédnutí i ke stažení na adrese \url{https://
 %---		OpenMP			 ---
 %-------------------------------
 \section{Paralelní algoritmus pomocí knihovny OpenMP}
+
+% ########## Dijkstra ##########
 \subsection{Dijkstrův algoritmus}
 Paralelizace algoritmu spočívá v paralelizaci cyklu, který prochází jednotlivé uzly a pro ně řeší problém hledání nejkratší cesty v grafu z jednoho počátečního uzlu. Každé vlákno tedy zpracovává jeden uzel jako počáteční a z něj hledá nejkratší cesty do všech ostatních uzlů.
 
@@ -152,22 +154,96 @@ Z důvodu paralelizace algoritmu bylo nutné upravit použitou prioritní frontu
 
 
 \subsubsection{Vektorizace}
+Pomocí přepínačů optimalizace \textit{-O3} a podpory vektorových sad \textit{-msse4.2} kompilátoru \textit{gcc} byla zapnuta podpora vektorizace cyklů \cite{w:vect}. Pro záznam o pokusech vektorizace byl použit přepínač \textit{-ftree-vectorizer-verbose=n}, kde za \textit{n} byly dosazeny 1,~3,~5, kde čím vyšší číslo, tím podrobnější informace \cite{w:vect}.\textbf{}
 
 
-\subsubsection{Optimalizace}
+% ----------------------------------------------------
+% - vektorizovany cyklus -
+\begin{figure}
+    \centering
+	\caption{Úspěšně vektorizovaný cyklus.}
+	\label{f:dij:vect1}
+    \begin{lstlisting}
+dijkstra.cpp:38: note: LOOP VECTORIZED.
+dijkstra.cpp:28: note: vectorized 1 loops in function.
+    \end{lstlisting}
+	\begin{lstlisting}
+for ( unsigned j = 0; j < pocetUzlu; j++ ) {
+	vzdalenostM[i][j] = DIJKSTRA_NEKONECNO;
+	predchudceM[i][j] = DIJKSTRA_NEDEFINOVANO;
+}
+    \end{lstlisting}
+    
+    \begin{lstlisting}
+dijkstra.cpp:99: note: not vectorized: number of iterations cannot be computed.
+dijkstra.cpp:99: note: bad loop form.
+dijkstra.cpp:82: note: vectorized 0 loops in function.
+    \end{lstlisting}
+\end{figure}
+% ----------------------------------------------------
+% - nevektorizovany cyklus -
+\begin{figure}
+    \centering
+    \caption{Cyklus, který se nepodařilo vektorizovat.}
+	\label{f:dij:vect2}
+    \begin{lstlisting}
+dijkstra.cpp:99: note: not vectorized: number of iterations cannot be computed.
+dijkstra.cpp:99: note: bad loop form.
+dijkstra.cpp:82: note: vectorized 0 loops in function.
+    \end{lstlisting}
+    
+	\begin{lstlisting}
+for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
+	vzdalenostM[idUzlu][i] = vzdalenost[i];
+	predchudceM[idUzlu][i] = predchudce[i];
+}
+	\end{lstlisting}
+\end{figure}
+% ----------------------------------------------------
+
+\paragraph{Původní stav}
+Na obrázcích \ref{f:dij:vect1} a \ref{f:dij:vect2} je znázorněn příklad jednoho cyklu, který je byl vektorizován a druhý cyklus, který se nepodařilo vektorizovat z důvodu nespočitatelného počtu iterací.
+
+% ----------------------------------------------------
+% - upraveny vektorizovany cyklus -
+\begin{figure}
+    \centering
+    \caption{Upravený cyklus, aby mohl být vektorizován.}
+	\label{f:dij:vect3}
+    \begin{lstlisting}
+Vectorizing loop at dijkstra.cpp:99
+dijkstra.cpp:99: note: LOOP VECTORIZED.
+dijkstra.cpp:82: note: vectorized 1 loops in function.
+    \end{lstlisting}
+    
+	\begin{lstlisting}
+unsigned tmp = pocetUzlu;
+for ( unsigned i = 0 ; i < tmp ; i++ ) {
+	vzdalenostM[idUzlu][i] = vzdalenost[i];
+	predchudceM[idUzlu][i] = predchudce[i];
+}
+	\end{lstlisting}
+\end{figure}
+% ----------------------------------------------------
+
+\paragraph{Optimalizace}
+Výpis \ref{f:dij:vect3} dokazuje úspěšnou úpravu cyklu, který se, díky malé změně zdrojového kódu, podařilo vektorizovat.
+
+%\subsubsection{Optimalizace}
 
 
+% ########## Floyd - Warshall ##########
 \subsection{Floyd-Warshallův algoritmus}
 Díky třem vnořeným sekvenčního algoritmu existuje několik možností, jak algoritmus paralelizovat.
 
 \subsubsection{První varianta}
-První variantou je algoritmus paralelizovat pouze v jednom cyklu, který definuje, která řádka je právě zpracovávána. Přidělená data jednomu vláknu zobrazuje obrázek \ref{f:flo:omp}. Algoritmus zapisuje pouze do přidělených sloupců, tedy řádků zobrazených v části \textit{a}. Řádek \textit{k} v části \textit{b} využívají všechna vlákna pouze ke čtení, proto zde nedochází ke konfliktům. Tato varianta je implementována.
+První variantou je algoritmus paralelizovat pouze v jednom cyklu, který definuje, která řádka je právě zpracovávána. Přidělená data jednomu vláknu zobrazuje obrázek \ref{f:fw:omp}. Algoritmus zapisuje pouze do přidělených sloupců, tedy řádků zobrazených v části \textit{a}. Řádek \textit{k} v části \textit{b} využívají všechna vlákna pouze ke čtení, proto zde nedochází ke konfliktům. Tato varianta je implementována.
 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{floyd-openmp}
-    \caption{Ukázka dat přidělených jednomu vláknu při paralelizaci jednoho cyklu \cite{w:flo:omp}.}
-    \label{f:flo:omp}
+    \caption{Ukázka dat přidělených jednomu vláknu při paralelizaci jednoho cyklu \cite{w:fw:omp}.}
+    \label{f:fw:omp}
 \end{figure}
 
 
@@ -175,8 +251,30 @@ První variantou je algoritmus paralelizovat pouze v jednom cyklu, který definu
 Druhou variantou, jak problém paralelizovat je použít původní variantu a přidat paralelizaci zároveň ve vnitřním cyklu, který prochází jednotlivé sloupce matice. V takovém případě by jednomu vláknu byl přidělen jeden nebo více necelých řádků ohraničených sloupci. Tato varianta se jeví vhodnější pouze při velkém počtu dostupných vláken, proto není v naší implementaci použita.
 
 \subsubsection{Vektorizace}
+Z výpisu \ref{f:fw:vect1} je patrné, že v algoritmu Floyd-Warshall je vektorizován pouze jeden cyklus. Z důvodu jednoduchosti algoritmu a absence jednoduchých \textit{for} cyklů se nepodařilo zvektorizovat žádný další cyklus.
 
-\subsubsection{Optimalizace}
+% - vektorizovany cyklus -
+\begin{figure}
+    \centering
+    \caption{Úspěšně vektorizovaný cyklus.}
+	\label{f:fw:vect1}
+    \begin{lstlisting}
+floydWarshall.cpp:90: note: vectorizing stmts using SLP.BASIC BLOCK VECTORIZED
+floydWarshall.cpp:90: note: basic block vectorized using SLP
+    \end{lstlisting}
+    
+	\begin{lstlisting}
+for ( unsigned k = 0; k < tmp; k++ ) {
+	unsigned i;
+	#pragma omp parallel for private( i, novaVzdalenost ) shared( delkaPredchozi, delkaAktualni, pre    dchudcePredchozi, predchudceAktualni )
+	for ( i = 0; i < tmp; i++ ) {
+		for ( unsigned j = 0; j < tmp; j++ ) {
+	\end{lstlisting}
+\end{figure}
+
+
+%\subsubsection{Optimalizace}
+
 
 \subsection{Měření}
 Na obou algoritmech bylo provedeno měření, které si klade za cíl analyzovat čas, zrychlení a efektivitu použitého paralelního algoritmu. Měření bylo prováděno na hustých grafech, kde při generování grafů byla použita pravděpodobnost 0.5, že mezi dvěmi uzly existuje hrana.
