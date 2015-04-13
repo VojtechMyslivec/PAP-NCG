@@ -50,7 +50,7 @@
 
 % TITLE
 \HRule \\[0.4cm]
-{ \huge \bfseries Hledání nejkratších cest v grafu}\\[0.4cm] % Nazev dokumentu (prace)
+{ \huge \bfseries Hledání nejkratších cest v~grafu}\\[0.4cm] % Nazev dokumentu (prace)
 \HRule \\[1.5cm]
 
 % AUTOR
@@ -73,7 +73,7 @@ Zdeněk \textsc{Nový}\\[2cm]	% Jmeno
 \newcommand{\keywords}[1]{\vspace{0.8cm}\textbf{Klíčová slova\hspace{0.2cm}} #1}
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
 \begin{abstract}
-Účelem této práce je sumarizovat výsledky měření řešení problému hledání nejkratších cest v grafu (NCG). Práce se zaměřuje na řešení problému Dijkstrovým a Floyd-Warshallovým algoritmem a porovnání sekvenční a několika paralelních implementací.
+Účelem této práce je sumarizovat výsledky měření řešení problému hledání nejkratších cest v~grafu (NCG). Práce se zaměřuje na řešení problému Dijkstrovým a~Floyd-Warshallovým algoritmem a~porovnání sekvenční a~několika paralelních implementací.
 \end{abstract}
 
 % --- Klicova slova ---
@@ -86,27 +86,27 @@ Zdeněk \textsc{Nový}\\[2cm]	% Jmeno
 %---		   Uvod		 	 ---
 %-------------------------------
 \section{Úvod}
-Tato práce se zabývá implementací dvou algoritmů hledání nejkratších cest v grafu. Jedná se o implementaci sekvenčním algoritmem, který je poté paralelizován pro procesor a pro grafickou kartu. Pro jednotlivé algoritmy je provedeno měření, které si klade za cíl určit zrychlení paralelních algoritmů proti sekvenčnímu.
+Tato práce se zabývá implementací dvou algoritmů hledání nejkratších cest v~grafu. Jedná se o~implementaci sekvenčním algoritmem, který je poté paralelizován pro procesor a~pro grafickou kartu. Pro jednotlivé algoritmy je provedeno měření, které si klade za cíl určit zrychlení paralelních algoritmů proti sekvenčnímu.
 
 %-------------------------------
 %---			NCG			 ---
 %-------------------------------
-\section{Hledání nejkratších cest v grafu} \label{ncg}
+\section{Hledání nejkratších cest v~grafu} \label{ncg}
 \subsection{Definice} \label{l:clondike:ncgdef}
-Hledání nejkratších cest v grafu je NP-úplná grafová úloha, jejímž cílem je nalézt v zadaném grafu nejkratší cesty mezi všemi možnými dvojicemi uzlů A a B \cite{w:ncg}.
+Hledání nejkratších cest v~grafu je NP-úplná grafová úloha, jejímž cílem je nalézt v~zadaném grafu nejkratší cesty mezi všemi možnými dvojicemi uzlů A~a~B \cite{w:ncg}.
 
 \subsection{Algoritmy}
 \subsubsection{Dijkstrův algoritmus}
-Dijkstrův algoritmus slouží k nalezení všech nejkratších cest ze zadaného uzlu do všech ostatních uzlů grafu. Graf nesmí obsahovat hrany se zápornou délkou \cite{w:dij:def}.
+Dijkstrův algoritmus slouží k~nalezení všech nejkratších cest ze zadaného uzlu do všech ostatních uzlů grafu. Graf nesmí obsahovat hrany se zápornou délkou \cite{w:dij:def}.
 
 \paragraph{Princip}
-Dijkstrův algoritmus je zobecněné prohledávání grafu do šířky, při kterém se vlna šíří na základě vzdálenosti od zdrojového uzlu. K uchovávání uzlů slouží prioritní fronta, která je řazena podle vzrůstající vzdálenosti od zdroje. V každém kroku algoritmu je vybrán uzel s nejmenší vzdáleností a pro každého souseda je vypočítána jeho vzdálenost od zdrojového uzlu \cite{w:dij:def}.
+Dijkstrův algoritmus je zobecněné prohledávání grafu do šířky, při kterém se vlna šíří na základě vzdálenosti od zdrojového uzlu. K~uchovávání uzlů slouží prioritní fronta, která je řazena podle vzrůstající vzdálenosti od zdroje. V~každém kroku algoritmu je vybrán uzel s~nejmenší vzdáleností a~pro každého souseda je vypočítána jeho vzdálenost od zdrojového uzlu \cite{w:dij:def}.
 
 \subsubsection{Floyd-Warshallův algoritmus}
-Floyd-Warshallův algoritmus slouží k nalezení nejkratších cest mezi všemi dvojicemi uzlů v grafu. Graf může obsahovat hrany, ale nikoliv cykly, záporné délky \cite{w:fw:def}.
+Floyd-Warshallův algoritmus slouží k~nalezení nejkratších cest mezi všemi dvojicemi uzlů v~grafu. Graf může obsahovat hrany, ale nikoliv cykly, záporné délky \cite{w:fw:def}.
 
 \paragraph{Princip} \label{l:fw:princip}
-Floyd-Warhsallův algoritmus pracuje s maticí sousednosti, kde hrana je ohodnocena vahou. Na počátku tato matice obsahuje pouze vzdálenosti dvou uzlů, mezi kterými je vedena hrana. V každém kroku je vybrán jeden uzel jako prostředník. Prvek matice sousednosti se přepočítá, pokud je vzdálenost z počátečního do koncového uzlu kratší přes nového prostředníka než bez něj \cite{w:fw:def}.
+Floyd-Warhsallův algoritmus pracuje s~maticí sousednosti, kde hrana je ohodnocena vahou. Na počátku tato matice obsahuje pouze vzdálenosti dvou uzlů, mezi kterými je vedena hrana. V~každém kroku je vybrán jeden uzel jako prostředník. Prvek matice sousednosti se přepočítá, pokud je vzdálenost z~počátečního do koncového uzlu kratší přes nového prostředníka než bez něj \cite{w:fw:def}.
 
 
 %-------------------------------
@@ -114,25 +114,25 @@ Floyd-Warhsallův algoritmus pracuje s maticí sousednosti, kde hrana je ohodnoc
 %-------------------------------
 \section{Sekvenční algoritmus}
 \subsection{Společná implementace}
-Oba algoritmy vycházejí z obecněho principu, který je popsán v kapitole \ref{l:fw:princip}. Algoritmy pracují s grafem, který je programu předložen jako soubor, ve kterém je graf ve formě matice sousednosti. Společnou částí je tedy načítání vstupu a jeho kontrola.
+Oba algoritmy vycházejí z~obecněho principu, který je popsán v~kapitole \ref{l:fw:princip}. Algoritmy pracují s~grafem, který je programu předložen jako soubor, ve kterém je graf ve formě matice sousednosti. Společnou částí je tedy načítání vstupu a~jeho kontrola.
 
 \subsection{Dijkstrův algoritmus}
-Protože Dijkstrův algoritmus slouží k hledání nejkratších cest od jednoho zdrojového uzlu, je nutné jej spouštět pro každý uzel grafu. To zajišťuje funkce \textit{dijkstraNtoN}.
+Protože Dijkstrův algoritmus slouží k~hledání nejkratších cest od jednoho zdrojového uzlu, je nutné jej spouštět pro každý uzel grafu. To zajišťuje funkce \textit{dijkstraNtoN}.
 
-\subsubsection{Dijkstrův algoritmus z jednoho zdroje}
-Pro výpočet Dijkstrova algoritmu z jednoho zdrojového uzlu se alokují tři pole o velikosti počtu uzlů. V jednom je uložena vzdálenost daného uzlu od zdrojového, ve druhém předchozí uzel v nalezené nejkratší cestě. Třetí pole určuje, jestli je už uzel uzavřený pro výpočty.
+\subsubsection{Dijkstrův algoritmus z~jednoho zdroje}
+Pro výpočet Dijkstrova algoritmu z~jednoho zdrojového uzlu se alokují tři pole o~velikosti počtu uzlů. V~jednom je uložena vzdálenost daného uzlu od zdrojového, ve druhém předchozí uzel v~nalezené nejkratší cestě. Třetí pole určuje, jestli je už uzel uzavřený pro výpočty.
 
-Algoritmus prochází postupně, podle nejmenší vzdálenosti, všechny uzly, které se nacházejí v prioritní frontě. Z daného uzlu vypočítá pro každého svého souseda novou cestu, která by vedla přes uzel samotný a porovná ji s dosavadní vzdáleností souseda. Menší vzdálenost je zapsána do pole vzdáleností a algoritmus pokračuje.
+Algoritmus prochází postupně, podle nejmenší vzdálenosti, všechny uzly, které se nacházejí v~prioritní frontě. Z~daného uzlu vypočítá pro každého svého souseda novou cestu, která by vedla přes uzel samotný a~porovná ji s~dosavadní vzdáleností souseda. Menší vzdálenost je zapsána do pole vzdáleností a~algoritmus pokračuje.
 
 \paragraph{Prioritní fronta} \label{l:dij:fron}
 Za účelem prioritní fronty byla implementována binární halda, kde složitost výběru minima je logaritmická, oproti nativní implementaci pomocí pole, kde je složitost výběru minima lineární.
 
 
 \subsection{Floyd-Warshallův algoritmus}
-Floyd-Warshallův algoritmus obsahuje tři vnořené for cykly a funguje na principu popsaném v \ref{l:fw:princip}. Jako datové struktury používá čtyři pole o velikosti počtu uzlů. Pro každý uzel si algoritmus udržuje aktuální vzdálenosti ke všem uzlům a navíc vzdálenosti z předchozí iterace. Další dvě pole obsahují předchozí uzel v nalezené cestě. 
+Floyd-Warshallův algoritmus obsahuje tři vnořené for cykly a~funguje na principu popsaném v~\ref{l:fw:princip}. Jako datové struktury používá čtyři pole o~velikosti počtu uzlů. Pro každý uzel si algoritmus udržuje aktuální vzdálenosti ke všem uzlům a~navíc vzdálenosti z~předchozí iterace. Další dvě pole obsahují předchozí uzel v~nalezené cestě. 
 
 \subsection{Implementace}
-Aktuální implementace je k nahlédnutí i ke stažení na adrese \url{https://github.com/VojtechMyslivec/PAP-NCG}. Sekvenční algoritmus se nachází ve složce \textit{01\_sekvencni}.
+Aktuální implementace je k~nahlédnutí i~ke stažení na adrese \url{https://github.com/VojtechMyslivec/PAP-NCG}. Sekvenční algoritmus se nachází ve složce \textit{01\_sekvencni}.
 
 
 %-------------------------------
@@ -142,19 +142,19 @@ Aktuální implementace je k nahlédnutí i ke stažení na adrese \url{https://
 
 % ########## Dijkstra ##########
 \subsection{Dijkstrův algoritmus}
-Paralelizace algoritmu spočívá v paralelizaci cyklu, který prochází jednotlivé uzly a pro ně řeší problém hledání nejkratší cesty v grafu z jednoho počátečního uzlu. Každé vlákno tedy zpracovává jeden uzel jako počáteční a z něj hledá nejkratší cesty do všech ostatních uzlů.
+Paralelizace algoritmu spočívá v~paralelizaci cyklu, který prochází jednotlivé uzly a~pro ně řeší problém hledání nejkratší cesty v~grafu z~jednoho počátečního uzlu. Každé vlákno tedy zpracovává jeden uzel jako počáteční a~z~něj hledá nejkratší cesty do všech ostatních uzlů.
 
 \subsubsection{Paměťové struktury}
-Každé vlákno dostane ukazatel na strukturu grafu. Protože všechna vlákna používají strukturu grafu pouze ke čtení, nedochází při přístupu k této struktuře k žádným problémům.
+Každé vlákno dostane ukazatel na strukturu grafu. Protože všechna vlákna používají strukturu grafu pouze ke čtení, nedochází při přístupu k~této struktuře k~žádným problémům.
 
-Každé vlákno si vytvoří jeden objekt, ve kterém si alokuje vlastní pole vzdáleností a předchůdců, které používá pro své výpočty. Tyto struktury jsou po ukončení funkce vlákna dealokovány společně s objektem.
+Každé vlákno si vytvoří jeden objekt, ve kterém si alokuje vlastní pole vzdáleností a~předchůdců, které používá pro své výpočty. Tyto struktury jsou po ukončení funkce vlákna dealokovány společně s~objektem.
 
 \subsubsection{Úprava algoritmu}
-Z důvodu paralelizace algoritmu bylo nutné upravit použitou prioritní frontu. V sekvenčním řešení byla použita implementace pomocí binární haldy \ref{l:dij:fron}. Z důvodu paralelizace výběru minima z fronty je pro paralelní řešení výhodnější použít implementaci polem.
+Z~důvodu paralelizace algoritmu bylo nutné upravit použitou prioritní frontu. V~sekvenčním řešení byla použita implementace pomocí binární haldy \ref{l:dij:fron}. Z~důvodu paralelizace výběru minima z~fronty je pro paralelní řešení výhodnější použít implementaci polem.
 
 
 \subsubsection{Vektorizace}
-Pomocí přepínačů optimalizace \textit{-O3} a podpory vektorových sad \textit{-msse4.2} kompilátoru \textit{gcc} byla zapnuta podpora vektorizace cyklů \cite{w:vect}. Pro záznam o pokusech vektorizace byl použit přepínač \textit{-ftree-vectorizer-verbose=n}, kde za \textit{n} byly dosazeny 1,~3,~5, kde čím vyšší číslo, tím podrobnější informace \cite{w:vect}.\textbf{}
+Pomocí přepínačů optimalizace \textit{-O3} a~podpory vektorových sad \textit{-msse4.2} kompilátoru \textit{gcc} byla zapnuta podpora vektorizace cyklů \cite{w:vect}. Pro záznam o~pokusech vektorizace byl použit přepínač \textit{-ftree-vectorizer-verbose=n}, kde za \textit{n} byly dosazeny 1,~3,~5, kde čím vyšší číslo, tím podrobnější informace \cite{w:vect}.\textbf{}
 
 
 % ----------------------------------------------------
@@ -193,7 +193,7 @@ dijkstra.cpp:82: note: vectorized 0 loops in function.
     \end{lstlisting}
     
 	\begin{lstlisting}
-for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
+for ( unsigned i~= 0 ; i~< pocetUzlu ; i++ ) {
 	vzdalenostM[idUzlu][i] = vzdalenost[i];
 	predchudceM[idUzlu][i] = predchudce[i];
 }
@@ -202,7 +202,7 @@ for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
 % ----------------------------------------------------
 
 \paragraph{Původní stav}
-Na obrázcích \ref{f:dij:vect1} a \ref{f:dij:vect2} je znázorněn příklad jednoho cyklu, který je byl vektorizován a druhý cyklus, který se nepodařilo vektorizovat z důvodu nespočitatelného počtu iterací.
+Na obrázcích \ref{f:dij:vect1} a~\ref{f:dij:vect2} je znázorněn příklad jednoho cyklu, který je byl vektorizován a~druhý cyklus, který se nepodařilo vektorizovat z~důvodu nespočitatelného počtu iterací.
 
 % ----------------------------------------------------
 % - upraveny vektorizovany cyklus -
@@ -218,7 +218,7 @@ dijkstra.cpp:82: note: vectorized 1 loops in function.
     
 	\begin{lstlisting}
 unsigned tmp = pocetUzlu;
-for ( unsigned i = 0 ; i < tmp ; i++ ) {
+for ( unsigned i~= 0 ; i~< tmp ; i++ ) {
 	vzdalenostM[idUzlu][i] = vzdalenost[i];
 	predchudceM[idUzlu][i] = predchudce[i];
 }
@@ -237,7 +237,7 @@ Výpis \ref{f:dij:vect3} dokazuje úspěšnou úpravu cyklu, který se, díky ma
 Díky třem vnořeným sekvenčního algoritmu existuje několik možností, jak algoritmus paralelizovat.
 
 \subsubsection{První varianta}
-První variantou je algoritmus paralelizovat pouze v jednom cyklu, který definuje, která řádka je právě zpracovávána. Přidělená data jednomu vláknu zobrazuje obrázek \ref{f:fw:omp}. Algoritmus zapisuje pouze do přidělených sloupců, tedy řádků zobrazených v části \textit{a}. Řádek \textit{k} v části \textit{b} využívají všechna vlákna pouze ke čtení, proto zde nedochází ke konfliktům. Tato varianta je implementována.
+První variantou je algoritmus paralelizovat pouze v~jednom cyklu, který definuje, která řádka je právě zpracovávána. Přidělená data jednomu vláknu zobrazuje obrázek \ref{f:fw:omp}. Algoritmus zapisuje pouze do přidělených sloupců, tedy řádků zobrazených v~části \textit{a}. Řádek \textit{k} v~části \textit{b} využívají všechna vlákna pouze ke čtení, proto zde nedochází ke konfliktům. Tato varianta je implementována.
 
 \begin{figure}
     \centering
@@ -248,10 +248,10 @@ První variantou je algoritmus paralelizovat pouze v jednom cyklu, který definu
 
 
 \subsubsection{Druhá varianta}
-Druhou variantou, jak problém paralelizovat je použít původní variantu a přidat paralelizaci zároveň ve vnitřním cyklu, který prochází jednotlivé sloupce matice. V takovém případě by jednomu vláknu byl přidělen jeden nebo více necelých řádků ohraničených sloupci. Tato varianta se jeví vhodnější pouze při velkém počtu dostupných vláken, proto není v naší implementaci použita.
+Druhou variantou, jak problém paralelizovat je použít původní variantu a~přidat paralelizaci zároveň ve vnitřním cyklu, který prochází jednotlivé sloupce matice. V~takovém případě by jednomu vláknu byl přidělen jeden nebo více necelých řádků ohraničených sloupci. Tato varianta se jeví vhodnější pouze při velkém počtu dostupných vláken, proto není v~naší implementaci použita.
 
 \subsubsection{Vektorizace}
-Z výpisu \ref{f:fw:vect1} je patrné, že v algoritmu Floyd-Warshall je vektorizován pouze jeden cyklus. Z důvodu jednoduchosti algoritmu a absence jednoduchých \textit{for} cyklů se nepodařilo zvektorizovat žádný další cyklus.
+Z~výpisu \ref{f:fw:vect1} je patrné, že v~algoritmu Floyd-Warshall je vektorizován pouze jeden cyklus. Z~důvodu jednoduchosti algoritmu a~absence jednoduchých \textit{for} cyklů se nepodařilo zvektorizovat žádný další cyklus.
 
 % - vektorizovany cyklus -
 \begin{figure}
@@ -264,10 +264,10 @@ floydWarshall.cpp:90: note: basic block vectorized using SLP
     \end{lstlisting}
     
 	\begin{lstlisting}
-for ( unsigned k = 0; k < tmp; k++ ) {
+for ( unsigned k~= 0; k~< tmp; k++ ) {
 	unsigned i;
 	#pragma omp parallel for private( i, novaVzdalenost ) shared( delkaPredchozi, delkaAktualni, pre    dchudcePredchozi, predchudceAktualni )
-	for ( i = 0; i < tmp; i++ ) {
+	for ( i~= 0; i~< tmp; i++ ) {
 		for ( unsigned j = 0; j < tmp; j++ ) {
 	\end{lstlisting}
 \end{figure}
@@ -277,20 +277,20 @@ for ( unsigned k = 0; k < tmp; k++ ) {
 
 
 \subsection{Měření}
-Na obou algoritmech bylo provedeno měření, které si klade za cíl analyzovat čas, zrychlení a efektivitu použitého paralelního algoritmu. Měření bylo prováděno na hustých grafech, kde při generování grafů byla použita pravděpodobnost 0.5, že mezi dvěmi uzly existuje hrana.
+Na obou algoritmech bylo provedeno měření, které si klade za cíl analyzovat čas, zrychlení a~efektivitu použitého paralelního algoritmu. Měření bylo prováděno na hustých grafech, kde při generování grafů byla použita pravděpodobnost 0.5, že mezi dvěmi uzly existuje hrana.
 
 \subsubsection{Testovací data}
-Jako testovací data byly vygenerovány grafy s počtem uzlů 1000, 2000, 3000, 4000, 5000. Měření probíhalo na serveru \url{star2.fit.cvut.cz} na stroji \textit{gpu-02} pro počet vláken 1, 2, 4, 6, 8, 12, 24.
+Jako testovací data byly vygenerovány grafy s~počtem uzlů 1000, 2000, 3000, 4000, 5000. Měření probíhalo na serveru \url{star2.fit.cvut.cz} na stroji \textit{gpu-02} pro počet vláken 1, 2, 4, 6, 8, 12, 24.
 
 \subsubsection{Výsledky}
-Grafy \ref{f:mer:cas}, \ref{f:mer:zry} a \ref{f:mer:efe} ukazují výsledky měření z pohledu času, zrychlení a efektivity.
+Grafy \ref{f:mer:cas}, \ref{f:mer:zry} a~\ref{f:mer:efe} ukazují výsledky měření z~pohledu času, zrychlení a~efektivity.
 
 % Cas
 \begin{figure}
     \centering
     \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-01-Dijsktra_cas}
     \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-01-Floyd_cas}
-    \caption{Závislost průměrného času výpočtu v závislosti na počtu vláken za použití statického plánování.}
+    \caption{Závislost průměrného času výpočtu v~závislosti na počtu vláken za použití statického plánování.}
     \label{f:mer:cas}
 \end{figure}
 
@@ -299,7 +299,7 @@ Grafy \ref{f:mer:cas}, \ref{f:mer:zry} a \ref{f:mer:efe} ukazují výsledky mě�
     \centering
     \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-02-Dijsktra_zrychleni}
     \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-02-Floyd_zrychleni}
-    \caption{Závislost zrychlení paralelního algoritmu oproti sekvenčnímu v závislosti na počtu vláken za použití statického plánování.}
+    \caption{Závislost zrychlení paralelního algoritmu oproti sekvenčnímu v~závislosti na počtu vláken za použití statického plánování.}
     \label{f:mer:zry}
 \end{figure}
 
@@ -308,23 +308,23 @@ Grafy \ref{f:mer:cas}, \ref{f:mer:zry} a \ref{f:mer:efe} ukazují výsledky mě�
     \centering
     \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-03-Dijsktra_efektivita}
     \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-03-Floyd_efektivita}
-    \caption{Závislost efektivity algoritmu v závislosti na počtu vláken za použití statického plánování.}
+    \caption{Závislost efektivity algoritmu v~závislosti na počtu vláken za použití statického plánování.}
     \label{f:mer:efe}
 \end{figure}
 
 \subsubsection{Analýza}
 \paragraph{Dijsktra}
-U výpočetního času je z grafů \ref{f:mer:cas} je patrná exponenciální závislost, kdy se čas pro větší počet vláken téměř nezkracuje. Zrychlení, které je zobrazeno v grafu \ref{f:mer:zry} na počátku stoupá téměř lineárně a teprve pro velký počet vláken se zrychlení zmírňuje a křivka dostává logaritmický tvar. Z výše uvedeného vyplývá efektivita, která je zobrazena v grafu \ref{f:mer:efe}.
+U~výpočetního času je z~grafů \ref{f:mer:cas} je patrná exponenciální závislost, kdy se čas pro větší počet vláken téměř nezkracuje. Zrychlení, které je zobrazeno v~grafu \ref{f:mer:zry} na počátku stoupá téměř lineárně a~teprve pro velký počet vláken se zrychlení zmírňuje a~křivka dostává logaritmický tvar. Z~výše uvedeného vyplývá efektivita, která je zobrazena v~grafu \ref{f:mer:efe}.
 
 \paragraph{Floyd-Warshallův algoritmus}
-U Floyd-Warshallova algoritmu se výpočetní čas pro počty vláken větší než 2 téměř nezkracuje. Zrychlení je tedy patrné pouze při použití 2 případně 4 vláknech. Z výše uvedené plyne, že efektivita paralelního algoritmu velmi rychle klesá.
+U~Floyd-Warshallova algoritmu se výpočetní čas pro počty vláken větší než 2 téměř nezkracuje. Zrychlení je tedy patrné pouze při použití 2 případně 4 vláknech. Z~výše uvedené plyne, že efektivita paralelního algoritmu velmi rychle klesá.
 
 \subsubsection{Zhodnocení}
-Efektivita Dijkstrova algoritmu s přidáváním vláken pomalu klesá a například pro 24 vláken dosahuje hodnoty 0.5. Naproti tomu u Floyd-Warshallova algoritmu klesá efektivita mnohem rychleji a na hodnotě 0.5 se nachází už pro 6 vláken. 
+Efektivita Dijkstrova algoritmu s~přidáváním vláken pomalu klesá a~například pro 24 vláken dosahuje hodnoty 0.5. Naproti tomu u~Floyd-Warshallova algoritmu klesá efektivita mnohem rychleji a~na hodnotě 0.5 se nachází už pro 6 vláken. 
 
-Výrazně lépe ve prospěch Dijkstrova paralelního algoritmu vycházejí i ostatní ukazatele -- zrychlení a čas výpočtu.
+Výrazně lépe ve prospěch Dijkstrova paralelního algoritmu vycházejí i~ostatní ukazatele -- zrychlení a~čas výpočtu.
 
-Výsledky Floyd-Warshallova algoritmu mohou být způsobeny opakovaným vytvářením a rušením vláken. V každém vnějším cyklu se vytvoří daný počet vláken, zpracuje jeden uzel a všechna tato vytvořená vlákna se opět ukončí. Tedy za běhu algoritmu se vytváří a ruší \textit{pocet\_uzlu * vlaken}, kde parametr \textit{vlaken} je počet najednou vytvářených paralelních vláken.
+Výsledky Floyd-Warshallova algoritmu mohou být způsobeny opakovaným vytvářením a~rušením vláken. V~každém vnějším cyklu se vytvoří daný počet vláken, zpracuje jeden uzel a~všechna tato vytvořená vlákna se opět ukončí. Tedy za běhu algoritmu se vytváří a~ruší \textit{pocet\_uzlu * vlaken}, kde parametr \textit{vlaken} je počet najednou vytvářených paralelních vláken.
 
 
 %-------------------------------
