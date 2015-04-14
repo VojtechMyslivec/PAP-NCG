@@ -81,6 +81,10 @@ Zdeněk \textsc{Nový}\\[2cm]	% Jmeno
 
 \clearpage
 
+%-------------------------------
+%---		   Obsah	 	 ---
+%-------------------------------
+\tableofcontents
 
 %-------------------------------
 %---		   Uvod		 	 ---
@@ -310,6 +314,34 @@ Grafy \ref{f:mer:cas}, \ref{f:mer:zry} a~\ref{f:mer:efe} ukazují výsledky mě�
     \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-03-Floyd_efektivita}
     \caption{Závislost efektivity algoritmu v~závislosti na počtu vláken za použití statického plánování.}
     \label{f:mer:efe}
+\end{figure}
+
+\paragraph{Poměr rychlosti algoritmů v závislosti na hustotě grafu}
+Graf \ref{f:mer:pomerhustota} porovnává výpočetní časy při použití statického plánování v závislosti na hustotě grafu. Z grafů vyplývá, že oba algoritmy jsou téměř nezávislé na hustotě grafu.
+
+\paragraph{Poměr rychlosti algoritmů v závislosti na plánování}
+Graf \ref{f:mer:pomerplanovani} zobrazuje poměr výpočetních časů v závislosti na použitém plánování. V porovnání byla použita plánování statické a dynamické. Z grafů je patrné, že plánování ovlivní čas výpočtu pouze nevýznamně a není tedy podstatné, jaké plánování je v algoritmu použito.
+\paragraph{Statické plánování}
+Při statickém plánování se iterace cyklu rovnoměrně rozdělí po blocích mezi všechna vlákna před začátkem provádění cyklu \cite{w:omp}.
+\paragraph{Dynamické plánování}
+Dynamickým plánováním se rozumí rozdělení jednotlivých iterací vláknům po jedné iteraci. Vždy když vlákno dokončí iteraci, je mu přidělena další iterace \cite{w:omp}.
+
+% Pomer rychlost vypoctu v zavislosti na hustote grafu
+\begin{figure}
+    \centering
+    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-04-Dijsktra_hustota}
+    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-04-Floyd_hustota}
+    \caption{Porovnání poměru rychlostí výpočtu v závislosti na hustotě grafu při použití statického plánování.}
+    \label{f:mer:pomerhustota}
+\end{figure}
+
+% Pomer rychlost vypoctu v zavislosti na hustote grafu
+\begin{figure}
+    \centering
+    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-05-Dijsktra_schedule}
+    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-05-Floyd_schedule}
+    \caption{Porovnání poměru rychlostí výpočtu v závislosti na použitém plánování.}
+    \label{f:mer:pomerplanovani}
 \end{figure}
 
 \subsubsection{Analýza}
