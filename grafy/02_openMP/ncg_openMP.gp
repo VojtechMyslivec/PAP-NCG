@@ -215,7 +215,7 @@ plot \
 
 set key top left 
 
-set ylabel 'Pomer casu huste/ridke'
+set ylabel 'Pomer casu staticke/dynamicke'
 set yrange [0.8:1.2]
 
 nadpis    = "Porovnani pomeru rychlosti vypoctu v zavislosti na planovani uloh"
