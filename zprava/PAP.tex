@@ -31,7 +31,7 @@
 %----------------------------------------------------------------------------------------
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 \documentclass[czech,12pt]{article}
-\usepackage[T1]{inputenc}
+\usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[czech]{babel}
 \usepackage{graphicx}
@@ -81,7 +81,7 @@ Zdeněk \textsc{Nový}\\[2cm]	% Jmeno
 \end{abstract}
 
 % --- Klicova slova ---
-\keywords{Dijkstra, Floyd, Warshall, nejkratší cesty, NCG, OpenMP, Cuda}
+\keywords{Dijkstra, Floyd-Warshall, nejkratší cesty, NCG, OpenMP, Cuda}
 
 \clearpage
 
@@ -141,7 +141,7 @@ Za účelem prioritní fronty byla implementována binární halda, kde složito
 \subsubsection{Vektorizace}
 Pomocí přepínačů optimalizace \textit{-O3} a~podpory vektorových sad \textit{-msse4.2} kompilátoru \textit{gcc} byla zapnuta podpora vektorizace cyklů \cite{w:vect}. Pro záznam o~pokusech vektorizace byl použit přepínač \textit{-ftree-vectorizer-verbose=n}, kde za \textit{n} byly dosazeny 1,~3,~5, kde čím vyšší číslo, tím podrobnější informace \cite{w:vect}.\textbf{}
 
-Samotný algoritmus je velmi sekvenční. V každém kroku se vybere minimum z prioritní fronty --- jinými slovy ze složitější struktury --- a přepíšou se hodnoty uzlu ve frontě. Tyto operace nelze nijak vektorizovat a~v~průběhu výpočtu (kromě počáteční inicializace polí) se nevyskytují žádné prvky vedle sebe ani pro čtení ani pro zápis.
+Samotný algoritmus je velmi sekvenční. V každém kroku se vybere minimum z prioritní fronty --- jinými slovy ze složitější struktury --- a přepíší se hodnoty uzlu ve frontě. Tyto operace nelze nijak vektorizovat a~v~průběhu výpočtu (kromě počáteční inicializace polí) se nevyskytují žádné prvky vedle sebe ani pro čtení ani pro zápis.
 
 % ----------------------------------------------------
 % - vektorizovany cyklus -
@@ -189,6 +189,9 @@ for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
 
 \paragraph{Původní stav}
 Na obrázcích \ref{f:dij:vect1} a~\ref{f:dij:vect2} je znázorněn příklad jednoho z cyklů, který byl vektorizován a~jiný cyklus, který se nepodařilo vektorizovat z~důvodu neznámého počtu iterací.
+
+\paragraph{Optimalizace}
+Výpis \ref{f:dij:vect3} ukazuje úspěšnou úpravu cyklu, který se díky změně zdrojového kódu podařilo vektorizovat.
 
 % ----------------------------------------------------
 % - upraveny vektorizovany cyklus -
@@ -365,7 +368,7 @@ Dynamickým plánováním se rozumí rozdělení jednotlivých iterací vláknů
 
 \subsubsection{Analýza}
 \paragraph{Dijsktra}
-Z~grafů \ref{f:mer:cas} je vidět klesající dobu výpočtu v závislosti na počtu vlíken.
+Z~grafů \ref{f:mer:cas} je vidět klesající dobu výpočtu v závislosti na počtu vláken.
 Zrychlení, které je zobrazeno v~grafu \ref{f:mer:zry} na počátku stoupá téměř lineárně a~teprve pro větší počet vláken 
 se zmírňuje. Toto nelineární zrychlení může způsobit například přístup do paměti, protože se vzrůstajícím počtem vláken klesá 
 relativní velikost cache pro každé z vláken.
