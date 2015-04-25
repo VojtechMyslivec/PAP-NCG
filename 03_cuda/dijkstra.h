@@ -12,15 +12,17 @@
  *
  *
  */
+#include "funkceSpolecne.h"
+#include "cDijkstra.h"
 
 // alokuje data pro objekt cDijkstra na GPU. Inicializace hodnot dela jiz GPU
 void dijkstraObjektInit( unsigned ** devGraf, unsigned pocetUzlu, unsigned idUzlu, cDijkstra *& devDijkstra );
 
 // inicializuje a nakopiruje data grafu na GPU
-void grafInicializaceNaGPU( unsigned ** graf, unsigned pocetUzlu, unsigned **& devGraf ) {
+void grafInicializaceNaGPU( unsigned ** graf, unsigned pocetUzlu, unsigned **& devGraf );
 
 // vytvori pole ukazatelu na cDijkstra, ktere budou alokovane na GPU
-void dijkstraInicializaceNaGPU( unsigned ** devGraf, unsigned pocetUzlu, cDijkstra **& devDijkstra ) {
+void dijkstraInicializaceNaGPU( unsigned ** devGraf, unsigned pocetUzlu, cDijkstra **& devDijkstra );
 
 // funkce zabalujici kompletni vypocet vcetne inicializace a uklidu...
 // vola (paralelne) vypocet Dijkstrova algoritmu pro kazdy uzel
@@ -38,5 +40,5 @@ void uklidUkazatelu( unsigned **& dveDimenze, unsigned rozmer );
 void zkopirujDataZGPU( unsigned ** vzdalenostM, cDijkstra ** devDijkstra, unsigned pocetUzlu );
 
 // funkce pro vypis matice delek a predchudcu
-void vypisVysledekMaticove( unsigned pocetUzlu, unsigned ** delka, unsigned ** predchudce );
+void vypisVysledekMaticove( unsigned ** vzdalenosti, unsigned pocetUzlu );
 

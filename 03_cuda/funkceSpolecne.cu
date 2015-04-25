@@ -22,6 +22,14 @@
 
 using namespace std;
 
+void HandleError( cudaError_t chyba, const char * soubor, int radek ) {
+    if ( chyba != cudaSuccess ) {
+        printf( "%s v %s na radku %d\n", cudaGetErrorString( chyba ), soubor, radek );
+        exit( 1 );
+    }
+}
+
+
 void vypisUsage( ostream & os, const char * jmenoProgramu ) {
    os << "USAGE\n"
          "   " << jmenoProgramu << " [-t pocet_vlaken] -f vstupni_soubor\n"
@@ -57,7 +65,7 @@ bool zkontrolujPrazdnyVstup( istream & is ) {
    while ( true ) {
       c = is.get();
       if ( is.fail() ) 
-         return true;
+         break;
       if ( ! ( c == ' ' || c == '\t' || c == '\n' || c == '\r' ) )
          return false;
    }
@@ -214,11 +222,9 @@ bool nactiGraf( istream & is, unsigned ** & graf, unsigned & pocetUzlu ) {
             case NACTI_OK:
             case NACTI_NEKONECNO:
                continue;
-               break;
             case NACTI_ERR_PRAZDNO:
                cerr << "nactiGraf(): Chyba! V ocekavam n^2 nezapornych hodnot (n = " << pocetUzlu << ")." << endl;
                return false;
-               break;
             case NACTI_ERR_ZNAMENKO:
             case NACTI_ERR_CISLO:
             case NACTI_ERR_TEXT:
@@ -227,7 +233,6 @@ bool nactiGraf( istream & is, unsigned ** & graf, unsigned & pocetUzlu ) {
             default:
                cerr << "nactiGraf(): Neocekavana chyba vstupu." << endl;
                return false;
-               break;
          }
       }
    }

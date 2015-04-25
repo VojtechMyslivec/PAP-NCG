@@ -27,6 +27,8 @@
 //    #undef FLOYDWARSHALL
 // #endif // DIJKSTRA
 
+#include <iostream>
+
 #include "funkceSpolecne.h"
 #ifdef FLOYDWARSHALL
    #include "floydWarshall.h"
@@ -34,11 +36,6 @@
 #ifdef DIJKSTRA
    #include "dijkstra.h"
 #endif // DIJKSTRA
-
-#include <iostream>
-#include <fstream>
-#include <iomanip>
-#include <omp.h>
 
 using namespace std;
 

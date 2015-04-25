@@ -17,13 +17,14 @@
 
 #include "cDijkstra.h"
 
+#include <stdio.h>
 #include <iostream>
 #include <iomanip>
 
 using namespace std;
 // ============================================================================
 
-cDijkstra::cDijkstra( unsigned idVychozihoUzlu ) {
+cDijkstra::cDijkstra( unsigned pocetUzlu, unsigned idVychozihoUzlu ) {
     if ( idVychozihoUzlu >= pocetUzlu ) {
         cerr << "inicializace(): Chyba! id uzlu je vyssi nez pocet uzlu.";
         throw "inicializace(): Chyba! id uzlu je vyssi nez pocet uzlu.";
@@ -34,6 +35,7 @@ cDijkstra::cDijkstra( unsigned idVychozihoUzlu ) {
     vzdalenost = NULL;
     uzavreny   = NULL;
     pocetUzavrenychUzlu   = 0;
+    this->pocetUzlu = pocetUzlu;
     this->idVychozihoUzlu = idVychozihoUzlu;
 }
 
@@ -64,7 +66,7 @@ __device__ bool cDijkstra::devSpustVypocet( ) {
     // dokud nenavstivi vsechny uzly
     while ( pocetUzavrenychUzlu < pocetUzlu ) {
         // uzly navstevuje podle nejmensi vzdalenosti
-        if ( ! vyberMinimumZFronty( idUzlu ) ) 
+        if ( ! devVyberMinimumZFronty( idUzlu ) ) 
             return false;
         uzavreny[idUzlu] = true;
         pocetUzavrenychUzlu++;
@@ -115,7 +117,7 @@ __device__ bool cDijkstra::devSpustVypocet( ) {
 
 __device__ bool cDijkstra::devVyberMinimumZFronty( unsigned & idMinima ) const {
     if (pocetUzavrenychUzlu == pocetUzlu) {
-        cerr << "vyberMinimumZFronty(): Chyba! Prazdna fronta!" << endl;
+        //cerr << "devVyberMinimumZFronty(): Chyba! Prazdna fronta!" << endl;
         return false;
     }
 
@@ -133,7 +135,7 @@ __device__ bool cDijkstra::devVyberMinimumZFronty( unsigned & idMinima ) const {
     }
     // pro kontrolu, zda se nejaky uzel nasel
     if ( idMinima == pocetUzlu ) {
-        cerr << "vyberMinimumZFronty(): Neocekavana chyba! Fronta neni prazdna, minimum se ale nenalezlo!" << endl;
+        //cerr << "devVyberMinimumZFronty(): Neocekavana chyba! Fronta neni prazdna, minimum se ale nenalezlo!" << endl;
         return false;
     }
 

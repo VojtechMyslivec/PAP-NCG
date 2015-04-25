@@ -16,8 +16,7 @@
 #ifndef FUNKCE_SPOLECNE_aohiuefijn39nvkjns92
 #define FUNKCE_SPOLECNE_aohiuefijn39nvkjns92
 
-#include <iostream>
-#include <climits>
+#define HANDLE_ERROR( err ) ( HandleError( err, __FILE__, __LINE__) )
 
 #define UNSIGNED_NEKONECNO  UINT_MAX
 
@@ -38,8 +37,14 @@
 #define GRAF_NEORIENTOVANY 1
 #define GRAF_CHYBA         2
 
+#include <iostream>
+#include <climits>
+
 using namespace std;
 
+// error handle pro cuda funkce
+void HandleError( cudaError_t chyba, const char * soubor, int radek );
+   
 // vypise usage na vystupni stream os, vola se s argumentem argv[0] 
 // jako jmenem programu
 void vypisUsage( ostream & os, const char * jmenoProgramu );

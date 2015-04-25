@@ -27,7 +27,7 @@ using namespace std;
 
 void dijkstraObjektInit( unsigned ** devGraf, unsigned pocetUzlu, unsigned idUzlu, cDijkstra *& devDijkstra ) {
     // vytvori objekt na host, aby ho zkopiroval na device ----------
-    hostDijkstra = new cDijkstra( pocetUzlu, idUzlu );
+    cDijkstra * hostDijkstra = new cDijkstra( pocetUzlu, idUzlu ); 
 
     cudaMalloc( &devDijkstra, sizeof(*devDijkstra) );
     cudaMemcpy( devDijkstra, hostDijkstra, sizeof(*devDijkstra), cudaMemcpyHostToDevice );
@@ -80,12 +80,13 @@ void dijkstraObjektInit( unsigned ** devGraf, unsigned pocetUzlu, unsigned idUzl
 }
 
 void dijkstraInicializaceNaGPU( unsigned ** devGraf, unsigned pocetUzlu, cDijkstra **& devDijkstra ) {
-    cDijkstra ** hostDevDijkstra = new cDijkstra* [pocetUzlu];
+    cDijkstra ** hostDevDijkstra = new cDijkstra * [pocetUzlu];
 
     // alokace objektu na GPU ---------------------------------------
-    devDijkstra = new cDijkstra * [pocetUzlu];
+    // TODO smazat? 
+    // devDijkstra = new cDijkstra * [pocetUzlu];
     for ( unsigned idUzlu = 0 ; idUzlu < pocetUzlu ; idUzlu++ ) {
-        dijkstraObjektInit( devGraf, pocetUzlu, idUzlu, hostDevDijkstra[i] );
+        dijkstraObjektInit( devGraf, pocetUzlu, idUzlu, hostDevDijkstra[idUzlu] );
     }
     // alokace a zkopirovani pole ukazatelu na GPU ------------------
     HANDLE_ERROR( 
@@ -217,7 +218,7 @@ void dijkstraObjektUklid( cDijkstra *& devDijkstra ) {
 void dijkstraUklidNaGPU( cDijkstra **& devDijkstra, unsigned pocetUzlu ) {
     // uvolneni objektu z pameti GPU ---------------------------------
     for ( unsigned idUzlu = 0 ; idUzlu < pocetUzlu ; idUzlu++ ) {
-        dijkstraObjektUklid( devDijkstra[i] );
+        dijkstraObjektUklid( devDijkstra[idUzlu] );
     }
     // uvolneni pole ukazatelu na objekty na GPU --------------------
     HANDLE_ERROR( 
@@ -280,7 +281,7 @@ void zkopirujDataZGPU( unsigned ** vzdalenostM, cDijkstra ** devDijkstra, unsign
             cudaMemcpy( 
                         &(devHodnoty), 
                         //&(hostDevDijkstra[i]->vzdalenosti), 
-                        &(devDijkstra[i]->vzdalenosti), 
+                        &(devDijkstra[i]->vzdalenost), 
                         sizeof(devHodnoty), 
                         cudaMemcpyDeviceToHost
                       )
@@ -302,13 +303,14 @@ void zkopirujDataZGPU( unsigned ** vzdalenostM, cDijkstra ** devDijkstra, unsign
 
 __global__ void wrapperProGPU( cDijkstra ** devDijkstra, unsigned pocetUzlu ) {
     for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
-        devDijkstra[i]->inicializujHodnoty();
-        devDijkstra[i]->spustVypocet();
+        devDijkstra[i]->devInicializujHodnoty();
+        devDijkstra[i]->devSpustVypocet();
     }
     return;
 }
 
 bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu, unsigned pocetVlaken ) {
+    unsigned  ** devGraf;
     unsigned  ** vzdalenostM; 
     cDijkstra ** devDijkstra;
 
@@ -326,8 +328,8 @@ bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu, unsigned pocetVlaken ) 
     return true;
 }
 
-void vypisVysledekMaticove( unsigned ** delka, unsigned pocetUzlu ) {
+void vypisVysledekMaticove( unsigned ** vzdalenosti, unsigned pocetUzlu ) {
     cout << "Vzdalenosti:" << endl;
-    vypisGrafu( cout, delka, pocetUzlu );
+    vypisGrafu( cout, vzdalenosti, pocetUzlu );
 }
 

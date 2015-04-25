@@ -43,7 +43,7 @@ class cDijkstra {
 
         // nastavi hodnoty poli a promennych dle jiz nastavenych hodnot 
         // pocetUzlu a idVychozihoUzlu z konstruktoru
-        __device__ bool devInicializujHodnoty( );
+        __device__ void devInicializujHodnoty( );
 
         // Vypocte nejkratsi cesty od daneho uzlu ke vsem ostatnim uzlum
         // Fronta hran je implementovana prostym prohledavanim pole (uzly
@@ -60,7 +60,7 @@ class cDijkstra {
 // 
 //         void vypisVysledekPoUzlech( ) const;
 
-    protected:
+//    protected:
         // nalezne mimimum z fronty (neboli z otevrenych uzlu)
         // false v pripade prazdne fronty
         __device__ bool devVyberMinimumZFronty( unsigned & idMinima ) const;
