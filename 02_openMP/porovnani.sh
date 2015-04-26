@@ -33,17 +33,17 @@ for file in "$data"/*.txt ; do
    vystupDiff="${rozdily}/diff_${metoda}_${filename}"
 
    echo "Zpracovavam soubor '$filename'"
-   "$dijkstra" -f "${file}" > "${vystupD}" 2> /dev/null
-   "$floyd" -f "${file}" > "${vystupF}" 2> /dev/null
+   "$dijkstra" -t 6 -f "${file}" > "${vystupD}" 2> /dev/null
+   "$floyd"    -t 6 -f "${file}" > "${vystupF}" 2> /dev/null
    diff "${vystupD}" "${vystupF}" > "${vystupDiff}"
 done
 
 # Uklid souboru
-make clean > /dev/null
-[[ $? -ne 0 ]] && {
-   echo "Chyba (make clean)! Nepodarilo se smazat vsechny vystupni soubory" >&2
-   exit 2
-}
+# make clean > /dev/null
+# [[ $? -ne 0 ]] && {
+#    echo "Chyba (make clean)! Nepodarilo se smazat vsechny vystupni soubory" >&2
+#    exit 2
+# }
 
 exit 0
 
