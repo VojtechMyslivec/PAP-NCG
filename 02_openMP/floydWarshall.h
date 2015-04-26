@@ -29,19 +29,23 @@
 void floydWarshall( unsigned ** graf, unsigned pocetUzlu, unsigned pocetVlaken );
 
 // funkce pro inicializovani veskerych promennych potrebnych behem vypoctu 
-void inicializace( unsigned pocetUzlu, unsigned ** graf, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned **& predchudcePredchozi, unsigned **& predchudceAktualni, unsigned pocetVlaken );
+//void inicializace( unsigned pocetUzlu, unsigned ** graf, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned **& predchudcePredchozi, unsigned **& predchudceAktualni, unsigned pocetVlaken );
+void inicializace( unsigned pocetUzlu, unsigned ** graf, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned pocetVlaken );
 
 // funkce, ktera zajisti uklizeni alokovanych promennych
-void uklid( unsigned pocetUzlu, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned **& predchudcePredchozi, unsigned **& predchudceAktualni );
+//void uklid( unsigned pocetUzlu, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned **& predchudcePredchozi, unsigned **& predchudceAktualni );
+void uklid( unsigned pocetUzlu, unsigned **& delkaPredchozi, unsigned **& delkaAktualni );
 
 // realizuje samotny (paralelni) vypocet algoritmu Floyd-Warshalla O( n^3 / p ) 
-void spustVypocet( unsigned pocetUzlu, unsigned ** graf, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned **& predchudcePredchozi, unsigned **& predchudceAktualni );
+//void spustVypocet( unsigned pocetUzlu, unsigned ** graf, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned **& predchudcePredchozi, unsigned **& predchudceAktualni );
+void spustVypocet( unsigned pocetUzlu, unsigned ** graf, unsigned **& delkaPredchozi, unsigned **& delkaAktualni );
 
 // pomocna funkce prohazujici dva ukazatele
 void prohodUkazatele( unsigned **& ukazatel1, unsigned **& ukazatel2 );
 
 // funkce pro vypis matice delek a predchudcu
-void vypisVysledekMaticove( unsigned pocetUzlu, unsigned ** delka, unsigned ** predchudce );
+//void vypisVysledekMaticove( unsigned pocetUzlu, unsigned ** delka, unsigned ** predchudce );
+void vypisVysledekMaticove( unsigned pocetUzlu, unsigned ** delka );
 
 #endif // FLOYDWARSHALL_kljnef29kjdsnf02
 

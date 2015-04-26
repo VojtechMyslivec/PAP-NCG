@@ -20,35 +20,40 @@
 void floydWarshall( unsigned ** graf, unsigned pocetUzlu, unsigned pocetVlaken ) {
    unsigned ** delkaPredchozi = NULL;
    unsigned ** delkaAktualni  = NULL;
-   unsigned ** predchudcePredchozi = NULL;
-   unsigned ** predchudceAktualni  = NULL;
-   inicializace( pocetUzlu, graf, delkaPredchozi, delkaAktualni, predchudcePredchozi, predchudceAktualni, pocetVlaken );
+//   unsigned ** predchudcePredchozi = NULL;
+//   unsigned ** predchudceAktualni  = NULL;
+//   inicializace( pocetUzlu, graf, delkaPredchozi, delkaAktualni, predchudcePredchozi, predchudceAktualni, pocetVlaken );
+   inicializace( pocetUzlu, graf, delkaPredchozi, delkaAktualni, pocetVlaken );
 
-   spustVypocet( pocetUzlu, graf, delkaPredchozi, delkaAktualni, predchudcePredchozi, predchudceAktualni );
+//   spustVypocet( pocetUzlu, graf, delkaPredchozi, delkaAktualni, predchudcePredchozi, predchudceAktualni );
+   spustVypocet( pocetUzlu, graf, delkaPredchozi, delkaAktualni );
 
-   vypisVysledekMaticove( pocetUzlu, delkaAktualni, predchudceAktualni );
+//   vypisVysledekMaticove( pocetUzlu, delkaAktualni, predchudceAktualni );
+   vypisVysledekMaticove( pocetUzlu, delkaAktualni );
 
-   uklid( pocetUzlu, delkaPredchozi, delkaAktualni, predchudcePredchozi, predchudceAktualni );
+//   uklid( pocetUzlu, delkaPredchozi, delkaAktualni, predchudcePredchozi, predchudceAktualni );
+   uklid( pocetUzlu, delkaPredchozi, delkaAktualni );
 }
 
-void inicializace( unsigned pocetUzlu, unsigned ** graf, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned **& predchudcePredchozi, unsigned **& predchudceAktualni, unsigned pocetVlaken ) {
+//void inicializace( unsigned pocetUzlu, unsigned ** graf, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned **& predchudcePredchozi, unsigned **& predchudceAktualni, unsigned pocetVlaken ) {
+void inicializace( unsigned pocetUzlu, unsigned ** graf, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned pocetVlaken ) {
    delkaPredchozi      = new unsigned*[pocetUzlu];
    delkaAktualni       = new unsigned*[pocetUzlu];
-   predchudcePredchozi = new unsigned*[pocetUzlu];
-   predchudceAktualni  = new unsigned*[pocetUzlu];
+//   predchudcePredchozi = new unsigned*[pocetUzlu];
+//   predchudceAktualni  = new unsigned*[pocetUzlu];
 
    for ( unsigned i = 0; i < pocetUzlu; i++ ) {
       delkaPredchozi[i]      = new unsigned[pocetUzlu];
       delkaAktualni[i]       = new unsigned[pocetUzlu];
-      predchudcePredchozi[i] = new unsigned[pocetUzlu];
-      predchudceAktualni[i]  = new unsigned[pocetUzlu];
+//      predchudcePredchozi[i] = new unsigned[pocetUzlu];
+//      predchudceAktualni[i]  = new unsigned[pocetUzlu];
 
       for ( unsigned j = 0; j < pocetUzlu; j++ ) {
          delkaPredchozi[i][j] = graf[i][j];
-         if ( i == j || graf[i][j] == FW_NEKONECNO )
-            predchudcePredchozi[i][j] = FW_NEDEFINOVANO;
-         else
-            predchudcePredchozi[i][j] = i;
+//         if ( i == j || graf[i][j] == FW_NEKONECNO )
+//            predchudcePredchozi[i][j] = FW_NEDEFINOVANO;
+//         else
+//            predchudcePredchozi[i][j] = i;
       }
    }
    
@@ -66,30 +71,35 @@ void inicializace( unsigned pocetUzlu, unsigned ** graf, unsigned **& delkaPredc
 
 }
 
-void uklid( unsigned pocetUzlu, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned **& predchudcePredchozi, unsigned **& predchudceAktualni ) {
+//void uklid( unsigned pocetUzlu, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned **& predchudcePredchozi, unsigned **& predchudceAktualni ) {
+void uklid( unsigned pocetUzlu, unsigned **& delkaPredchozi, unsigned **& delkaAktualni ) {
    for ( unsigned i = 0; i < pocetUzlu; i++ ) {
       delete [] delkaPredchozi[i];
       delete [] delkaAktualni[i];
-      delete [] predchudcePredchozi[i];
-      delete [] predchudceAktualni[i];
+//      delete [] predchudcePredchozi[i];
+//      delete [] predchudceAktualni[i];
    }
    delete [] delkaPredchozi;
    delete [] delkaAktualni;
-   delete [] predchudcePredchozi;
-   delete [] predchudceAktualni;
+//   delete [] predchudcePredchozi;
+//   delete [] predchudceAktualni;
 
    delkaPredchozi      = delkaAktualni      = NULL;
-   predchudcePredchozi = predchudceAktualni = NULL;
+//   predchudcePredchozi = predchudceAktualni = NULL;
 }
 
-void spustVypocet( unsigned pocetUzlu, unsigned ** graf, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned **& predchudcePredchozi, unsigned **& predchudceAktualni ) {
+//void spustVypocet( unsigned pocetUzlu, unsigned ** graf, unsigned **& delkaPredchozi, unsigned **& delkaAktualni, unsigned **& predchudcePredchozi, unsigned **& predchudceAktualni ) {
+void spustVypocet( unsigned pocetUzlu, unsigned ** graf, unsigned **& delkaPredchozi, unsigned **& delkaAktualni ) {
    unsigned novaVzdalenost;
    
-   for ( unsigned k = 0; k < pocetUzlu; k++ ) {
-      unsigned i;
-#pragma omp parallel for private( i, novaVzdalenost ) shared( delkaPredchozi, delkaAktualni, predchudcePredchozi, predchudceAktualni )
+   unsigned i, j, k;
+   i = j = k = 0;
+//#pragma omp parallel private( i, j, novaVzdalenost ) shared( k, delkaPredchozi, delkaAktualni, predchudcePredchozi, predchudceAktualni )
+#pragma omp parallel private( i, j, novaVzdalenost ) shared( k, delkaPredchozi, delkaAktualni )
+   while ( k < pocetUzlu ) {
+#pragma omp for
       for ( i = 0; i < pocetUzlu; i++ ) {
-         for ( unsigned j = 0; j < pocetUzlu; j++ ) {
+         for ( j = 0; j < pocetUzlu; j++ ) {
             // osetreni nekonecna
             if ( delkaPredchozi[i][k] == FW_NEKONECNO || delkaPredchozi[k][j] == FW_NEKONECNO )
                 novaVzdalenost = FW_NEKONECNO;
@@ -99,23 +109,27 @@ void spustVypocet( unsigned pocetUzlu, unsigned ** graf, unsigned **& delkaPredc
             // pokud nalezne kratsi cestu, zapise ji a zmeni predchudcePredchozi
             if ( novaVzdalenost < delkaPredchozi[i][j] ) {
                 delkaAktualni[i][j]      = novaVzdalenost;
-                predchudceAktualni[i][j] = predchudcePredchozi[k][j];
-            }// jinak delka i predchudce zustavaji
+//                predchudceAktualni[i][j] = predchudcePredchozi[k][j];
+            }
+            // jinak delka i predchudce zustavaji
             else {
                 delkaAktualni[i][j]      = delkaPredchozi[i][j];
-                predchudceAktualni[i][j] = predchudcePredchozi[i][j];
+//                predchudceAktualni[i][j] = predchudcePredchozi[i][j];
             }
          }
       }
-
-      // prohozeni predchozi a aktualni
-      prohodUkazatele( delkaPredchozi,      delkaAktualni );
-      prohodUkazatele( predchudcePredchozi, predchudceAktualni );
+#pragma omp single
+      {
+         // prohozeni predchozi a aktualni
+         prohodUkazatele( delkaPredchozi,      delkaAktualni );
+//         prohodUkazatele( predchudcePredchozi, predchudceAktualni );
+         k++;
+      }
    }
 
    // prohozeni predchozi a aktualni, aby vysledky byly v aktualnim ( po skonceni cyklu jsou vysledky v predchozim )
    prohodUkazatele( delkaPredchozi,      delkaAktualni );
-   prohodUkazatele( predchudcePredchozi, predchudceAktualni );
+//   prohodUkazatele( predchudcePredchozi, predchudceAktualni );
 }
 
 void prohodUkazatele( unsigned **& ukazatel1, unsigned **& ukazatel2 ) {
@@ -125,9 +139,10 @@ void prohodUkazatele( unsigned **& ukazatel1, unsigned **& ukazatel2 ) {
    ukazatel2 = pomocny;
 }
 
-void vypisVysledekMaticove( unsigned pocetUzlu, unsigned ** delka, unsigned ** predchudce ) {
+//void vypisVysledekMaticove( unsigned pocetUzlu, unsigned ** delka, unsigned ** predchudce ) {
+void vypisVysledekMaticove( unsigned pocetUzlu, unsigned ** delka ) {
    vypisGrafu( cout, delka, pocetUzlu );
-   cout << endl;
-   vypisGrafu( cout, predchudce, pocetUzlu );
+//   cout << endl;
+//   vypisGrafu( cout, predchudce, pocetUzlu );
 }
 
