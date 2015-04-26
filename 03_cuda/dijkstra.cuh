@@ -1,19 +1,20 @@
-/** dijkstra.h
+/** dijkstra.cuh
  *
  * Autori:      Vojtech Myslivec <vojtech.myslivec@fit.cvut.cz>,  FIT CVUT v Praze
  *              Zdenek  Novy     <novyzde3@fit.cvut.cz>,          FIT CVUT v Praze
  *              
- * Datum:       unor-brezen 2015
+ * Datum:       unor-duben 2015
  *
  * Popis:       Semestralni prace z predmetu MI-PAP:
  *              Hledani nejkratsich cest v grafu 
- *                 paralelni cast
+ *                 paralelni implementace na CUDA
  *                 algoritmus Dijkstra
  *
  *
  */
-#include "funkceSpolecne.h"
-#include "cDijkstra.h"
+
+#include "funkceSpolecne.cuh"
+#include "cDijkstra.cuh"
 
 // alokuje data pro objekt cDijkstra na GPU. Inicializace hodnot dela jiz GPU
 void dijkstraObjektInit( unsigned ** devGraf, unsigned pocetUzlu, unsigned idUzlu, cDijkstra *& devDijkstra );
@@ -28,10 +29,10 @@ void dijkstraInicializaceNaGPU( unsigned ** devGraf, unsigned pocetUzlu, cDijkst
 // vola (paralelne) vypocet Dijkstrova algoritmu pro kazdy uzel
 // idealni slozitost O( n^3 / p )
 // vysledek vypise na stdout
-bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu, unsigned pocetVlaken );
+bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu );
 
 // funkce pro inicializovani veskerych promennych potrebnych behem vypoctu 
-void inicializace( unsigned ** graf, unsigned pocetUzlu, unsigned **& vzdalenostM, unsigned **& predchudceM, unsigned pocetVlaken );
+void inicializace( unsigned ** graf, unsigned pocetUzlu, unsigned **& vzdalenostM, unsigned **& predchudceM );
 
 // funkce, ktera zajisti uklizeni alokovane dvourozmerne promenne
 void uklidUkazatelu( unsigned **& dveDimenze, unsigned rozmer );
@@ -41,4 +42,7 @@ void zkopirujDataZGPU( unsigned ** vzdalenostM, cDijkstra ** devDijkstra, unsign
 
 // funkce pro vypis matice delek a predchudcu
 void vypisVysledekMaticove( unsigned ** vzdalenosti, unsigned pocetUzlu );
+
+// kernel kod pro CUDA, wrapper obalujici spousteni vypoctu kazdeho z objektu v poli devDijkstra
+__global__ void wrapperProGPU( cDijkstra ** devDijkstra, unsigned pocetUzlu );
 

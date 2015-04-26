@@ -1,0 +1,12 @@
+Optimalizace (dijsktra)
+  -O3
+  Xptxas -O3,
+  page-locked memory (cudaHostAlloc)
+  cache (cudaFuncSetCacheConfig)
+
+  Nic z toho vyrazne nepomohlo 
+
+
+
+
+

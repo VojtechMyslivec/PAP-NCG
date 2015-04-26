@@ -1,6 +1,6 @@
 #!/bin/bash
 USAGE="USAGE
-   $0 program adresar_s_daty stitek
+   $0 program adresar_s_daty stitek [host]
 
       Pro vsechna data s koncovkou .txt v tomto adresari_s_daty
       a pro vsechny merene pocty vlaken zaradi do fronty qsub 
@@ -8,7 +8,14 @@ USAGE="USAGE
 
       Skript vytvori podadresar stitek s casovou znackou, do
       ktereho se budou ukladat soubory fronty a vystupy programu
-      spoustenych pres frontu."
+      spoustenych pres frontu.
+
+      Nepovinny parametr host urcuje pocitac, na kterem se
+      uloha ve fronte bude spoustet
+         povolene hodnoty jsou:
+            gpu-02  [vychozi]
+            gpu-03"
+
 
 chyba () {
    echo "$0: Chyba:" "$*" >&2
@@ -37,7 +44,7 @@ done
    echo "$USAGE"
    exit 0
 }
-[[ $# -eq 3 ]] || {
+[[ $# -eq 3 || $# -eq 4 ]] || {
    echo "$USAGE" >&2
    exit 1
 }
@@ -50,13 +57,20 @@ done
    exit 1
 }
 
+
 program=$1
 data=$2
 stitek=$3
+host=${4:-gpu-02}
 vstupy=`ls "$data/"*.txt 2> /dev/null`
-# test, jesltli existuje alespon jeden soubor
+# test, jestli existuje alespon jeden soubor
 [[ -z "$vstupy" ]] && {
    chyba "V adresari '$data' neni zadny vstupni soubor s koncovkou .txt"
+   exit 1
+}
+# test host
+[[ "$host" == "gpu-02" || "$host" == "gpu-02" ]] || {
+   chyba "Nepodporovany host!"
    exit 1
 }
 
@@ -112,7 +126,7 @@ for vstup in $vstupy ; do
             s|${nahrazeni["CHYBOVY"]}|\"$adrMereni\"|g
             s|${nahrazeni["STANDARDNI"]}|\"$adrVystupy\"|g" "$vzor" > "$fronta"
 
-      id=`qsub -l h=gpu-02 "$fronta" 2> /dev/null | awk '{print $3}'`
+      id=`qsub -l "h=${host}" "$fronta" 2> /dev/null | awk '{print $3}'`
       if [[ "$id" =~ ^[0-9]+$ ]]; then 
          echo -n "$t "
       else

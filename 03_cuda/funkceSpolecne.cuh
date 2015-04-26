@@ -1,13 +1,13 @@
-/** funkceSpolecne.h
+/** funkceSpolecne.cuh
  *
  * Autori:      Vojtech Myslivec <vojtech.myslivec@fit.cvut.cz>,  FIT CVUT v Praze
  *              Zdenek  Novy     <novyzde3@fit.cvut.cz>,          FIT CVUT v Praze
  *              
- * Datum:       unor-brezen 2015
+ * Datum:       unor-duben 2015
  *
  * Popis:       Semestralni prace z predmetu MI-PAP:
  *              Hledani nejkratsich cest v grafu 
- *                 sekvencni cast
+ *                 paralelni implementace na CUDA
  *                 Spolecne funkce pro nacitani / vypis dat
  *
  *
@@ -16,7 +16,9 @@
 #ifndef FUNKCE_SPOLECNE_aohiuefijn39nvkjns92
 #define FUNKCE_SPOLECNE_aohiuefijn39nvkjns92
 
-#define HANDLE_ERROR( err ) ( HandleError( err, __FILE__, __LINE__) )
+#define HANDLE_ERROR( err )  ( HandleError( err, __FILE__, __LINE__) )
+#define MIN( A, B )          ( A < B ? A : B )
+#define CUDA_BLOK_VELIKOST   128
 
 #define UNSIGNED_NEKONECNO  UINT_MAX
 
@@ -61,7 +63,6 @@ bool zkontrolujPrazdnyVstup( istream & is );
 
 // Funkce zajisti nacteni a kontrolu parametru.
 // Do vystupnich promenych uklada:
-//    pocetVlaken      pocet pozadovanych vlaken       -- prepinac -t
 //    souborSGrafem    jmeno souboru se vstupnimi daty -- prepinac -f (povinny!)
 //    navrat           navratovy kod v pripade selhani / chyby
 //                     tedy  v pripade vraceni false
@@ -72,7 +73,7 @@ bool zkontrolujPrazdnyVstup( istream & is );
 //           Prepinac -h prinuti funkci skoncit s chybou, ale navratova
 //           hodnota bude MAIN_OK.
 //    true   Vse v poradku, parametry byly uspesne nacteny
-bool parsujArgumenty( int argc, char ** argv, unsigned & pocetVlaken, char *& souborSGrafem, unsigned & navrat );
+bool parsujArgumenty( int argc, char ** argv, char *& souborSGrafem, unsigned & navrat );
 
 // nacte jednu unsigned hodnotu ze vstupu
 // pokud misto unsigned cisla nalezne - (nasledovanou prazdnym znakem)

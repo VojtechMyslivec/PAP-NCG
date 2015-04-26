@@ -1,9 +1,9 @@
-/** dijkstra.cpp
+/** dijkstra.cu
  *
  * Autori:      Vojtech Myslivec <vojtech.myslivec@fit.cvut.cz>,  FIT CVUT v Praze
  *              Zdenek  Novy     <novyzde3@fit.cvut.cz>,          FIT CVUT v Praze
  *              
- * Datum:       unor-brezen 2015
+ * Datum:       unor-duben 2015
  *
  * Popis:       Semestralni prace z predmetu MI-PAP:
  *              Hledani nejkratsich cest v grafu 
@@ -13,15 +13,16 @@
  *
  */
 
-#include "dijkstra.h"
-#include "cDijkstra.h"
-#include "funkceSpolecne.h"
+#include "dijkstra.cuh"
+#include "cDijkstra.cuh"
+#include "funkceSpolecne.cuh"
 
 #include <iostream>
 #include <fstream>
 #include <iomanip>
 #include <cstring>
 #include <omp.h>
+
 
 using namespace std;
 
@@ -83,8 +84,6 @@ void dijkstraInicializaceNaGPU( unsigned ** devGraf, unsigned pocetUzlu, cDijkst
     cDijkstra ** hostDevDijkstra = new cDijkstra * [pocetUzlu];
 
     // alokace objektu na GPU ---------------------------------------
-    // TODO smazat? 
-    // devDijkstra = new cDijkstra * [pocetUzlu];
     for ( unsigned idUzlu = 0 ; idUzlu < pocetUzlu ; idUzlu++ ) {
         dijkstraObjektInit( devGraf, pocetUzlu, idUzlu, hostDevDijkstra[idUzlu] );
     }
@@ -105,7 +104,6 @@ void dijkstraInicializaceNaGPU( unsigned ** devGraf, unsigned pocetUzlu, cDijkst
     );
 
     delete [] hostDevDijkstra;
-
 }
 
 void grafInicializaceNaGPU( unsigned ** graf, unsigned pocetUzlu, unsigned **& devGraf ) {
@@ -148,36 +146,71 @@ void grafInicializaceNaGPU( unsigned ** graf, unsigned pocetUzlu, unsigned **& d
     }
 }
 
-void inicializaceNtoN( unsigned ** graf,     unsigned pocetUzlu, 
+// alokuje PAGE-LOCKED pamet pro rychlejsi kopirovani
+void maticeInicializaceNaCPU( unsigned **& hostVzdalenost, unsigned pocetUzlu ) {
+    //vzdalenostM = new unsigned*[pocetUzlu];
+    // page-lock memory
+    HANDLE_ERROR( 
+            cudaHostAlloc( 
+                &hostVzdalenost, 
+                pocetUzlu * sizeof(*hostVzdalenost),
+                cudaHostAllocDefault
+                )
+            );
+    for ( unsigned i = 0; i < pocetUzlu; i++ ) {
+        //vzdalenostM[i] = new unsigned[pocetUzlu];
+        // page-lock memory
+        HANDLE_ERROR( 
+                cudaHostAlloc( 
+                    &(hostVzdalenost[i]), 
+                    pocetUzlu * sizeof(*hostVzdalenost[i]),
+                    cudaHostAllocDefault
+                    )
+                );
+        for ( unsigned j = 0; j < pocetUzlu; j++ ) {
+            hostVzdalenost[i][j] = DIJKSTRA_NEKONECNO;
+        }
+    }
+}
+
+void inicializaceNtoN( unsigned **  graf,    unsigned pocetUzlu, 
                        unsigned **& vzdalenostM,
                        unsigned **& devGraf, cDijkstra **& devDijkstra
                      ) {
     // inicializace matic vysledku -------------------------
-    vzdalenostM = new unsigned*[pocetUzlu];
-    for ( unsigned i = 0; i < pocetUzlu; i++ ) {
-        vzdalenostM[i] = new unsigned[pocetUzlu];
-        for ( unsigned j = 0; j < pocetUzlu; j++ ) {
-            vzdalenostM[i][j] = DIJKSTRA_NEKONECNO;
-        }
-    }
+    maticeInicializaceNaCPU( vzdalenostM, pocetUzlu );
 
     // pseudo-staticka inicializace -----------------------
     grafInicializaceNaGPU( graf, pocetUzlu, devGraf );
 
     // inicializace objektu na GPU ------------------------
     dijkstraInicializaceNaGPU( devGraf, pocetUzlu, devDijkstra );
+
+    // dalsi nastaveni pro GPU ----------------------------
+#ifdef CACHE
+    cudaFuncSetCacheConfig( wrapperProGPU, cudaFuncCachePreferL1 );
+    //cudaDeviceSetCacheConfig( cudaFuncCachePreferL1 );
+#endif // CACHE
 }
 
-void uklidUkazatelu( unsigned **& dveDimenze, unsigned rozmer ) {
-    if ( dveDimenze != NULL ) {
-        for ( unsigned i = 0; i < rozmer; i++ ) {
-            if ( dveDimenze[i] != NULL ) {
-                delete [] dveDimenze[i];
-                dveDimenze[i] = NULL;
+void maticeUklidNaCPU( unsigned **& hostVzdalenost, unsigned pocetUzlu ) {
+    if ( hostVzdalenost != NULL ) {
+        for ( unsigned i = 0; i < pocetUzlu; i++ ) {
+            if ( hostVzdalenost[i] != NULL ) {
+                //delete [] hostVzdalenost[i];
+                // page-locked memory
+                HANDLE_ERROR( 
+                        cudaFreeHost( hostVzdalenost[i] )
+                        );
+                hostVzdalenost[i] = NULL;
             }
         }
-        delete [] dveDimenze;
-        dveDimenze = NULL;
+        //delete [] hostVzdalenost;
+        // page-locked memory
+        HANDLE_ERROR( 
+                cudaFreeHost( hostVzdalenost )
+                );
+        hostVzdalenost = NULL;
     }
 }
 
@@ -212,19 +245,30 @@ void dijkstraObjektUklid( cDijkstra *& devDijkstra ) {
     // uvolni objekt z pameti na GPU --------------------------------
     cudaFree( devDijkstra );
     devDijkstra = NULL;
-
 }
 
 void dijkstraUklidNaGPU( cDijkstra **& devDijkstra, unsigned pocetUzlu ) {
+    // zkopirovani pole [ukazatelu do device] ---------------------------
+    cDijkstra ** hostDevDijkstra = new cDijkstra * [pocetUzlu];
+    HANDLE_ERROR( 
+       cudaMemcpy( 
+                   hostDevDijkstra,
+                   devDijkstra,
+                   pocetUzlu*sizeof(*devDijkstra), 
+                   cudaMemcpyDeviceToHost 
+                 )
+    );
+
     // uvolneni objektu z pameti GPU ---------------------------------
     for ( unsigned idUzlu = 0 ; idUzlu < pocetUzlu ; idUzlu++ ) {
-        dijkstraObjektUklid( devDijkstra[idUzlu] );
+        dijkstraObjektUklid( hostDevDijkstra[idUzlu] );
     }
     // uvolneni pole ukazatelu na objekty na GPU --------------------
     HANDLE_ERROR( 
             cudaFree( devDijkstra )
             );
     devDijkstra = NULL;
+    delete [] hostDevDijkstra;
 }
 
 void grafUklidNaGPU( unsigned **& devGraf, unsigned pocetUzlu ) {
@@ -257,22 +301,22 @@ void uklidNtoN( unsigned  ** vzdalenostM,
                 cDijkstra ** devDijkstra,
                 unsigned     pocetUzlu 
               ) {
-    uklidUkazatelu(     vzdalenostM, pocetUzlu );
+    maticeUklidNaCPU(   vzdalenostM, pocetUzlu );
     dijkstraUklidNaGPU( devDijkstra, pocetUzlu );
     grafUklidNaGPU(         devGraf, pocetUzlu );
 }
 
 void zkopirujDataZGPU( unsigned ** vzdalenostM, cDijkstra ** devDijkstra, unsigned pocetUzlu ) {
-//     // zkopirovani pole [ukazatelu do device] ---------------------------
-//     cDijkstra ** hostDevDijkstra = new cDijkstra* [pocetUzlu];
-//     HANDLE_ERROR( 
-//        cudaMemcpy( 
-//                    hostDevDijkstra,
-//                    devDijkstra,
-//                    pocetUzlu*sizeof(*devDijkstra), 
-//                    cudaMemcpyDeviceToHost 
-//                  )
-//     );
+    // zkopirovani pole [ukazatelu do device] ---------------------------
+    cDijkstra ** hostDevDijkstra = new cDijkstra * [pocetUzlu];
+    HANDLE_ERROR( 
+       cudaMemcpy( 
+                   hostDevDijkstra,
+                   devDijkstra,
+                   pocetUzlu*sizeof(*devDijkstra), 
+                   cudaMemcpyDeviceToHost 
+                 )
+    );
 
     unsigned * devHodnoty;
     for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
@@ -280,8 +324,8 @@ void zkopirujDataZGPU( unsigned ** vzdalenostM, cDijkstra ** devDijkstra, unsign
         HANDLE_ERROR( 
             cudaMemcpy( 
                         &(devHodnoty), 
-                        //&(hostDevDijkstra[i]->vzdalenosti), 
-                        &(devDijkstra[i]->vzdalenost), 
+                        &(hostDevDijkstra[i]->vzdalenost), 
+                        //&(devDijkstra[i]->vzdalenost), 
                         sizeof(devHodnoty), 
                         cudaMemcpyDeviceToHost
                       )
@@ -298,32 +342,89 @@ void zkopirujDataZGPU( unsigned ** vzdalenostM, cDijkstra ** devDijkstra, unsign
         );
     }
     
-//     delete [] hostDevDijkstra;
+    delete [] hostDevDijkstra;
 }
 
 __global__ void wrapperProGPU( cDijkstra ** devDijkstra, unsigned pocetUzlu ) {
-    for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
-        devDijkstra[i]->devInicializujHodnoty();
-        devDijkstra[i]->devSpustVypocet();
-    }
-    return;
+   int blok   = blockIdx.x;
+   int vlakno = threadIdx.x;
+   int i      = CUDA_BLOK_VELIKOST * blok + vlakno;
+
+#ifdef DEBUG
+   printf( "thread id = %d, b = %d, v = %d\n", i, blok, vlakno );
+#endif // DEBUG
+
+   if ( i < pocetUzlu ) {
+      devDijkstra[i]->devInicializujHodnoty();
+      devDijkstra[i]->devSpustVypocet();
+   }
+   return;
 }
 
-bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu, unsigned pocetVlaken ) {
+bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu ) {
     unsigned  ** devGraf;
     unsigned  ** vzdalenostM; 
     cDijkstra ** devDijkstra;
+    // pocet vlaken v bloku -- BLOK_VELIKOST nebo mensi
+    int vlaken = MIN( CUDA_BLOK_VELIKOST, pocetUzlu );
+    // horni cast pocetUzlu/vlaken
+    int bloku  = ( pocetUzlu + vlaken - 1 ) / vlaken;
+#ifdef MERENI
+    // udalosti pro mereni casu vypoctu
+    cudaEvent_t eStart, eZapsano, eVypocteno, eKonec;
+    float       tVypocet, tCelkem;
 
+    HANDLE_ERROR(   cudaEventCreate(     &eStart )  );
+    HANDLE_ERROR(   cudaEventCreate(   &eZapsano )  );
+    HANDLE_ERROR(   cudaEventCreate( &eVypocteno )  );
+    HANDLE_ERROR(   cudaEventCreate(     &eKonec )  );
+
+    HANDLE_ERROR(   cudaEventRecord(      eStart )  );
+#endif // MERENI
+
+    // inicializace a kopirovani dat na GPU --------------------------
     inicializaceNtoN( graf, pocetUzlu, vzdalenostM, devGraf, devDijkstra );
 
-    wrapperProGPU<<<1,1>>>( devDijkstra, pocetUzlu ) ;
+#ifdef MERENI
+    HANDLE_ERROR(   cudaEventRecord(    eZapsano )  );
+#endif // MERENI
+
+    // vypocet na GPU ------------------------------------------------
+    wrapperProGPU<<<bloku,vlaken>>>( devDijkstra, pocetUzlu ) ;
     cudaDeviceSynchronize();
 
+#ifdef MERENI
+    HANDLE_ERROR(   cudaEventRecord(  eVypocteno )  );
+#endif // MERENI
+
+    // kopirovani dat z GPU ------------------------------------------
     zkopirujDataZGPU( vzdalenostM, devDijkstra, pocetUzlu );
 
+#ifdef VYPIS
+    // vypis vysledku ------------------------------------------------
     vypisVysledekMaticove( vzdalenostM, pocetUzlu );
+#endif // VYPIS
 
+    // uvolneni pameti na CPU i GPU ----------------------------------
     uklidNtoN( vzdalenostM, devGraf, devDijkstra, pocetUzlu );
+
+#ifdef MERENI
+    HANDLE_ERROR(   cudaEventRecord(      eKonec )  );
+
+    HANDLE_ERROR(   cudaEventElapsedTime( &tVypocet, eZapsano, eVypocteno )  );
+    HANDLE_ERROR(   cudaEventElapsedTime(  &tCelkem,   eStart,     eKonec )  );
+
+    tCelkem  /= 1000;
+    tVypocet /= 1000;
+    cerr << pocetUzlu << '	' << bloku   << '	' << vlaken << '	'
+         << tVypocet  << '	' << tCelkem << '	' << endl;
+
+
+    HANDLE_ERROR(  cudaEventDestroy(     eKonec )  );
+    HANDLE_ERROR(  cudaEventDestroy( eVypocteno )  );
+    HANDLE_ERROR(  cudaEventDestroy(   eZapsano )  );
+    HANDLE_ERROR(  cudaEventDestroy(     eStart )  );
+#endif // MERENI
 
     return true;
 }

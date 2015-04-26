@@ -1,13 +1,13 @@
-/** cDijkstra.h
+/** cDijkstra.cuh
  *
  * Autori:      Vojtech Myslivec <vojtech.myslivec@fit.cvut.cz>,  FIT CVUT v Praze
  *              Zdenek  Novy     <novyzde3@fit.cvut.cz>,          FIT CVUT v Praze
  *              
- * Datum:       unor-brezen 2015
+ * Datum:       unor-duben 2015
  *
  * Popis:       Semestralni prace z predmetu MI-PAP:
  *              Hledani nejkratsich cest v grafu 
- *                 paralelni cast
+ *                 paralelni implementace na CUDA
  *                 trida cDijkstra pro Dijkstruv algoritmus
  *                    upraven vypocet prioritni fronty -- misto haldy for cylky, 
  *                    aby slo paralelizovat
@@ -22,7 +22,7 @@
     #define DEBUG
 #endif // DEBUG2
 
-#include "funkceSpolecne.h"
+#include "funkceSpolecne.cuh"
 #include <climits>
 
 #define DIJKSTRA_NEKONECNO    UNSIGNED_NEKONECNO

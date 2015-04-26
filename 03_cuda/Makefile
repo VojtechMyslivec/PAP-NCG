@@ -1,17 +1,23 @@
 CC=nvcc
 RM=rm -f
-FLAGS=-g -rdc=true -arch=sm_20 # -O3
+FLAGS=-arch=sm_20 -rdc=true -O3 -Xptxas -O3
 LIBS=
 DEFINE=
+DEFINE += -D CACHE
+DEFINE += -D MERENI
 
 DIJKSTRA=./dijkstra
 #FLOYD=./floyd-warshall
 
 all: dijkstra 
-	# floyd
+# floyd
+
+vypis: DEFINE += -D VYPIS
+vypis: dijkstra
+# floyd
 
 dijkstra: funkce cDijkstra dijkstraMain
-	$(CC)    $(DEFINE) $(FLAGS) $(LIBS) -lcudadevrt -o $(DIJKSTRA) dijkstra.o funkceSpolecne.o cDijkstra.o mainDijkstra.o
+	$(CC)    $(DEFINE) $(FLAGS) $(LIBS) -o $(DIJKSTRA) dijkstra.o funkceSpolecne.o cDijkstra.o mainDijkstra.o
 
 # floyd: funkce floydWarshall floydWarshallMain
 # 	$(CC)    $(DEFINE) $(FLAGS) $(LIBS) -o $(FLOYD) funkceSpolecne.o floydWarshall.o mainFloyd.o

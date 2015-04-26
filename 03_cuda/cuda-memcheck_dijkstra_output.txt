@@ -1,0 +1,7 @@
+========= CUDA-MEMCHECK
+========= LEAK SUMMARY: 0 bytes leaked in 0 allocations
+========= ERROR SUMMARY: 0 errors
+
+========= CUDA-MEMCHECK
+========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings) 
+
