@@ -69,7 +69,7 @@ vstupy=`ls "$data/"*.txt 2> /dev/null`
    exit 1
 }
 # test host
-[[ "$host" == "gpu-02" || "$host" == "gpu-02" ]] || {
+[[ "$host" == "gpu-02" || "$host" == "gpu-03" ]] || {
    chyba "Nepodporovany host!"
    exit 1
 }
@@ -112,7 +112,7 @@ for vstup in $vstupy ; do
    
    jmenoSouboru=${vstup##*/}
 
-   echo -n "Pro soubor '$vstup' zarazen vypocet ( vlaken "
+   echo -n "Pro soubor '$jmenoSouboru' zarazen vypocet ( vlaken "
    IFS=$oldIFS
    for t in $merenyPocetVlaken; do
       [[ "$t" =~ ^[0-9]+$ ]] || {
@@ -140,5 +140,6 @@ for vstup in $vstupy ; do
    echo ")"
 
 done
-echo Done
+
+echo "Hotovo"
 

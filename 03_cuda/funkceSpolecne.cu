@@ -24,7 +24,7 @@ using namespace std;
 
 void HandleError( cudaError_t chyba, const char * soubor, int radek ) {
     if ( chyba != cudaSuccess ) {
-        printf( "%s v %s na radku %d\n", cudaGetErrorString( chyba ), soubor, radek );
+        fprintf( stderr, "%s v %s na radku %d\n", cudaGetErrorString( chyba ), soubor, radek );
         exit( 1 );
     }
 }

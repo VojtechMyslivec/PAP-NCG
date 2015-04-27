@@ -19,10 +19,10 @@
 #$ -cwd
 
 # Defines  or  redefines  the  path used for the standard error stream of the job.
-#$ -e ___NAHRAZENI-STDERR___
+#$ -e .
 
 # The path used for the standard output stream of the job.
-#$ -o ___NAHRAZENI-STDOUT___
+#$ -o .
 
 # Do not change.
 #$ -pe ompi 1
@@ -30,5 +30,5 @@
 # Do not change.
 #$ -q long.q
 
-___NAHRAZENI-PRIKAZ___ # > /dev/null
+./seznam-karet.out
 

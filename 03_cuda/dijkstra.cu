@@ -380,6 +380,9 @@ bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu ) {
     HANDLE_ERROR(   cudaEventCreate(     &eKonec )  );
 
     HANDLE_ERROR(   cudaEventRecord(      eStart )  );
+    // event synchronize, aby se vsechny operace dokoncily a mereni
+    // probehlo v poradku
+    HANDLE_ERROR(   cudaEventSynchronize( eStart ) );
 #endif // MERENI
 
     // inicializace a kopirovani dat na GPU --------------------------
@@ -387,14 +390,16 @@ bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu ) {
 
 #ifdef MERENI
     HANDLE_ERROR(   cudaEventRecord(    eZapsano )  );
+    HANDLE_ERROR( cudaEventSynchronize( eZapsano )  );
 #endif // MERENI
 
     // vypocet na GPU ------------------------------------------------
     wrapperProGPU<<<bloku,vlaken>>>( devDijkstra, pocetUzlu ) ;
-    cudaDeviceSynchronize();
+    HANDLE_ERROR(   cudaDeviceSynchronize( )        );
 
 #ifdef MERENI
     HANDLE_ERROR(   cudaEventRecord(  eVypocteno )  );
+    HANDLE_ERROR( cudaEventSynchronize( eVypocteno ) );
 #endif // MERENI
 
     // kopirovani dat z GPU ------------------------------------------
@@ -410,6 +415,7 @@ bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu ) {
 
 #ifdef MERENI
     HANDLE_ERROR(   cudaEventRecord(      eKonec )  );
+    HANDLE_ERROR(   cudaEventSynchronize( eKonec )  );
 
     HANDLE_ERROR(   cudaEventElapsedTime( &tVypocet, eZapsano, eVypocteno )  );
     HANDLE_ERROR(   cudaEventElapsedTime(  &tCelkem,   eStart,     eKonec )  );
