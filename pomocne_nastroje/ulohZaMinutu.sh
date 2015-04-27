@@ -25,14 +25,16 @@ clear
 echo "Vypisuje statistiku z fronty qstat pro uzivatele $uzivatel"
 sleep 5
 
+pocetTed=$pocetNaZacatku
 while :; do
+   pocetMinule=$pocetTed
    pocetTed=`pocetUlohVeFronte "$uzivatel"`
    casTed=`date +%s`
    rozdilPoctu=$(( pocetNaZacatku - pocetTed ))
    rozdilCasu=$(( casTed - casNaZacatku ))
    zaMinutu=`echo "scale=1; 60 * $rozdilPoctu / $rozdilCasu" | bc`
 
-   [ "$rozdilPoctu" -lt 0 ] && {
+   [  "$pocetTed" -gt "$pocetMinule"   -o   "$rozdilPoctu" -lt 0  ] && {
       echo "Pocet uloh se navysil"
       exit 1
    }

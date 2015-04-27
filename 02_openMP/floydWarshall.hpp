@@ -1,4 +1,4 @@
-/** floydWarshall.h
+/** floydWarshall.hpp
  *
  * Autori:      Vojtech Myslivec <vojtech.myslivec@fit.cvut.cz>,  FIT CVUT v Praze
  *              Zdenek  Novy     <novyzde3@fit.cvut.cz>,          FIT CVUT v Praze
@@ -7,7 +7,7 @@
  *
  * Popis:       Semestralni prace z predmetu MI-PAP:
  *              Hledani nejkratsich cest v grafu 
- *                 paralelni cast
+ *                 openMP paralelni implementace
  *                 funkce pro algoritmus Floyd-Warshall
  *
  *
@@ -20,7 +20,7 @@
    #define DEBUG
 #endif // DEBUG2
 
-#include "funkceSpolecne.h"
+#include "funkceSpolecne.hpp"
 #define FW_NEKONECNO       UNSIGNED_NEKONECNO
 #define FW_NEDEFINOVANO    UINT_MAX
 

@@ -3,11 +3,15 @@ RM=rm -f
 FLAGS=-Wall -pedantic -O3
 LIBS=-fopenmp
 DEFINE=
+DEFINE += -D MERENI
 
 DIJKSTRA=./dijkstra
 FLOYD=./floyd-warshall
 
 all: dijkstra floyd
+
+vypis: DEFINE += -D VYPIS
+vypis: dijkstra floyd
 
 dijkstra: funkce cDijkstra dijkstraMain
 	$(CC)    $(DEFINE) $(FLAGS) $(LIBS) -o $(DIJKSTRA) dijkstra.o funkceSpolecne.o cDijkstra.o mainDijkstra.o

@@ -6,8 +6,8 @@
  * Datum:       unor-brezen 2015
  *
  * Popis:       Semestralni prace z predmetu MI-PAP:
- *              Hledani nejkratsich cest v grafu 
- *                 paralelni cast
+ *              Hledani nejkratsich cest v grafu
+ *                 openMP paralelni implementace
  *                 trida cDijkstra pro Dijkstruv algoritmus
  *                    upraven vypocet prioritni fronty -- misto haldy for cylky, 
  *                    aby slo paralelizovat
@@ -15,7 +15,7 @@
  *
  */
 
-#include "cDijkstra.h"
+#include "cDijkstra.hpp"
 
 #include <iostream>
 #include <iomanip>
@@ -33,7 +33,7 @@ cDijkstra::cDijkstra( unsigned idVychozihoUzlu ) {
     }
 
     vzdalenost = new unsigned[pocetUzlu];
-    predchudce = new unsigned[pocetUzlu];
+//    predchudce = new unsigned[pocetUzlu];
     uzavreny   = new bool[pocetUzlu];
     pocetUzavrenychUzlu = 0;
     this->idVychozihoUzlu = idVychozihoUzlu;
@@ -41,7 +41,7 @@ cDijkstra::cDijkstra( unsigned idVychozihoUzlu ) {
     pocetUzavrenychUzlu = 0;
     for ( unsigned idUzlu = 0; idUzlu < pocetUzlu; idUzlu++ ) {
         vzdalenost[idUzlu] = DIJKSTRA_NEKONECNO;
-        predchudce[idUzlu] = DIJKSTRA_NEDEFINOVANO;
+//        predchudce[idUzlu] = DIJKSTRA_NEDEFINOVANO;
         uzavreny[idUzlu] = false;
     }
     vzdalenost[idVychozihoUzlu] = 0;
@@ -50,8 +50,8 @@ cDijkstra::cDijkstra( unsigned idVychozihoUzlu ) {
 cDijkstra::~cDijkstra() {
     if (vzdalenost != NULL)
         delete [] vzdalenost;
-    if (predchudce != NULL)
-        delete [] predchudce;
+//    if (predchudce != NULL)
+//        delete [] predchudce;
     if (uzavreny != NULL)
         delete [] uzavreny;
 
@@ -111,7 +111,7 @@ bool cDijkstra::spustVypocet( ) {
 #ifdef DEBUG
                 cerr << "   nova vzdalenost z " << idUzlu << " do " << idSouseda << " = " << vzdalenostHrany << '(' << novaVzdalenost << ')' << endl;
 #endif // DEBUG
-                predchudce[idSouseda] = idUzlu;
+//                predchudce[idSouseda] = idUzlu;
                 vzdalenost[idSouseda] = novaVzdalenost;
 
 #ifdef DEBUG
@@ -164,9 +164,9 @@ void cDijkstra::vypisFrontu( ) const {
    cerr << endl;
 }
 
-unsigned * cDijkstra::getPredchudce( ) const {
-   return this->predchudce;
-}
+//unsigned * cDijkstra::getPredchudce( ) const {
+//   return this->predchudce;
+//}
 
 unsigned * cDijkstra::getVzdalenost( ) const {
    return this->vzdalenost;
@@ -187,15 +187,15 @@ void cDijkstra::vypisVysledekPoUzlech( ) const {
         else
             cout << setw(2) << hodnota << " ";
     }
-    cout << "\n"
-            "Predchudci[" << idVychozihoUzlu << "]:   ";
-    for (unsigned i = 0; i < pocetUzlu; i++) {
-        hodnota = predchudce[i];
-        if (hodnota == DIJKSTRA_NEDEFINOVANO)
-            cout << " - ";
-        else
-            cout << setw(2) << hodnota << " ";
-    }
+//    cout << "\n"
+//            "Predchudci[" << idVychozihoUzlu << "]:   ";
+//    for (unsigned i = 0; i < pocetUzlu; i++) {
+//        hodnota = predchudce[i];
+//        if (hodnota == DIJKSTRA_NEDEFINOVANO)
+//            cout << " - ";
+//        else
+//            cout << setw(2) << hodnota << " ";
+//    }
     cout << endl;
 }
 

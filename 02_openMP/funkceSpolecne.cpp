@@ -7,13 +7,13 @@
  *
  * Popis:       Semestralni prace z predmetu MI-PAP:
  *              Hledani nejkratsich cest v grafu 
- *                 sekvencni cast
+ *                 openMP paralelni implementace
  *                 Spolecne funkce pro nacitani / vypis dat
  *
  *
  */
 
-#include "funkceSpolecne.h"
+#include "funkceSpolecne.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>
