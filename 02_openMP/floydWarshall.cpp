@@ -7,13 +7,13 @@
  *
  * Popis:       Semestralni prace z predmetu MI-PAP:
  *              Hledani nejkratsich cest v grafu 
- *                 paralelni cast
+ *                 openMP paralelni implementace
  *                 funkce pro algoritmus Floyd-Warshall
  *
  *
  */
 
-#include "floydWarshall.h"
+#include "floydWarshall.hpp"
 #include <iomanip>
 #include <omp.h>
 
@@ -28,8 +28,10 @@ void floydWarshall( unsigned ** graf, unsigned pocetUzlu, unsigned pocetVlaken )
 //   spustVypocet( pocetUzlu, graf, delkaPredchozi, delkaAktualni, predchudcePredchozi, predchudceAktualni );
    spustVypocet( pocetUzlu, graf, delkaPredchozi, delkaAktualni );
 
+#ifdef VYPIS
 //   vypisVysledekMaticove( pocetUzlu, delkaAktualni, predchudceAktualni );
    vypisVysledekMaticove( pocetUzlu, delkaAktualni );
+#endif // VYPIS
 
 //   uklid( pocetUzlu, delkaPredchozi, delkaAktualni, predchudcePredchozi, predchudceAktualni );
    uklid( pocetUzlu, delkaPredchozi, delkaAktualni );

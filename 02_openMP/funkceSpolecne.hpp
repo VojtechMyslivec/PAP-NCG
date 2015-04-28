@@ -1,4 +1,4 @@
-/** funkceSpolecne.h
+/** funkceSpolecne.hpp
  *
  * Autori:      Vojtech Myslivec <vojtech.myslivec@fit.cvut.cz>,  FIT CVUT v Praze
  *              Zdenek  Novy     <novyzde3@fit.cvut.cz>,          FIT CVUT v Praze
@@ -7,7 +7,7 @@
  *
  * Popis:       Semestralni prace z predmetu MI-PAP:
  *              Hledani nejkratsich cest v grafu 
- *                 sekvencni cast
+ *                 openMP paralelni implementace
  *                 Spolecne funkce pro nacitani / vypis dat
  *
  *
