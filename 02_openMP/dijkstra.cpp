@@ -99,8 +99,7 @@ bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu, unsigned pocetVlaken ) 
          // zkopiruje vysledek do matice
          vzdalenost = dijkstra->getVzdalenost( );
 //         predchudce = dijkstra->getPredchudce( );
-         unsigned tmp = pocetUzlu;
-         for ( unsigned i = 0 ; i < tmp ; i++ ) {
+         for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
             vzdalenostM[idUzlu][i] = vzdalenost[i];
 //            predchudceM[idUzlu][i] = predchudce[i];
          }
