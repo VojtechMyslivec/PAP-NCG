@@ -19,9 +19,6 @@
 // alokuje data pro objekt cDijkstra na GPU. Inicializace hodnot dela jiz GPU
 void dijkstraObjektInit( unsigned ** devGraf, unsigned pocetUzlu, unsigned idUzlu, cDijkstra *& devDijkstra );
 
-// inicializuje a nakopiruje data grafu na GPU
-void grafInicializaceNaGPU( unsigned ** graf, unsigned pocetUzlu, unsigned **& devGraf );
-
 // vytvori pole ukazatelu na cDijkstra, ktere budou alokovane na GPU
 void dijkstraInicializaceNaGPU( unsigned ** devGraf, unsigned pocetUzlu, cDijkstra **& devDijkstra );
 
@@ -31,17 +28,14 @@ void dijkstraInicializaceNaGPU( unsigned ** devGraf, unsigned pocetUzlu, cDijkst
 // vysledek vypise na stdout
 bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu, unsigned pocetWarpu );
 
-// funkce pro inicializovani veskerych promennych potrebnych behem vypoctu 
-void inicializace( unsigned ** graf, unsigned pocetUzlu, unsigned **& vzdalenostM, unsigned **& predchudceM );
+// TODO smazat // funkce pro inicializovani veskerych promennych potrebnych behem vypoctu 
+// void inicializace( unsigned ** graf, unsigned pocetUzlu, unsigned **& vzdalenostM, unsigned **& predchudceM );
 
 // funkce, ktera zajisti uklizeni alokovane dvourozmerne promenne
 void uklidUkazatelu( unsigned **& dveDimenze, unsigned rozmer );
 
 // kopiruje data ze vsech objektu v poli devDijkstra na device do pole vzdalenostM na host
 void zkopirujDataZGPU( unsigned ** vzdalenostM, cDijkstra ** devDijkstra, unsigned pocetUzlu );
-
-// funkce pro vypis matice delek a predchudcu
-void vypisVysledekMaticove( unsigned ** vzdalenosti, unsigned pocetUzlu );
 
 // kernel kod pro CUDA, wrapper obalujici spousteni vypoctu kazdeho z objektu v poli devDijkstra
 __global__ void wrapperProGPU( cDijkstra ** devDijkstra, unsigned pocetUzlu, unsigned pocetWarpu );

@@ -6,6 +6,9 @@ Optimalizace (dijsktra)
 
   Nic z toho vyrazne nepomohlo 
 
+  # TODO 
+      pitch
+      floyd inicializace
 
 
 

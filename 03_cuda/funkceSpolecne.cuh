@@ -23,7 +23,7 @@
 #define CUDA_MAX_POCET_WARPU      32
 #define CUDA_WARP_VELIKOST        32
 
-#define UNSIGNED_NEKONECNO  UINT_MAX
+#define NEKONECNO  UINT_MAX
 
 #define MAIN_OK            0
 #define MAIN_ERR_USAGE     1
@@ -80,11 +80,11 @@ bool parsujArgumenty( int argc, char ** argv, char *& souborSGrafem, unsigned & 
 
 // nacte jednu unsigned hodnotu ze vstupu
 // pokud misto unsigned cisla nalezne - (nasledovanou prazdnym znakem)
-// ulozi do hodnoty DIJKSTRA_NEKONECNO
+// ulozi do hodnoty NEKONECNO
 //
 //   NACTI_OK           v poradku se podarilo nacist jednu unsigned hodnotu
 //   NACTI_NEKONECNO    na vstupu byl znak '-' oddeleny mezerami, do hodnoty byla
-//                      prirazena hodnota UNSIGNED_NEKONECNO
+//                      prirazena hodnota NEKONECNO
 //   NACTI_ERR_TEXT     na vstupu byl nejaky retezec zacinajici znakem -
 //   NACTI_ERR_PRAZDNO  na vstupu jiz nebyl zadny platny znak
 //   NACTI_ERR_ZNAMENKO na vstupu byla zaporna hodnota
@@ -119,6 +119,18 @@ unsigned kontrolaGrafu( unsigned ** graf, unsigned pocetUzlu ); // graf by mel b
 // vypise graf (formatovanou w-matici) do vystupniho streamu os
 void vypisGrafu( ostream & os, unsigned ** graf, unsigned pocetUzlu ); // graf by mel byt const..
 
+// inicializuje a nakopiruje data grafu na GPU
+//   pokud graf je NULL tak neinicializuje, pouze alokuje
+void maticeInicializaceNaGPU( unsigned ** graf, unsigned pocetUzlu, unsigned **& devGraf );
+
+// alokuje PAGE-LOCKED pamet pro rychlejsi kopirovani a inicializuje hodnoty na NEKONECNO
+void maticeInicializaceNaCPU( unsigned **& hostMatice, unsigned pocetUzlu );
+
+// uvolni data grafu na GPU
+void maticeUklidNaGPU( unsigned **& devGraf, unsigned pocetUzlu );
+
+// uvolni PAGE-LOCKED pamet 
+void maticeUklidNaCPU( unsigned **& hostMatice, unsigned pocetUzlu );
 
 #endif // FUNKCE_SPOLECNE_aohiuefijn39nvkjns92
 

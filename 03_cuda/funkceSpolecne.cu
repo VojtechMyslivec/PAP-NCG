@@ -47,14 +47,13 @@ void vypisUsage( ostream & os, const char * jmenoProgramu ) {
           "                       Vychozi hodnota: 4\n"
           "\n"
           "      -h               Vypise tuto napovedu a skonci."
-       << endl;
+        << endl;
 }
 
 void uklid( unsigned ** graf, unsigned pocetUzlu ) {
     if ( graf != NULL ) {
         for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
             if ( graf[i] != NULL ) {
-                //delete [] graf[i];  
                 // page-locked memory
                 HANDLE_ERROR( 
                         cudaFreeHost( graf[i] )
@@ -62,7 +61,6 @@ void uklid( unsigned ** graf, unsigned pocetUzlu ) {
                 graf[i] = NULL;
             }
         }
-        //delete [] graf;
         // page-locked memory
         HANDLE_ERROR( 
                 cudaFreeHost( graf )
@@ -84,20 +82,20 @@ bool zkontrolujPrazdnyVstup( istream & is ) {
 }
 
 bool nactiPocetWarpu( const char * vstup, unsigned & pocetWarpu ) {
-   istringstream iss( vstup );
-   int tmp;
-   iss >> tmp;
-   if ( tmp < 1         ||
-        iss.fail( )     ||
-        zkontrolujPrazdnyVstup( iss ) != true 
-      ) {
-      return false;
-   }
-   if ( tmp > CUDA_MAX_POCET_WARPU ) {
-       return false;
-   }
-   pocetWarpu = (unsigned)tmp;
-   return true;
+    istringstream iss( vstup );
+    int tmp;
+    iss >> tmp;
+    if ( tmp < 1         ||
+            iss.fail( )     ||
+            zkontrolujPrazdnyVstup( iss ) != true 
+       ) {
+        return false;
+    }
+    if ( tmp > CUDA_MAX_POCET_WARPU ) {
+        return false;
+    }
+    pocetWarpu = (unsigned)tmp;
+    return true;
 }
 
 bool zkontrolujSoubor( const char * optarg ) {
@@ -200,7 +198,7 @@ unsigned nactiHodnotu( istream & is, unsigned & hodnota ) {
         }
 
         // kolem znaku - jsou spravne prazdne znaky, reprezentuje tedy nekonecno
-        hodnota = UNSIGNED_NEKONECNO;
+        hodnota = NEKONECNO;
         return NACTI_NEKONECNO;
     }
     // jinak to ma byt cislo
@@ -222,7 +220,6 @@ bool nactiGraf( istream & is, unsigned ** & graf, unsigned & pocetUzlu ) {
         return false;
     }
 
-    //graf = new unsigned*[pocetUzlu];
     // page-locked memory
     HANDLE_ERROR( 
             cudaHostAlloc( 
@@ -232,7 +229,6 @@ bool nactiGraf( istream & is, unsigned ** & graf, unsigned & pocetUzlu ) {
                 )
             );
     for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
-        //graf[i] = new unsigned[pocetUzlu];
         // page-locked memory
         HANDLE_ERROR( 
                 cudaHostAlloc( 
@@ -316,12 +312,126 @@ void vypisGrafu( ostream & os, unsigned ** graf, unsigned pocetUzlu ) {
     for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
         os << '\n' << setw(2) << i << " |";
         for ( unsigned j = 0 ; j < pocetUzlu ; j++ ) {
-            if ( graf[i][j] == UNSIGNED_NEKONECNO )
+            if ( graf[i][j] == NEKONECNO )
                 os << " - ";
             else
                 os << setw(2) << graf[i][j] << ' ';
         }
     }
     os << endl;
+}
+
+
+
+void maticeInicializaceNaGPU( unsigned ** graf, unsigned pocetUzlu, unsigned **& devGraf ) {
+    // TODO #optimalizace
+    //    alokovat 2D pole pomoci pitch
+    // alokace matice -- pole sloupcu ---------------------
+    HANDLE_ERROR( 
+            cudaMalloc( 
+                &devGraf,
+                pocetUzlu*sizeof(*devGraf)
+                )
+            ); 
+
+    // v cyklu se alokuji a kopiruji data z grafu na GPU
+    unsigned * devHodnoty;
+    for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
+        // alokace jednoho radku matice -------------------
+        HANDLE_ERROR( 
+                cudaMalloc( 
+                    &devHodnoty,
+                    pocetUzlu*sizeof(*devHodnoty)
+                    )
+                );
+        // kopirovani jednoho radku matice ----------------
+        if ( graf != NULL ) {
+            HANDLE_ERROR( 
+                    cudaMemcpy( 
+                        devHodnoty,
+                        graf[i],
+                        pocetUzlu*sizeof(*devHodnoty), 
+                        cudaMemcpyHostToDevice 
+                        )
+                    );
+        }
+        // zkopirovani pointeru na radek do pole sloupcu --
+        HANDLE_ERROR( 
+                cudaMemcpy( 
+                    &(devGraf[i]),
+                    &(devHodnoty),
+                    sizeof(devHodnoty),
+                    cudaMemcpyHostToDevice
+                    )
+                );
+    }
+}
+
+void maticeInicializaceNaCPU( unsigned **& hostMatice, unsigned pocetUzlu ) {
+    // page-lock memory
+    HANDLE_ERROR( 
+            cudaHostAlloc( 
+                &hostMatice, 
+                pocetUzlu * sizeof(*hostMatice),
+                cudaHostAllocDefault
+                )
+            );
+    for ( unsigned i = 0; i < pocetUzlu; i++ ) {
+        // page-lock memory
+        HANDLE_ERROR( 
+                cudaHostAlloc( 
+                    &(hostMatice[i]), 
+                    pocetUzlu * sizeof(*hostMatice[i]),
+                    cudaHostAllocDefault
+                    )
+                );
+        for ( unsigned j = 0; j < pocetUzlu; j++ ) {
+            hostMatice[i][j] = NEKONECNO;
+        }
+    }
+}
+
+void maticeUklidNaGPU( unsigned **& devGraf, unsigned pocetUzlu ) {
+    // v cyklu se kopiruji hodnoty ukazatelu na radek a ty se smazou
+    unsigned * devHodnoty;
+    for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
+        // zkopirovani ukazatele z [pole sloupcu na device] --
+        HANDLE_ERROR( 
+                cudaMemcpy( 
+                    &(devHodnoty),
+                    &(devGraf[i]),
+                    sizeof(devHodnoty),
+                    cudaMemcpyDeviceToHost
+                    )
+                );
+        // uvolneni pameti radku matice -------------------
+        HANDLE_ERROR( 
+                cudaFree( devHodnoty )
+                );
+    }
+    // uvolneni pameti ukazatele na radky matice ----------
+    HANDLE_ERROR( 
+            cudaFree( devGraf )
+            ); 
+    devGraf = NULL;
+}
+
+void maticeUklidNaCPU( unsigned **& hostMatice, unsigned pocetUzlu ) {
+    if ( hostMatice != NULL ) {
+        for ( unsigned i = 0; i < pocetUzlu; i++ ) {
+            if ( hostMatice[i] != NULL ) {
+                // page-locked memory
+                HANDLE_ERROR( 
+                        cudaFreeHost( hostMatice[i] )
+                        );
+                hostMatice[i] = NULL;
+            }
+        }
+        // page-locked memory
+        HANDLE_ERROR( 
+                cudaFreeHost( hostMatice )
+                );
+        hostMatice = NULL;
+    }
 }
 

@@ -49,7 +49,7 @@ cDijkstra::~cDijkstra() {
 __device__ void cDijkstra::devInicializujHodnoty() {
     pocetUzavrenychUzlu = 0;
     for ( unsigned idUzlu = 0; idUzlu < pocetUzlu; idUzlu++ ) {
-        vzdalenost[idUzlu] = DIJKSTRA_NEKONECNO;
+        vzdalenost[idUzlu] = NEKONECNO;
         uzavreny[idUzlu] = false;
     }
     vzdalenost[idVychozihoUzlu] = 0;
@@ -76,7 +76,7 @@ __device__ bool cDijkstra::devSpustVypocet( ) {
 #endif // DEBUG
         vzdalenostUzlu = vzdalenost[idUzlu];
         // pokud je stale nekonecna, znamena to nedostupny uzel;
-        if ( vzdalenostUzlu >= DIJKSTRA_NEKONECNO ) {
+        if ( vzdalenostUzlu >= NEKONECNO ) {
 #ifdef DEBUG
             cerr << "preskakuji " << idUzlu << " vzd.: " << vzdalenostUzlu << endl;
 #endif // DEBUG
@@ -93,8 +93,8 @@ __device__ bool cDijkstra::devSpustVypocet( ) {
             vzdalenostSouseda = vzdalenost[idSouseda];
             vzdalenostHrany = graf[idUzlu][idSouseda];
             // kontrola, aby nepretekla hodnota
-            if ( vzdalenostHrany >= DIJKSTRA_NEKONECNO )
-                novaVzdalenost = DIJKSTRA_NEKONECNO;
+            if ( vzdalenostHrany >= NEKONECNO )
+                novaVzdalenost = NEKONECNO;
             else
                 novaVzdalenost = vzdalenostUzlu + vzdalenostHrany;
 
@@ -121,7 +121,7 @@ __device__ bool cDijkstra::devVyberMinimumZFronty( unsigned & idMinima ) const {
         return false;
     }
 
-    unsigned minimum = DIJKSTRA_NEKONECNO;
+    unsigned minimum = NEKONECNO;
     // pro kontrolu, zda se nejaky uzel najde
     idMinima = pocetUzlu;
     // ze vsech neuzavrenych uzlu vybere minimum
@@ -147,7 +147,7 @@ __device__ void cDijkstra::devVypisFrontu( ) const {
     for ( unsigned idUzlu = 0 ; idUzlu < pocetUzlu ; idUzlu++ ) {
         if      ( uzavreny[idUzlu] ) 
             printf( " z " );
-        else if ( vzdalenost[idUzlu] == DIJKSTRA_NEKONECNO ) 
+        else if ( vzdalenost[idUzlu] == NEKONECNO ) 
             printf( " - " );
         else
             printf( "%2d ", vzdalenost[idUzlu] );
@@ -169,7 +169,7 @@ __device__ void cDijkstra::devVypisFrontu( ) const {
 //         "Vzdalenosti[" << idVychozihoUzlu << "]:  ";
 //     for (unsigned i = 0; i < pocetUzlu; i++) {
 //         hodnota = vzdalenost[i];
-//         if (hodnota == DIJKSTRA_NEKONECNO)
+//         if (hodnota == NEKONECNO)
 //             cout << " - ";
 //         else
 //             cout << setw(2) << hodnota << " ";
