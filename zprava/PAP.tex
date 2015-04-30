@@ -296,6 +296,13 @@ jsou navzájem disjunktní, takže nehrozí konflikt zápisů jednotlivými vlá
 \subsubsection{Druhá varianta}
 Druhou variantou, jak problém paralelizovat je použít původní variantu a~přidat paralelizaci zároveň ve vnitřním cyklu, který prochází jednotlivé sloupce matice. V~takovém případě by jednomu vláknu byl přidělen jeden nebo více necelých řádků ohraničených sloupci. Tato varianta se jeví vhodnější pouze při velkém počtu dostupných vláken, proto není v~naší implementaci použita.
 
+\subsection{Optimalizace implementace}
+\subsubsection{Optimalizace vytváření vláken} \label{l:opt1}
+Z měření algoritmu Floyd-Warshall v sekci \ref{l:vysledky} bylo zjištěno, že implementace v každé iteraci vnějšího cyklu vytváří a spouští nová vlákna, která po skončení vnitřního cyklu ukončí a v další iteraci proces opakuje. Proto byla paralelizace vláken upravena tak, aby na začátku vnějšího cyklu algoritmus vytvořil příslušný počet vláken, kterým pak v jednotlivých iteracích přiděloval práci. Grafy s touto optimalizací mají tvar \textit{*\_v2.png}. Výsledky měření jsou prezentovány v kapitole \ref{l:mer:opt1}.
+
+\subsubsection{Odstranění výpočtu předchůdců} \label{l:opt2}
+Protože zadáním této práce nebylo získat matici předchůdců, je v algoritmu zbytečné udržovat informaci o předchůdcích jednotlivých uzlů. Proto byly v rámci další optimalizace odstraněny veškeré výpočty, které se týkaly matice předchůdců. Výsledek byl znovu naměřen a výsledky jsou prezentovány v kapitolách \ref{l:mer:opt2}.
+
 
 \subsection{Měření}
 Na obou algoritmech bylo provedeno měření, které si klade za cíl analyzovat čas, zrychlení a~efektivitu použitého paralelního algoritmu. Měření bylo prováděno na hustých grafech, kde při generování grafů byla použita pravděpodobnost 0.5, že mezi dvěmi uzly existuje hrana.
@@ -309,13 +316,14 @@ Měření probíhalo na serveru \url{star2.fit.cvut.cz} na stroji \textit{gpu-02
 Jako čas výpočtu pro dané $n$ se vypočítal průměr z časů přes všech 5 grafů s odpovídajícím počtem uzlů.
 
 \subsubsection{Výsledky}
+\label{l:vysledky}
 Grafy \ref{f:mer:cas}, \ref{f:mer:zry} a~\ref{f:mer:efe} ukazují výsledky měření z~pohledu času, zrychlení a~efektivity.
 
 % Cas
 \begin{figure}
     \centering
-    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-01-Dijsktra_cas}
-    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-01-Floyd_cas}
+    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-01-Dijkstra_cas_v1}
+    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-01-Floyd_cas_v1}
     \caption{Závislost průměrného času výpočtu v~závislosti na počtu vláken za použití statického plánování.}
     \label{f:mer:cas}
 \end{figure}
@@ -323,8 +331,8 @@ Grafy \ref{f:mer:cas}, \ref{f:mer:zry} a~\ref{f:mer:efe} ukazují výsledky mě�
 % Zrychleni
 \begin{figure}
     \centering
-    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-02-Dijsktra_zrychleni}
-    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-02-Floyd_zrychleni}
+    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-02-Dijkstra_zrychleni_v1}
+    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-02-Floyd_zrychleni_v1}
     \caption{Závislost zrychlení paralelního algoritmu oproti sekvenčnímu v~závislosti na počtu vláken za použití statického plánování.}
     \label{f:mer:zry}
 \end{figure}
@@ -332,8 +340,8 @@ Grafy \ref{f:mer:cas}, \ref{f:mer:zry} a~\ref{f:mer:efe} ukazují výsledky mě�
 % Efektivita
 \begin{figure}
     \centering
-    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-03-Dijsktra_efektivita}
-    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-03-Floyd_efektivita}
+    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-03-Dijkstra_efektivita_v1}
+    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-03-Floyd_efektivita_v1}
     \caption{Závislost efektivity algoritmu v~závislosti na počtu vláken za použití statického plánování.}
     \label{f:mer:efe}
 \end{figure}
@@ -351,8 +359,8 @@ Dynamickým plánováním se rozumí rozdělení jednotlivých iterací vláknů
 % Pomer rychlost vypoctu v zavislosti na hustote grafu
 \begin{figure}
     \centering
-    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-04-Dijsktra_hustota}
-    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-04-Floyd_hustota}
+    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-04-Dijkstra_hustota_v1}
+    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-04-Floyd_hustota_v1}
     \caption{Porovnání poměru rychlostí výpočtu v závislosti na hustotě grafu při použití statického plánování.}
     \label{f:mer:pomerhustota}
 \end{figure}
@@ -360,14 +368,14 @@ Dynamickým plánováním se rozumí rozdělení jednotlivých iterací vláknů
 % Pomer rychlost vypoctu v zavislosti na hustote grafu
 \begin{figure}
     \centering
-    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-05-Dijsktra_schedule}
-    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-05-Floyd_schedule}
+    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-05-Dijkstra_schedule_v1}
+    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-05-Floyd_schedule_v1}
     \caption{Porovnání poměru rychlostí výpočtu v závislosti na použitém plánování.}
     \label{f:mer:pomerplanovani}
 \end{figure}
 
 \subsubsection{Analýza}
-\paragraph{Dijsktra}
+\paragraph{Dijkstra}
 Z~grafů \ref{f:mer:cas} je vidět klesající dobu výpočtu v závislosti na počtu vláken.
 Zrychlení, které je zobrazeno v~grafu \ref{f:mer:zry} na počátku stoupá téměř lineárně a~teprve pro větší počet vláken 
 se zmírňuje. Toto nelineární zrychlení může způsobit například přístup do paměti, protože se vzrůstajícím počtem vláken klesá 
@@ -377,6 +385,63 @@ Z~výše uvedeného vyplývá efektivita, která je zobrazena v~grafu \ref{f:mer
 \paragraph{Floyd-Warshallův algoritmus}
 U~Floyd-Warshallova algoritmu se výpočetní čas pro počty vláken větší než 3 téměř nezkracuje. 
 Zrychlení je tedy patrné pouze při použití 2 případně 4 vláknech. Z~výše uvedené plyne, že efektivita paralelního algoritmu velmi rychle klesá.
+
+\subsubsection{Optimalizace vláken Floyd-Warshallova algoritmu} \label{l:mer:opt1}
+Výsledky měření po implementaci optimalizace \ref{l:opt1} Floyd-Warshallova algoritmu.
+
+% Cas po optimalizaci 
+\begin{figure}
+    \centering
+    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-01-Floyd_cas_v2}
+    \caption{Závislost průměrného času výpočtu v~závislosti na počtu vláken za použití statického plánování po optimalizaci \ref{l:opt1}.}
+    \label{f:mer:cas:opt1}
+\end{figure}
+
+% Zrychleni
+\begin{figure}
+    \centering
+    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-02-Floyd_zrychleni_v2}
+    \caption{Závislost zrychlení paralelního algoritmu oproti sekvenčnímu v~závislosti na počtu vláken za použití statického plánovánípo optimalizaci \ref{l:opt1}.}
+    \label{f:mer:zry:opt1}
+\end{figure}
+
+% Efektivita
+\begin{figure}
+    \centering
+    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-03-Floyd_efektivita_v2}
+    \caption{Závislost efektivity algoritmu v~závislosti na počtu vláken za použití statického plánování po optimalizaci \ref{l:opt1}.}
+    \label{f:mer:efe:opt1}
+\end{figure}
+
+\subsubsection{Optimalizace odstraněním předchůdců obou algoritmů} \label{l:mer:opt2}
+Výsledky měření obou algoritmů po implementaci optimalizace \ref{l:opt2}.
+
+% Cas po optimalizaci
+\begin{figure}
+    \centering
+    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-01-Dijkstra_cas_v3}
+    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-01-Floyd_cas_v3}
+    \caption{Závislost průměrného času výpočtu v~závislosti na počtu vláken za použití statického plánování po optimalizaci \ref{l:opt2}.}
+    \label{f:mer:cas:opt2}
+\end{figure}
+
+% Zrychleni
+\begin{figure}
+    \centering
+    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-02-Dijkstra_zrychleni_v3}
+    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-02-Floyd_zrychleni_v3}
+    \caption{Závislost zrychlení paralelního algoritmu oproti sekvenčnímu v~závislosti na počtu vláken za použití statického plánovánípo optimalizaci \ref{l:opt2}.}
+    \label{f:mer:zry:opt2}
+\end{figure}
+
+% Efektivita
+\begin{figure}
+    \centering
+    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-03-Dijkstra_efektivita_v3}
+    \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-03-Floyd_efektivita_v3}
+    \caption{Závislost efektivity algoritmu v~závislosti na počtu vláken za použití statického plánování po optimalizaci \ref{l:opt2}.}
+    \label{f:mer:efe:opt2}
+\end{figure}
 
 \subsubsection{Zhodnocení}
 Efektivita Dijkstrova algoritmu s~přidáváním vláken pomalu klesá a~například pro 24 vláken dosahuje hodnoty 0.5. Naproti tomu u~Floyd-Warshallova algoritmu klesá efektivita mnohem rychleji a~na hodnotě 0.5 se nachází už pro 6 vláken. 
@@ -414,3 +479,5 @@ Výsledky Floyd-Warshallova algoritmu mohou být způsobeny opakovaným vytvář
 \bibliography{citace}
 
 \end{document}
+
+
