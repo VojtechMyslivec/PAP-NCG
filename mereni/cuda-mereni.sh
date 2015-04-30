@@ -3,7 +3,8 @@ USAGE="USAGE
    $0 program adresar_s_daty stitek [host]
 
       Pro vsechna data s koncovkou .txt v adresari_s_daty
-      zaradi do fronty qsub program s temito parametry.
+      a pro vsechny merene pocty warpu zaradi do fronty qsub 
+      program s temito parametry.
 
       Skript vytvori podadresar stitek s casovou znackou, do
       ktereho se budou ukladat soubory fronty a vystupy programu
@@ -26,6 +27,7 @@ nahrazeni["STANDARDNI"]=___NAHRAZENI-STDOUT___
 nahrazeni["PRIKAZ"]=___NAHRAZENI-PRIKAZ___
 
 vzor="vzor.q"
+merenyPocetWarpu="1 2 4 8 16 24 32"
 
 [[ -f "$vzor" && -r "$vzor" ]] || {
     chyba "Soubor se vzorovou frontou '$vzor' neni citelny"
@@ -33,9 +35,9 @@ vzor="vzor.q"
 }
 for hodnota in "${nahrazeni[@]}"; do
     grep -q "$hodnota" "$vzor" || {
-    chyba "Vzorovy soubor nema zastupny symbol '$hodnota'"
-    exit 2
-}
+        chyba "Vzorovy soubor nema zastupny symbol '$hodnota'"
+        exit 2
+    }
 done
 
 [[ "$1" == "-h" ]] && {
@@ -74,9 +76,10 @@ vstupy=`ls "$data/"*.txt 2> /dev/null`
 
 # Kontrola uzivatele o poctu uloh k vypocitani
 souboru=`echo "$vstupy" | wc -l`
+ulohNaSoubor=`echo "$merenyPocetWarpu" | wc -w`
 
 while true; do
-    read -p "Zadat k vypoctu $souboru souboru (celkem $souboru uloh)? " odp
+    read -p "Zadat k vypoctu $souboru souboru po $ulohNaSoubor ulohach, celkem $((souboru*ulohNaSoubor)) uloh? " odp
     if   [[ "$odp" =~ ^[aA]$  ]]; then
         break
     elif [[ "$odp" =~ ^[nN]$  ]]; then
@@ -103,27 +106,38 @@ oldIFS=$IFS;
 IFS="
 "
 for vstup in $vstupy ; do
-   n=${vstup##*n}
-   n=${n%%[-.]*}
-   [[ "$n" =~ ^[0-9]+$ ]] || n="NaN"
-   
-   jmenoSouboru=${vstup##*/}
+    n=${vstup##*n}
+    n=${n%%[-.]*}
+    [[ "$n" =~ ^[0-9]+$ ]] || n="NaN"
 
-   fronta="fronta-n${n}-${jmenoSouboru%%.txt}.q"
+    jmenoSouboru=${vstup##*/}
 
-   prikaz="\"${program}\" -f \"${vstup}\""
-   sed  "s|${nahrazeni["PRIKAZ"]}|$prikaz|g
-         s|${nahrazeni["CHYBOVY"]}|\"$adrMereni\"|g
-         s|${nahrazeni["STANDARDNI"]}|\"$adrVystupy\"|g" "$vzor" > "$fronta"
+    echo -n "Pro soubor '$jmenoSouboru' zarazen vypocet ( warpu "
+    IFS=$oldIFS
+    for w in $merenyPocetWarpu; do
+        [[ "$w" =~ ^[0-9]+$ ]] || {
+            chyba "Pocet warpu '$w' neni cislo" 
+            exit 2
+        }
 
-   id=`qsub -l "h=${host}" "$fronta" 2> /dev/null | awk '{print $3}'`
-   if [[ "$id" =~ ^[0-9]+$ ]]; then 
-       echo "Pro soubor '$jmenoSouboru' zarazen vypocet s id ${id}."
-   else
-       echo "Pro soubor '$jmenoSouboru' se nepodarilo zaradit vypocet."
-       id="NaN"
-   fi
-   mv "$fronta" "${adrFronty}/${fronta%.q}.${id}.q"
+        fronta="fronta-n${n}-w${w}-${jmenoSouboru%%.txt}.q"
+        prikaz="\"${program}\" -w \"${w}\" -f \"${vstup}\""
+        sed  "s|${nahrazeni["PRIKAZ"]}|$prikaz|g
+              s|${nahrazeni["CHYBOVY"]}|\"$adrMereni\"|g
+              s|${nahrazeni["STANDARDNI"]}|\"$adrVystupy\"|g" "$vzor" > "$fronta"
+
+        id=`qsub -l "h=${host}" "$fronta" 2> /dev/null | awk '{print $3}'`
+        if [[ "$id" =~ ^[0-9]+$ ]]; then 
+            echo -n "$w "
+        else
+            echo -n "XX"
+            id="NaN"
+        fi
+        mv "$fronta" "${adrFronty}/${fronta%.q}.${id}.q"
+
+    done
+
+    echo ")"
 
 done
 

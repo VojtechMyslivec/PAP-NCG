@@ -16,21 +16,27 @@ vypis: DEFINE += -D VYPIS
 vypis: dijkstra
 # floyd
 
-dijkstra: funkce cDijkstra dijkstraMain
-	$(CC)    $(DEFINE) $(FLAGS) $(LIBS) -o $(DIJKSTRA) dijkstra.o funkceSpolecne.o cDijkstra.o mainDijkstra.o
+#dijkstra: funkce cDijkstra dijkstraMain
+$(DIJKSTRA): funkceSpolecne.o dijkstra.o cDijkstra.o mainDijkstra.o 
+	$(CC)    $(DEFINE) $(FLAGS) $(LIBS) -o $@ $^
 
 # floyd: funkce floydWarshall floydWarshallMain
 # 	$(CC)    $(DEFINE) $(FLAGS) $(LIBS) -o $(FLOYD) funkceSpolecne.o floydWarshall.o mainFloyd.o
 
-funkce:
-	$(CC) -c $(DEFINE) $(FLAGS) $(LIBS) -o funkceSpolecne.o funkceSpolecne.cu
+#funkce:
+funkceSpolecne.o: funkceSpolecne.cu
+	$(CC) -c $(DEFINE) $(FLAGS) $(LIBS) -o $@ $^
 
-dijkstraMain:
-	$(CC) -c $(DEFINE) -D DIJKSTRA $(FLAGS) $(LIBS) -o mainDijkstra.o main.cu
+#dijkstraMain:
+mainDijkstra.o: main.cu
+	$(CC) -c $(DEFINE) -D DIJKSTRA $(FLAGS) $(LIBS) -o $@ $^
 
-cDijkstra:
-	$(CC) -c $(DEFINE) $(FLAGS) $(LIBS) -o dijkstra.o dijkstra.cu
-	$(CC) -c $(DEFINE) $(FLAGS) $(LIBS) -o cDijkstra.o cDijkstra.cu
+#cDijkstra:
+dijkstra.o: dijkstra.cu
+	$(CC) -c $(DEFINE) $(FLAGS) $(LIBS) -o $@ $^
+
+cDijkstra.o: cDijkstra.cu
+	$(CC) -c $(DEFINE) $(FLAGS) $(LIBS) -o $@ $^
 
 # floydWarshallMain:
 # 	$(CC) -c $(DEFINE) -D FLOYDWARSHALL $(FLAGS) $(LIBS) -o mainFloyd.o main.cu

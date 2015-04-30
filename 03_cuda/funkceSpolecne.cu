@@ -32,7 +32,7 @@ void HandleError( cudaError_t chyba, const char * soubor, int radek ) {
 
 void vypisUsage( ostream & os, const char * jmenoProgramu ) {
     os << "USAGE\n"
-          "   " << jmenoProgramu << " [-t pocet_vlaken] -f vstupni_soubor\n"
+          "   " << jmenoProgramu << " [-w pocet_warpu] -f vstupni_soubor\n"
           "   " << jmenoProgramu << " -h\n"
           "\n"
           "      vstupni_soubor   Soubor s daty grafu ve formatu ohodnocene incidencni\n"
@@ -41,9 +41,11 @@ void vypisUsage( ostream & os, const char * jmenoProgramu ) {
           "                       udava cislo n (pocet uzlu, ruzny od nuly). Hodnota -\n"
           "                       urcuje neexistujici hranu\n"
           "\n"
-          //         "      pocet_vlaken     Pocet vlaken pro paralelni cast vypoctu.\n"
-          //         "                       Vychozi hodnota: 5\n"
-          //         "\n"
+          "      pocet_warpu      Pocet warpu v jednom bloku pro paralelni cast vypoctu.\n"
+          "                       Pocet bloku se dopocita automaticky, aby pocet vlaken\n"
+          "                       byl >= pocet uzlu grafu.\n"
+          "                       Vychozi hodnota: 4\n"
+          "\n"
           "      -h               Vypise tuto napovedu a skonci."
        << endl;
 }
@@ -81,19 +83,22 @@ bool zkontrolujPrazdnyVstup( istream & is ) {
     return true;
 }
 
-// bool nactiPocetVlaken( const char * vstup, unsigned & pocetVlaken ) {
-//    istringstream iss( vstup );
-//    int tmp;
-//    iss >> tmp;
-//    if ( tmp < 1         ||
-//         iss.fail( )     ||
-//         zkontrolujPrazdnyVstup( iss ) != true 
-//       ) {
-//       return false;
-//    }
-//    pocetVlaken = (unsigned)tmp;
-//    return true;
-// }
+bool nactiPocetWarpu( const char * vstup, unsigned & pocetWarpu ) {
+   istringstream iss( vstup );
+   int tmp;
+   iss >> tmp;
+   if ( tmp < 1         ||
+        iss.fail( )     ||
+        zkontrolujPrazdnyVstup( iss ) != true 
+      ) {
+      return false;
+   }
+   if ( tmp > CUDA_MAX_POCET_WARPU ) {
+       return false;
+   }
+   pocetWarpu = (unsigned)tmp;
+   return true;
+}
 
 bool zkontrolujSoubor( const char * optarg ) {
     ifstream f( optarg );
@@ -104,7 +109,7 @@ bool zkontrolujSoubor( const char * optarg ) {
     return navrat;
 }
 
-bool parsujArgumenty( int argc, char ** argv, char *& souborSGrafem, unsigned & navrat ) {
+bool parsujArgumenty( int argc, char ** argv, char *& souborSGrafem, unsigned & pocetWarpu, unsigned & navrat ) {
     if ( argc < 2 ) {
         cerr << "Nedostatecny pocet argumentu" << endl;
         vypisUsage( cerr, argv[0] );
@@ -117,7 +122,7 @@ bool parsujArgumenty( int argc, char ** argv, char *& souborSGrafem, unsigned & 
     opterr = 0; // zabrani getopt, aby vypisovala chyby
     // optstring '+' zajisti POSIX zadavani prepinacu, 
     //           ':' pro rozliseni neznameho prepinace od chybejiciho argumentu
-    while ( ( o = getopt( argc, argv, "+:hf:" ) ) != -1 ) {
+    while ( ( o = getopt( argc, argv, "+:hf:w:" ) ) != -1 ) {
         switch ( o ) {
             case 'h':
                 vypisUsage( cout, argv[0] );
@@ -133,13 +138,13 @@ bool parsujArgumenty( int argc, char ** argv, char *& souborSGrafem, unsigned & 
                 souborSGrafem = optarg;
                 break;
 
-                //         case 't':
-                //            if ( nactiPocetVlaken( optarg, pocetVlaken ) != true ) {
-                //               cerr << argv[0] << ": Pocet vlaken musi byt kladne cele cislo" << endl;
-                //               navrat = MAIN_ERR_VSTUP;
-                //               return false;
-                //            }
-                //            break;
+            case 'w':
+                if ( nactiPocetWarpu( optarg, pocetWarpu ) != true ) {
+                    cerr << argv[0] << ": Pocet warpu musi byt kladne cele cislo mensi rovno nez " << CUDA_MAX_POCET_WARPU << endl;
+                    navrat = MAIN_ERR_VSTUP;
+                    return false;
+                }
+                break;
 
             case ':':
                 cerr << argv[0] << ": Prepinac '-" << (char)optopt << "' vyzaduje argument." << endl;

@@ -29,7 +29,7 @@ void dijkstraInicializaceNaGPU( unsigned ** devGraf, unsigned pocetUzlu, cDijkst
 // vola (paralelne) vypocet Dijkstrova algoritmu pro kazdy uzel
 // idealni slozitost O( n^3 / p )
 // vysledek vypise na stdout
-bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu );
+bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu, unsigned pocetWarpu );
 
 // funkce pro inicializovani veskerych promennych potrebnych behem vypoctu 
 void inicializace( unsigned ** graf, unsigned pocetUzlu, unsigned **& vzdalenostM, unsigned **& predchudceM );
@@ -44,5 +44,5 @@ void zkopirujDataZGPU( unsigned ** vzdalenostM, cDijkstra ** devDijkstra, unsign
 void vypisVysledekMaticove( unsigned ** vzdalenosti, unsigned pocetUzlu );
 
 // kernel kod pro CUDA, wrapper obalujici spousteni vypoctu kazdeho z objektu v poli devDijkstra
-__global__ void wrapperProGPU( cDijkstra ** devDijkstra, unsigned pocetUzlu );
+__global__ void wrapperProGPU( cDijkstra ** devDijkstra, unsigned pocetUzlu, unsigned pocetWarpu );
 

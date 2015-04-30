@@ -345,10 +345,10 @@ void zkopirujDataZGPU( unsigned ** vzdalenostM, cDijkstra ** devDijkstra, unsign
     delete [] hostDevDijkstra;
 }
 
-__global__ void wrapperProGPU( cDijkstra ** devDijkstra, unsigned pocetUzlu ) {
-   int blok   = blockIdx.x;
+__global__ void wrapperProGPU( cDijkstra ** devDijkstra, unsigned pocetUzlu, unsigned pocetVlakenVBloku ) {
+   int blok   =  blockIdx.x;
    int vlakno = threadIdx.x;
-   int i      = CUDA_BLOK_VELIKOST * blok + vlakno;
+   int i      = pocetVlakenVBloku * blok + vlakno;
 
 #ifdef DEBUG
    printf( "thread id = %d, b = %d, v = %d\n", i, blok, vlakno );
@@ -361,12 +361,12 @@ __global__ void wrapperProGPU( cDijkstra ** devDijkstra, unsigned pocetUzlu ) {
    return;
 }
 
-bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu ) {
+bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu, unsigned pocetWarpu ) {
     unsigned  ** devGraf;
     unsigned  ** vzdalenostM; 
     cDijkstra ** devDijkstra;
-    // pocet vlaken v bloku -- BLOK_VELIKOST nebo mensi
-    int vlaken = MIN( CUDA_BLOK_VELIKOST, pocetUzlu );
+    // pocet vlaken v bloku -- minimalne pocet uzlu
+    int vlaken = MIN( pocetWarpu * CUDA_WARP_VELIKOST, pocetUzlu );
     // horni cast pocetUzlu/vlaken
     int bloku  = ( pocetUzlu + vlaken - 1 ) / vlaken;
 #ifdef MERENI
@@ -394,7 +394,7 @@ bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu ) {
 #endif // MERENI
 
     // vypocet na GPU ------------------------------------------------
-    wrapperProGPU<<<bloku,vlaken>>>( devDijkstra, pocetUzlu ) ;
+    wrapperProGPU<<<bloku,vlaken>>>( devDijkstra, pocetUzlu, vlaken ) ;
     HANDLE_ERROR(   cudaDeviceSynchronize( )        );
 
 #ifdef MERENI

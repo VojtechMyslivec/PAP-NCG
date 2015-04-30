@@ -40,14 +40,14 @@
 using namespace std;
 
 // mereni jiz v danem algoritmu pomoci CUDA udalosti
-void mereni( unsigned ** graf, unsigned pocetUzlu ) {
+void mereni( unsigned ** graf, unsigned pocetUzlu, unsigned pocetWarpu ) {
 
 #ifdef DIJKSTRA
-   dijkstraNtoN(  graf, pocetUzlu );
+   dijkstraNtoN(  graf, pocetUzlu, pocetWarpu );
 #endif // DIJKSTRA
 
 #ifdef FLOYDWARSHALL
-   floydWarshall( graf, pocetUzlu );
+   floydWarshall( graf, pocetUzlu, pocetWarpu );
 #endif // FLOYDWARSHALL
 
 }
@@ -56,10 +56,11 @@ void mereni( unsigned ** graf, unsigned pocetUzlu ) {
 int main( int argc, char ** argv ) {
    unsigned ** graf          = NULL;
    char     *  souborSGrafem = NULL;
+   unsigned    pocetWarpu    = CUDA_VYCHOZI_POCET_WARPU;
    unsigned    pocetUzlu     = 0;
    unsigned    navrat;
 
-   if ( parsujArgumenty( argc, argv, souborSGrafem, navrat ) != true ) {
+   if ( parsujArgumenty( argc, argv, souborSGrafem, pocetWarpu, navrat ) != true ) {
       return navrat;
    }
 
@@ -92,7 +93,7 @@ int main( int argc, char ** argv ) {
    cout << endl;
 #endif // VYPIS
 
-   mereni( graf, pocetUzlu );
+   mereni( graf, pocetUzlu, pocetWarpu );
 
    uklid( graf, pocetUzlu );
 

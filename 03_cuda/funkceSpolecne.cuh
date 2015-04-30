@@ -18,7 +18,10 @@
 
 #define HANDLE_ERROR( err )  ( HandleError( err, __FILE__, __LINE__) )
 #define MIN( A, B )          ( A < B ? A : B )
-#define CUDA_BLOK_VELIKOST   128
+
+#define CUDA_VYCHOZI_POCET_WARPU   4
+#define CUDA_MAX_POCET_WARPU      32
+#define CUDA_WARP_VELIKOST        32
 
 #define UNSIGNED_NEKONECNO  UINT_MAX
 
@@ -73,7 +76,7 @@ bool zkontrolujPrazdnyVstup( istream & is );
 //           Prepinac -h prinuti funkci skoncit s chybou, ale navratova
 //           hodnota bude MAIN_OK.
 //    true   Vse v poradku, parametry byly uspesne nacteny
-bool parsujArgumenty( int argc, char ** argv, char *& souborSGrafem, unsigned & navrat );
+bool parsujArgumenty( int argc, char ** argv, char *& souborSGrafem, unsigned & pocetWarpu, unsigned & navrat );
 
 // nacte jednu unsigned hodnotu ze vstupu
 // pokud misto unsigned cisla nalezne - (nasledovanou prazdnym znakem)
