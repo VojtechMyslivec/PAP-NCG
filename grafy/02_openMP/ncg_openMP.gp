@@ -3,18 +3,25 @@
 reset
 adresar = "../../mereni/"
 
-# podadresarDynamicDijkstraHuste = adresar."dynamic_huste_dijkstra/"."vysledky/"
-# podadresarDynamicDijkstraRidke = adresar."dynamic_ridke_dijkstra/"."vysledky/"
-# podadresarDynamicFloydHuste    = adresar."dynamic_huste_floyd-warshall/"."vysledky/"
-# podadresarDynamicFloydRidke    = adresar."dynamic_ridke_floyd-warshall/"."vysledky/"
-podadresarStaticDijkstraHuste  = adresar."static_huste_dijkstra/"."vysledky/"
-podadresarStaticDijkstraRidke  = adresar."static_ridke_dijkstra/"."vysledky/"
-podadresarStaticFloydHuste     = adresar."static_huste_floyd-warshall_v2/"."vysledky/"
-podadresarStaticFloydRidke     = adresar."static_ridke_floyd-warshall_v2/"."vysledky/"
-# podadresarStaticFloydHuste     = adresar."static_huste_floyd-warshall/"."vysledky/"
-# podadresarStaticFloydRidke     = adresar."static_ridke_floyd-warshall/"."vysledky/"
-# podadresarStaticFloydHuste     = adresar."static_huste_vzdalenosti_floyd-warshall/"."vysledky/"
-# podadresarStaticFloydRidke     = adresar."static_ridke_vzdalenosti_floyd-warshall/"."vysledky/"
+# podadresarDynamicDijkstraHuste = adresar."dynamic_huste_dijkstra_v1/"."vysledky/"
+# podadresarDynamicDijkstraRidke = adresar."dynamic_ridke_dijkstra_v1/"."vysledky/"
+
+# podadresarDynamicFloydHuste    = adresar."dynamic_huste_floyd-warshall_v1/"."vysledky/"
+# podadresarDynamicFloydRidke    = adresar."dynamic_ridke_floyd-warshall_v1/"."vysledky/"
+
+# podadresarStaticDijkstraHuste  = adresar."static_huste_dijkstra_v1/"."vysledky/"
+  podadresarStaticDijkstraHuste  = adresar."static_huste_dijkstra_vzdalenosti/"."vysledky/"
+
+# podadresarStaticDijkstraRidke  = adresar."static_ridke_dijkstra_v1/"."vysledky/"
+  podadresarStaticDijkstraRidke  = adresar."static_ridke_dijkstra_vzdalenosti/"."vysledky/"
+
+# podadresarStaticFloydHuste     = adresar."static_huste_floyd-warshall_v1/"."vysledky/"
+# podadresarStaticFloydHuste     = adresar."static_huste_floyd-warshall_v2/"."vysledky/"
+  podadresarStaticFloydHuste     = adresar."static_huste_floyd-warshall_vzdalenosti/"."vysledky/"
+
+# podadresarStaticFloydRidke     = adresar."static_ridke_floyd-warshall_v1/"."vysledky/"
+# podadresarStaticFloydRidke     = adresar."static_ridke_floyd-warshall_v2/"."vysledky/"
+  podadresarStaticFloydRidke     = adresar."static_ridke_floyd-warshall_vzdalenosti/"."vysledky/"
 
 adresarPorovnani                     = adresar."porovnani/"
 podadresarPorovnaniDijkstraHustota   = adresarPorovnani."dijkstra_static_huste-ridke/"
@@ -70,11 +77,11 @@ set ylabel 'Cas [s]'
 set yrange [0:450]
 
 nadpis    = "Prumerny cas vypoctu v zavislosti na poctu vlaken"
-podnadpis = "Algoritmus Dijsktra, huste grafy, staticke planovani"
+podnadpis = "Algoritmus Dijkstra, huste grafy, staticke planovani"
 set title nadpis."\n{/*0.8 ".podnadpis."}"
 
 podadresar = podadresarStaticDijkstraHuste
-set output "02-01-Dijsktra_cas.png"
+set output "02-01-Dijkstra_cas.png"
 
 plot \
    podadresar."vysledky-1000.txt" using 1:2 linestyle 11 title "n = 1000", \
@@ -83,19 +90,19 @@ plot \
    podadresar."vysledky-4000.txt" using 1:2 linestyle 41 title "n = 4000", \
    podadresar."vysledky-5000.txt" using 1:2 linestyle 51 title "n = 5000";
 
-podnadpis = "Algoritmus Floyd-Warshall, huste grafy, staticke planovani"
-set title nadpis."\n{/*0.8 ".podnadpis."}"
-
-podadresar = podadresarStaticFloydHuste
-set output "02-01-Floyd_cas.png"
-
-plot \
-   podadresar."vysledky-1000.txt" using 1:2 linestyle 12 title "n = 1000", \
-   podadresar."vysledky-2000.txt" using 1:2 linestyle 22 title "n = 2000", \
-   podadresar."vysledky-3000.txt" using 1:2 linestyle 32 title "n = 3000", \
-   podadresar."vysledky-4000.txt" using 1:2 linestyle 42 title "n = 4000", \
-   podadresar."vysledky-5000.txt" using 1:2 linestyle 52 title "n = 5000";
-
+# podnadpis = "Algoritmus Floyd-Warshall, huste grafy, staticke planovani"
+# set title nadpis."\n{/*0.8 ".podnadpis."}"
+# 
+# podadresar = podadresarStaticFloydHuste
+# set output "02-01-Floyd_cas.png"
+# 
+# plot \
+#    podadresar."vysledky-1000.txt" using 1:2 linestyle 12 title "n = 1000", \
+#    podadresar."vysledky-2000.txt" using 1:2 linestyle 22 title "n = 2000", \
+#    podadresar."vysledky-3000.txt" using 1:2 linestyle 32 title "n = 3000", \
+#    podadresar."vysledky-4000.txt" using 1:2 linestyle 42 title "n = 4000", \
+#    podadresar."vysledky-5000.txt" using 1:2 linestyle 52 title "n = 5000";
+# 
 # ======================================================================
 # Zrychleni vypoctu
 # ======================================================================
@@ -106,11 +113,11 @@ set ylabel 'Zrychleni'
 set yrange [0:16]
 
 nadpis    = "Zrychleni vypoctu v zavislosti na poctu vlaken"
-podnadpis = "Algoritmus Dijsktra, huste grafy, staticke planovani"
+podnadpis = "Algoritmus Dijkstra, huste grafy, staticke planovani"
 set title nadpis."\n{/*0.8 ".podnadpis."}"
 
 podadresar = podadresarStaticDijkstraHuste
-set output "02-02-Dijsktra_zrychleni.png"
+set output "02-02-Dijkstra_zrychleni.png"
 
 plot \
    x with lines linecolor "black" title "y = x", \
@@ -120,20 +127,20 @@ plot \
    podadresar."vysledky-4000.txt" using 1:3 linestyle 41 title "n = 4000", \
    podadresar."vysledky-5000.txt" using 1:3 linestyle 51 title "n = 5000";
 
-podnadpis = "Algoritmus Floyd-Warshall, huste grafy, staticke planovani"
-
-set title nadpis."\n{/*0.8 ".podnadpis."}"
-podadresar = podadresarStaticFloydHuste
-set output "02-02-Floyd_zrychleni.png"
-
-plot \
-   x with lines linecolor "black" title "y = x", \
-   podadresar."vysledky-1000.txt" using 1:3 linestyle 11 title "n = 1000", \
-   podadresar."vysledky-2000.txt" using 1:3 linestyle 21 title "n = 2000", \
-   podadresar."vysledky-3000.txt" using 1:3 linestyle 31 title "n = 3000", \
-   podadresar."vysledky-4000.txt" using 1:3 linestyle 41 title "n = 4000", \
-   podadresar."vysledky-5000.txt" using 1:3 linestyle 51 title "n = 5000";
-
+# podnadpis = "Algoritmus Floyd-Warshall, huste grafy, staticke planovani"
+# 
+# set title nadpis."\n{/*0.8 ".podnadpis."}"
+# podadresar = podadresarStaticFloydHuste
+# set output "02-02-Floyd_zrychleni.png"
+# 
+# plot \
+#    x with lines linecolor "black" title "y = x", \
+#    podadresar."vysledky-1000.txt" using 1:3 linestyle 11 title "n = 1000", \
+#    podadresar."vysledky-2000.txt" using 1:3 linestyle 21 title "n = 2000", \
+#    podadresar."vysledky-3000.txt" using 1:3 linestyle 31 title "n = 3000", \
+#    podadresar."vysledky-4000.txt" using 1:3 linestyle 41 title "n = 4000", \
+#    podadresar."vysledky-5000.txt" using 1:3 linestyle 51 title "n = 5000";
+# 
 # ======================================================================
 # Efektivita
 # ======================================================================
@@ -144,11 +151,11 @@ set ylabel 'Efektivita'
 set yrange [0:1]
 
 nadpis    = "Efektivita vypoctu v zavislosti na poctu vlaken"
-podnadpis = "Algoritmus Dijsktra, huste grafy, staticke planovani"
+podnadpis = "Algoritmus Dijkstra, huste grafy, staticke planovani"
 set title nadpis."\n{/*0.8 ".podnadpis."}"
 
 podadresar = podadresarStaticDijkstraHuste
-set output "02-03-Dijsktra_efektivita.png"
+set output "02-03-Dijkstra_efektivita.png"
 
 plot \
    1 with lines linecolor "black" title "y = 1", \
@@ -159,98 +166,98 @@ plot \
    podadresar."vysledky-5000.txt" using 1:4 linestyle 51 title "n = 5000";
 
 
-podnadpis = "Algoritmus Floyd-Warshall, huste grafy, staticke planovani"
-set title nadpis."\n{/*0.8 ".podnadpis."}"
-
-podadresar = podadresarStaticFloydHuste
-set output "02-03-Floyd_efektivita.png"
-
-plot \
-   1 with lines linecolor "black" title "y = 1", \
-   podadresar."vysledky-1000.txt" using 1:4 linestyle 11 title "n = 1000", \
-   podadresar."vysledky-2000.txt" using 1:4 linestyle 21 title "n = 2000", \
-   podadresar."vysledky-3000.txt" using 1:4 linestyle 31 title "n = 3000", \
-   podadresar."vysledky-4000.txt" using 1:4 linestyle 41 title "n = 4000", \
-   podadresar."vysledky-5000.txt" using 1:4 linestyle 51 title "n = 5000";
-
-
-# ======================================================================
-# Porovnani ridke huste grafy 
-# ======================================================================
-
-set key top left 
-
-set ylabel 'Pomer casu huste/ridke'
-set yrange [0.8:1.2]
-
-nadpis    = "Porovnani pomeru rychlosti vypoctu v zavislosti na hustote grafu"
-podnadpis = "Algoritmus Dijsktra, staticke planovani"
-set title nadpis."\n{/*0.8 ".podnadpis."}"
-
-podadresar = podadresarPorovnaniDijkstraHustota
-set output "02-04-Dijsktra_hustota.png"
-
-plot \
-   1 with lines linecolor "black" title "y = 1", \
-   podadresar."vysledky-1000.txt" using 1:2 linestyle 11 title "n = 1000", \
-   podadresar."vysledky-2000.txt" using 1:2 linestyle 21 title "n = 2000", \
-   podadresar."vysledky-3000.txt" using 1:2 linestyle 31 title "n = 3000", \
-   podadresar."vysledky-4000.txt" using 1:2 linestyle 41 title "n = 4000", \
-   podadresar."vysledky-5000.txt" using 1:2 linestyle 51 title "n = 5000";
-
-podnadpis = "Algoritmus Floyd-Warshall, staticke planovani"
-set title nadpis."\n{/*0.8 ".podnadpis."}"
-
-podadresar = podadresarPorovnaniFloydHustota
-set output "02-04-Floyd_hustota.png"
-
-plot \
-   1 with lines linecolor "black" title "y = 1", \
-   podadresar."vysledky-1000.txt" using 1:2 linestyle 11 title "n = 1000", \
-   podadresar."vysledky-2000.txt" using 1:2 linestyle 21 title "n = 2000", \
-   podadresar."vysledky-3000.txt" using 1:2 linestyle 31 title "n = 3000", \
-   podadresar."vysledky-4000.txt" using 1:2 linestyle 41 title "n = 4000", \
-   podadresar."vysledky-5000.txt" using 1:2 linestyle 51 title "n = 5000";
-
-
-# ======================================================================
-# Porovnani dynamicke, staticke planovani
-# ======================================================================
-
-set key top left 
-
-set ylabel 'Pomer casu staticke/dynamicke'
-set yrange [0.8:1.2]
-
-nadpis    = "Porovnani pomeru rychlosti vypoctu v zavislosti na planovani uloh"
-podnadpis = "Algoritmus Dijsktra, huste grafy"
-set title nadpis."\n{/*0.8 ".podnadpis."}"
-
-podadresar = podadresarPorovnaniDijkstraPlanovani
-set output "02-05-Dijsktra_schedule.png"
-
-plot \
-   1 with lines linecolor "black" title "y = 1", \
-   podadresar."vysledky-1000.txt" using 1:2 linestyle 11 title "n = 1000", \
-   podadresar."vysledky-2000.txt" using 1:2 linestyle 21 title "n = 2000", \
-   podadresar."vysledky-3000.txt" using 1:2 linestyle 31 title "n = 3000", \
-   podadresar."vysledky-4000.txt" using 1:2 linestyle 41 title "n = 4000", \
-   podadresar."vysledky-5000.txt" using 1:2 linestyle 51 title "n = 5000";
-
-
-podnadpis = "Algoritmus Floyd-Warshall, huste grafy"
-set title nadpis."\n{/*0.8 ".podnadpis."}"
-
-podadresar = podadresarPorovnaniFloydHustota
-set output "02-05-Floyd_schedule.png"
-
-plot \
-   1 with lines linecolor "black" title "y = 1", \
-   podadresar."vysledky-1000.txt" using 1:2 linestyle 11 title "n = 1000", \
-   podadresar."vysledky-2000.txt" using 1:2 linestyle 21 title "n = 2000", \
-   podadresar."vysledky-3000.txt" using 1:2 linestyle 31 title "n = 3000", \
-   podadresar."vysledky-4000.txt" using 1:2 linestyle 41 title "n = 4000", \
-   podadresar."vysledky-5000.txt" using 1:2 linestyle 51 title "n = 5000";
-
-
-
+# podnadpis = "Algoritmus Floyd-Warshall, huste grafy, staticke planovani"
+# set title nadpis."\n{/*0.8 ".podnadpis."}"
+# 
+# podadresar = podadresarStaticFloydHuste
+# set output "02-03-Floyd_efektivita.png"
+# 
+# plot \
+#    1 with lines linecolor "black" title "y = 1", \
+#    podadresar."vysledky-1000.txt" using 1:4 linestyle 11 title "n = 1000", \
+#    podadresar."vysledky-2000.txt" using 1:4 linestyle 21 title "n = 2000", \
+#    podadresar."vysledky-3000.txt" using 1:4 linestyle 31 title "n = 3000", \
+#    podadresar."vysledky-4000.txt" using 1:4 linestyle 41 title "n = 4000", \
+#    podadresar."vysledky-5000.txt" using 1:4 linestyle 51 title "n = 5000";
+# 
+# 
+# # ======================================================================
+# # Porovnani ridke huste grafy 
+# # ======================================================================
+# 
+# set key top left 
+# 
+# set ylabel 'Pomer casu huste/ridke'
+# set yrange [0.8:1.2]
+# 
+# nadpis    = "Porovnani pomeru rychlosti vypoctu v zavislosti na hustote grafu"
+# podnadpis = "Algoritmus Dijkstra, staticke planovani"
+# set title nadpis."\n{/*0.8 ".podnadpis."}"
+# 
+# podadresar = podadresarPorovnaniDijkstraHustota
+# set output "02-04-Dijkstra_hustota.png"
+# 
+# plot \
+#    1 with lines linecolor "black" title "y = 1", \
+#    podadresar."vysledky-1000.txt" using 1:2 linestyle 11 title "n = 1000", \
+#    podadresar."vysledky-2000.txt" using 1:2 linestyle 21 title "n = 2000", \
+#    podadresar."vysledky-3000.txt" using 1:2 linestyle 31 title "n = 3000", \
+#    podadresar."vysledky-4000.txt" using 1:2 linestyle 41 title "n = 4000", \
+#    podadresar."vysledky-5000.txt" using 1:2 linestyle 51 title "n = 5000";
+# 
+# podnadpis = "Algoritmus Floyd-Warshall, staticke planovani"
+# set title nadpis."\n{/*0.8 ".podnadpis."}"
+# 
+# podadresar = podadresarPorovnaniFloydHustota
+# set output "02-04-Floyd_hustota.png"
+# 
+# plot \
+#    1 with lines linecolor "black" title "y = 1", \
+#    podadresar."vysledky-1000.txt" using 1:2 linestyle 11 title "n = 1000", \
+#    podadresar."vysledky-2000.txt" using 1:2 linestyle 21 title "n = 2000", \
+#    podadresar."vysledky-3000.txt" using 1:2 linestyle 31 title "n = 3000", \
+#    podadresar."vysledky-4000.txt" using 1:2 linestyle 41 title "n = 4000", \
+#    podadresar."vysledky-5000.txt" using 1:2 linestyle 51 title "n = 5000";
+# 
+# 
+# # ======================================================================
+# # Porovnani dynamicke, staticke planovani
+# # ======================================================================
+# 
+# set key top left 
+# 
+# set ylabel 'Pomer casu staticke/dynamicke'
+# set yrange [0.8:1.2]
+# 
+# nadpis    = "Porovnani pomeru rychlosti vypoctu v zavislosti na planovani uloh"
+# podnadpis = "Algoritmus Dijkstra, huste grafy"
+# set title nadpis."\n{/*0.8 ".podnadpis."}"
+# 
+# podadresar = podadresarPorovnaniDijkstraPlanovani
+# set output "02-05-Dijkstra_schedule.png"
+# 
+# plot \
+#    1 with lines linecolor "black" title "y = 1", \
+#    podadresar."vysledky-1000.txt" using 1:2 linestyle 11 title "n = 1000", \
+#    podadresar."vysledky-2000.txt" using 1:2 linestyle 21 title "n = 2000", \
+#    podadresar."vysledky-3000.txt" using 1:2 linestyle 31 title "n = 3000", \
+#    podadresar."vysledky-4000.txt" using 1:2 linestyle 41 title "n = 4000", \
+#    podadresar."vysledky-5000.txt" using 1:2 linestyle 51 title "n = 5000";
+# 
+# 
+# podnadpis = "Algoritmus Floyd-Warshall, huste grafy"
+# set title nadpis."\n{/*0.8 ".podnadpis."}"
+# 
+# podadresar = podadresarPorovnaniFloydHustota
+# set output "02-05-Floyd_schedule.png"
+# 
+# plot \
+#    1 with lines linecolor "black" title "y = 1", \
+#    podadresar."vysledky-1000.txt" using 1:2 linestyle 11 title "n = 1000", \
+#    podadresar."vysledky-2000.txt" using 1:2 linestyle 21 title "n = 2000", \
+#    podadresar."vysledky-3000.txt" using 1:2 linestyle 31 title "n = 3000", \
+#    podadresar."vysledky-4000.txt" using 1:2 linestyle 41 title "n = 4000", \
+#    podadresar."vysledky-5000.txt" using 1:2 linestyle 51 title "n = 5000";
+# 
+# 
+# 
