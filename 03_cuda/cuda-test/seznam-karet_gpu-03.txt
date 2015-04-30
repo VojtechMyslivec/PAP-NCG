@@ -1,0 +1,52 @@
+Found 3 Cuda device(s).
+Cuda device 0
+	name : GeForce GTX 590
+	totalGlobablMem: 1610285056
+	sharedMemPerBlock: 49152
+	regsPerBlock: 32768
+	warpSize: 32
+	memPitch: 2147483647
+	maxThreadsPerBlock: 1024
+	maxThreadsDim: 1024, 1024, 64
+	maxGridSize: 65535, 65535, 65535
+	clockRate: 1225000
+	totalConstMem: 65536
+	major: 2
+	minor: 0
+	textureAlignment: 512
+	deviceOverlap: 1
+	multiProcessorCount: 16
+Cuda device 1
+	name : GeForce GTX 470
+	totalGlobablMem: 1341849600
+	sharedMemPerBlock: 49152
+	regsPerBlock: 32768
+	warpSize: 32
+	memPitch: 2147483647
+	maxThreadsPerBlock: 1024
+	maxThreadsDim: 1024, 1024, 64
+	maxGridSize: 65535, 65535, 65535
+	clockRate: 1215000
+	totalConstMem: 65536
+	major: 2
+	minor: 0
+	textureAlignment: 512
+	deviceOverlap: 1
+	multiProcessorCount: 14
+Cuda device 2
+	name : GeForce GTX 590
+	totalGlobablMem: 1609760768
+	sharedMemPerBlock: 49152
+	regsPerBlock: 32768
+	warpSize: 32
+	memPitch: 2147483647
+	maxThreadsPerBlock: 1024
+	maxThreadsDim: 1024, 1024, 64
+	maxGridSize: 65535, 65535, 65535
+	clockRate: 1225000
+	totalConstMem: 65536
+	major: 2
+	minor: 0
+	textureAlignment: 512
+	deviceOverlap: 1
+	multiProcessorCount: 16

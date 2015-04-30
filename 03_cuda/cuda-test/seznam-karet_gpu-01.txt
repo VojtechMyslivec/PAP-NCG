@@ -1,0 +1,69 @@
+Found 4 Cuda device(s).
+Cuda device 0
+	name : Tesla K40c
+	totalGlobablMem: 12079136768
+	sharedMemPerBlock: 49152
+	regsPerBlock: 65536
+	warpSize: 32
+	memPitch: 2147483647
+	maxThreadsPerBlock: 1024
+	maxThreadsDim: 1024, 1024, 64
+	maxGridSize: 2147483647, 65535, 65535
+	clockRate: 745000
+	totalConstMem: 65536
+	major: 3
+	minor: 5
+	textureAlignment: 512
+	deviceOverlap: 1
+	multiProcessorCount: 15
+Cuda device 1
+	name : Tesla C2050
+	totalGlobablMem: 2817982464
+	sharedMemPerBlock: 49152
+	regsPerBlock: 32768
+	warpSize: 32
+	memPitch: 2147483647
+	maxThreadsPerBlock: 1024
+	maxThreadsDim: 1024, 1024, 64
+	maxGridSize: 65535, 65535, 65535
+	clockRate: 1147000
+	totalConstMem: 65536
+	major: 2
+	minor: 0
+	textureAlignment: 512
+	deviceOverlap: 1
+	multiProcessorCount: 14
+Cuda device 2
+	name : GeForce GTX 780 Ti
+	totalGlobablMem: 3221028864
+	sharedMemPerBlock: 49152
+	regsPerBlock: 65536
+	warpSize: 32
+	memPitch: 2147483647
+	maxThreadsPerBlock: 1024
+	maxThreadsDim: 1024, 1024, 64
+	maxGridSize: 2147483647, 65535, 65535
+	clockRate: 1071500
+	totalConstMem: 65536
+	major: 3
+	minor: 5
+	textureAlignment: 512
+	deviceOverlap: 1
+	multiProcessorCount: 15
+Cuda device 3
+	name : GeForce GTX 750
+	totalGlobablMem: 2147287040
+	sharedMemPerBlock: 49152
+	regsPerBlock: 65536
+	warpSize: 32
+	memPitch: 2147483647
+	maxThreadsPerBlock: 1024
+	maxThreadsDim: 1024, 1024, 64
+	maxGridSize: 2147483647, 65535, 65535
+	clockRate: 1137000
+	totalConstMem: 65536
+	major: 5
+	minor: 0
+	textureAlignment: 512
+	deviceOverlap: 1
+	multiProcessorCount: 4
