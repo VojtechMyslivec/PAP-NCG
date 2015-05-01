@@ -18,6 +18,7 @@
 #ifndef CDIJKSTRA_kljnef29kjdsnf02
 #define CDIJKSTRA_kljnef29kjdsnf02
 
+
 #ifdef DEBUG2
     #define DEBUG
 #endif // DEBUG2

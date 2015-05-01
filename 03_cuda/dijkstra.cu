@@ -197,45 +197,45 @@ void zkopirujDataZGPU( unsigned ** vzdalenostM, cDijkstra ** devDijkstra, unsign
     // zkopirovani pole [ukazatelu do device] ---------------------------
     cDijkstra ** hostDevDijkstra = new cDijkstra * [pocetUzlu];
     HANDLE_ERROR( 
-       cudaMemcpy( 
-                   hostDevDijkstra,
-                   devDijkstra,
-                   pocetUzlu*sizeof(*devDijkstra), 
-                   cudaMemcpyDeviceToHost 
-                 )
-    );
+            cudaMemcpy( 
+                hostDevDijkstra,
+                devDijkstra,
+                pocetUzlu*sizeof(*devDijkstra), 
+                cudaMemcpyDeviceToHost 
+                )
+            );
 
     unsigned * devHodnoty;
     for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
         // zkopiruje hodnotu ukazatele z [tridy na device] ----------
         HANDLE_ERROR( 
-            cudaMemcpy( 
-                        &(devHodnoty), 
-                        &(hostDevDijkstra[i]->vzdalenost), 
-                        //&(devDijkstra[i]->vzdalenost), 
-                        sizeof(devHodnoty), 
-                        cudaMemcpyDeviceToHost
-                      )
-        );
+                cudaMemcpy( 
+                    &(devHodnoty), 
+                    &(hostDevDijkstra[i]->vzdalenost), 
+                    //&(devDijkstra[i]->vzdalenost), 
+                    sizeof(devHodnoty), 
+                    cudaMemcpyDeviceToHost
+                    )
+                );
 
         // zkopiruje data z device do matice vzdalenosti ------------
         HANDLE_ERROR( 
-           cudaMemcpy(
-                       vzdalenostM[i],
-                       devHodnoty,
-                       pocetUzlu*sizeof(*devHodnoty),
-                       cudaMemcpyDeviceToHost 
-                     )
-        );
+                cudaMemcpy(
+                    vzdalenostM[i],
+                    devHodnoty,
+                    pocetUzlu*sizeof(*devHodnoty),
+                    cudaMemcpyDeviceToHost 
+                    )
+                );
     }
-    
+
     delete [] hostDevDijkstra;
 }
 
 __global__ void wrapperProGPU( cDijkstra ** devDijkstra, unsigned pocetUzlu, unsigned pocetVlakenVBloku ) {
-    int blok   =  blockIdx.x;
-    int vlakno = threadIdx.x;
-    int i      = pocetVlakenVBloku * blok + vlakno;
+    unsigned blok   =  blockIdx.x;
+    unsigned vlakno = threadIdx.x;
+    unsigned i      = pocetVlakenVBloku * blok + vlakno;
 
 #ifdef DEBUG
     printf( "thread id = %d, b = %d, v = %d\n", i, blok, vlakno );
@@ -248,49 +248,45 @@ __global__ void wrapperProGPU( cDijkstra ** devDijkstra, unsigned pocetUzlu, uns
     return;
 }
 
-bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu, unsigned pocetWarpu ) {
+void dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu, unsigned pocetWarpu ) {
     unsigned  ** devGraf;
     unsigned  ** vzdalenostM; 
     cDijkstra ** devDijkstra;
     // pocet vlaken v bloku -- minimalne pocet uzlu
-    int vlaken = MIN( pocetWarpu * CUDA_WARP_VELIKOST, pocetUzlu );
+    unsigned     vlaken = MIN( pocetWarpu * CUDA_WARP_VELIKOST, pocetUzlu );
     // horni cast pocetUzlu/vlaken
-    int bloku  = ( pocetUzlu + vlaken - 1 ) / vlaken;
+    unsigned     bloku  = ( pocetUzlu + vlaken - 1 ) / vlaken;
+
 #ifdef MERENI
     // udalosti pro mereni casu vypoctu
-    cudaEvent_t eStart, eZapsano, eVypocteno, eKonec;
+    cudaEvent_t udalosti[MERENI_POCET];
     float       tVypocet, tCelkem;
 
-    HANDLE_ERROR(   cudaEventCreate(     &eStart )  );
-    HANDLE_ERROR(   cudaEventCreate(   &eZapsano )  );
-    HANDLE_ERROR(   cudaEventCreate( &eVypocteno )  );
-    HANDLE_ERROR(   cudaEventCreate(     &eKonec )  );
-
-    HANDLE_ERROR(   cudaEventRecord(      eStart )  );
-    // event synchronize, aby se vsechny operace dokoncily a mereni
-    // probehlo v poradku
-    HANDLE_ERROR(   cudaEventSynchronize( eStart ) );
+    mereniInicializace( udalosti, MERENI_POCET);
+    mereniZaznam( udalosti[MERENI_START] );
 #endif // MERENI
 
     // inicializace a kopirovani dat na GPU --------------------------
     inicializaceNtoN( graf, pocetUzlu, vzdalenostM, devGraf, devDijkstra );
 
 #ifdef MERENI
-    HANDLE_ERROR(   cudaEventRecord(    eZapsano )  );
-    HANDLE_ERROR( cudaEventSynchronize( eZapsano )  );
+    mereniZaznam( udalosti[MERENI_ZAPIS] );
 #endif // MERENI
 
     // vypocet na GPU ------------------------------------------------
-    wrapperProGPU<<<bloku,vlaken>>>( devDijkstra, pocetUzlu, vlaken ) ;
+    wrapperProGPU <<< bloku, vlaken >>> ( devDijkstra, pocetUzlu, vlaken ) ;
     HANDLE_ERROR(   cudaDeviceSynchronize( )        );
 
 #ifdef MERENI
-    HANDLE_ERROR(   cudaEventRecord(  eVypocteno )  );
-    HANDLE_ERROR( cudaEventSynchronize( eVypocteno ) );
+    mereniZaznam( udalosti[MERENI_VYPOCET] );
 #endif // MERENI
 
     // kopirovani dat z GPU ------------------------------------------
     zkopirujDataZGPU( vzdalenostM, devDijkstra, pocetUzlu );
+
+#ifdef MERENI
+    mereniZaznam( udalosti[MERENI_KONEC] );
+#endif // MERENI
 
 #ifdef VYPIS
     // vypis vysledku ------------------------------------------------
@@ -301,24 +297,15 @@ bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu, unsigned pocetWarpu ) {
     uklidNtoN( vzdalenostM, devGraf, devDijkstra, pocetUzlu );
 
 #ifdef MERENI
-    HANDLE_ERROR(   cudaEventRecord(      eKonec )  );
-    HANDLE_ERROR(   cudaEventSynchronize( eKonec )  );
+    mereniUplynulo( tVypocet, udalosti[MERENI_ZAPIS], udalosti[MERENI_VYPOCET] );
+    mereniUplynulo(  tCelkem, udalosti[MERENI_START],   udalosti[MERENI_KONEC] );
 
-    HANDLE_ERROR(   cudaEventElapsedTime( &tVypocet, eZapsano, eVypocteno )  );
-    HANDLE_ERROR(   cudaEventElapsedTime(  &tCelkem,   eStart,     eKonec )  );
-
-    tCelkem  /= 1000;
-    tVypocet /= 1000;
     cerr << pocetUzlu << '	' << bloku   << '	' << vlaken << '	'
-         << tVypocet  << '	' << tCelkem << '	' << endl;
+         << tVypocet  << '	' << tCelkem << endl;
 
+    mereniUklid( udalosti, MERENI_POCET);
 
-    HANDLE_ERROR(  cudaEventDestroy(     eKonec )  );
-    HANDLE_ERROR(  cudaEventDestroy( eVypocteno )  );
-    HANDLE_ERROR(  cudaEventDestroy(   eZapsano )  );
-    HANDLE_ERROR(  cudaEventDestroy(     eStart )  );
 #endif // MERENI
 
-    return true;
 }
 

@@ -16,6 +16,7 @@
 #ifndef FUNKCE_SPOLECNE_aohiuefijn39nvkjns92
 #define FUNKCE_SPOLECNE_aohiuefijn39nvkjns92
 
+
 #define HANDLE_ERROR( err )  ( HandleError( err, __FILE__, __LINE__) )
 #define MIN( A, B )          ( A < B ? A : B )
 
@@ -131,6 +132,25 @@ void maticeUklidNaGPU( unsigned **& devGraf, unsigned pocetUzlu );
 
 // uvolni PAGE-LOCKED pamet 
 void maticeUklidNaCPU( unsigned **& hostMatice, unsigned pocetUzlu );
+
+
+#ifdef MERENI
+
+// funkce pro mereni pomoci CUDA udalosti
+
+// pro kazdou polozku z pole udalosti vytvori udalost (cudaEventCreate)
+void mereniInicializace( cudaEvent_t udalosti[], unsigned pocet );
+
+// zaznamena udalost a pocka na synchronizaci (cudaEventRecord a cudaDeviceSynchronize)
+void mereniZaznam( cudaEvent_t udalost );
+
+// zjisti, kolik uplynulo sekund mezi dvema udalostmi (cudaEventElapsedTime/1000)
+void mereniUplynulo( float & cas, cudaEvent_t zacatek, cudaEvent_t konec );
+
+// uvolni vytvorene udalosti (v poli) (cudaEventDestroy)
+void mereniUklid( cudaEvent_t udalosti[], unsigned pocet );
+
+#endif // MERENI
 
 #endif // FUNKCE_SPOLECNE_aohiuefijn39nvkjns92
 

@@ -435,3 +435,32 @@ void maticeUklidNaCPU( unsigned **& hostMatice, unsigned pocetUzlu ) {
     }
 }
 
+
+#ifdef MERENI
+void mereniInicializace( cudaEvent_t udalosti[], unsigned pocet ) {
+    for ( unsigned i = 0 ; i < pocet ; i++ ) {
+        HANDLE_ERROR(   cudaEventCreate( &(udalosti[i]) )   );
+    }
+}
+
+void mereniZaznam( cudaEvent_t udalost ) {
+    // event synchronize, aby se vsechny operace dokoncily a mereni
+    // probehlo v poradku
+    HANDLE_ERROR(   cudaEventRecord(      udalost )    );
+    HANDLE_ERROR(   cudaEventSynchronize( udalost )    );
+}
+
+void mereniUplynulo( float & cas, cudaEvent_t zacatek, cudaEvent_t konec ) {
+    HANDLE_ERROR(   cudaEventElapsedTime( &cas, zacatek, konec )   );
+    // prepocet na sekundy
+    cas = cas / 1000;
+}
+
+void mereniUklid( cudaEvent_t udalosti[], unsigned pocet ) {
+    for ( unsigned i = 0 ; i < pocet ; i++ ) {
+        HANDLE_ERROR(   cudaEventDestroy( udalosti[i] )   );
+    }
+}
+
+#endif // MERENI
+

@@ -13,6 +13,18 @@
  *
  */
 
+#ifndef DIJKSTRA_hwogh32flkjnbvx87uhlkj1n3t
+#define DIJKSTRA_hwogh32flkjnbvx87uhlkj1n3t
+
+
+#ifdef MERENI
+    #define MERENI_POCET   4
+    #define MERENI_START   0
+    #define MERENI_ZAPIS   1
+    #define MERENI_VYPOCET 2
+    #define MERENI_KONEC   3
+#endif // MERENI
+
 #include "funkceSpolecne.cuh"
 #include "cDijkstra.cuh"
 
@@ -26,7 +38,7 @@ void dijkstraInicializaceNaGPU( unsigned ** devGraf, unsigned pocetUzlu, cDijkst
 // vola (paralelne) vypocet Dijkstrova algoritmu pro kazdy uzel
 // idealni slozitost O( n^3 / p )
 // vysledek vypise na stdout
-bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu, unsigned pocetWarpu );
+void dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu, unsigned pocetWarpu );
 
 // TODO smazat // funkce pro inicializovani veskerych promennych potrebnych behem vypoctu 
 // void inicializace( unsigned ** graf, unsigned pocetUzlu, unsigned **& vzdalenostM, unsigned **& predchudceM );
@@ -39,4 +51,7 @@ void zkopirujDataZGPU( unsigned ** vzdalenostM, cDijkstra ** devDijkstra, unsign
 
 // kernel kod pro CUDA, wrapper obalujici spousteni vypoctu kazdeho z objektu v poli devDijkstra
 __global__ void wrapperProGPU( cDijkstra ** devDijkstra, unsigned pocetUzlu, unsigned pocetWarpu );
+
+
+#endif // DIJKSTRA_hwogh32flkjnbvx87uhlkj1n3t
 
