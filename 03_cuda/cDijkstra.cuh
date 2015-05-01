@@ -18,14 +18,13 @@
 #ifndef CDIJKSTRA_kljnef29kjdsnf02
 #define CDIJKSTRA_kljnef29kjdsnf02
 
+
 #ifdef DEBUG2
     #define DEBUG
 #endif // DEBUG2
 
 #include "funkceSpolecne.cuh"
-#include <climits>
-
-#define DIJKSTRA_NEKONECNO    UNSIGNED_NEKONECNO
+//#include <climits>
 
 // ============================================================================
 // trida pro vypocet nejkratsich cest od jednoho uzlu ke vsem ostatnim
