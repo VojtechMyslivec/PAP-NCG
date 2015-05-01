@@ -13,8 +13,8 @@ USAGE="USAGE
       Nepovinny parametr host urcuje pocitac, na kterem se
       uloha ve fronte bude spoustet
          povolene hodnoty jsou:
-            gpu-02
-            gpu-03  [vychozi]"
+            gpu-02  [vychozi]
+            gpu-03"
 
 
 chyba () {
@@ -61,7 +61,7 @@ done
 program=$1
 data=$2
 stitek=$3
-host=${4:-gpu-03}
+host=${4:-gpu-02}
 vstupy=`ls "$data/"*.txt 2> /dev/null`
 # test, jestli existuje alespon jeden soubor
 [[ -z "$vstupy" ]] && {
