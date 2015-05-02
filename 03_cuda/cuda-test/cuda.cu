@@ -14,7 +14,9 @@ __global__ void helloWorldParallel( void ) {
 
 __global__ void sectiVektory( const int * vektorA, const int * vektorB, int * vektorV ) {
     int b = blockIdx.x;
+#ifdef BLA
     int t = threadIdx.x;
+#endif //BLA
     int i = BLOK_VELIKOST*b+t;
     
     printf( "thread id = %d, b = %d, v = %d\n", i, b, t );

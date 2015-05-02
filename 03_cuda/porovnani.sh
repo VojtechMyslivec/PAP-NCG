@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# metoda vystupu z programu uzly | matice
-metoda="uzly"
-
 data="../data/male-grafy"
 vystupy="./vystupy"
 rozdily="$vystupy/diff"
@@ -35,13 +32,13 @@ mkdir -p "$rozdily"
 # Spousteni pro ruzne vstupni soubory
 for file in "$data"/*.txt ; do
    filename=${file##*/}
-   vystupD="${vystupy}/out_${metoda}_dijkstra_${filename}"
-   vystupF="${vystupy}/out_${metoda}_floyd_${filename}"
-   vystupDiff="${rozdily}/diff_${metoda}_${filename}"
+   vystupD="${vystupy}/out_dijkstra_${filename}"
+   vystupF="${vystupy}/out_floyd_${filename}"
+   vystupDiff="${rozdily}/diff_${filename}"
 
    echo "Zpracovavam soubor '$filename'"
-   "$dijkstra" -t 6 -f "${file}" > "${vystupD}" 2> /dev/null
-   "$floyd"    -t 6 -f "${file}" > "${vystupF}" 2> /dev/null
+   "$dijkstra" -f "${file}" > "${vystupD}" 2>&1
+   "$floyd"    -f "${file}" > "${vystupF}" 2>&1
    diff "${vystupD}" "${vystupF}" > "${vystupDiff}"
 done
 
@@ -51,6 +48,4 @@ done
 #    echo "Chyba (make clean)! Nepodarilo se smazat vsechny vystupni soubory" >&2
 #    exit 2
 # }
-
-exit 0
 

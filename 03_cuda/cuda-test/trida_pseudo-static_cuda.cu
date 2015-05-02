@@ -89,7 +89,7 @@ void cudaVektorInit( cVektor *& device, const cVektor * host, int * devStatickeP
     int * devHodnoty;
     HANDLE_ERROR( 
        cudaMalloc( 
-                   (void**)&devHodnoty,
+                   &devHodnoty,
                    DELKA*sizeof(*devHodnoty)
                  )
     );
