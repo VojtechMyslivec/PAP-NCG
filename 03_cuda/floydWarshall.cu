@@ -18,18 +18,13 @@
    #include <stdio.h>
 #endif // DEBUG
 
-void inicializace( unsigned ** graf, unsigned pocetUzlu,
-        unsigned **& vzdalenostM,
-        unsigned **& devDelkaPredchozi, unsigned **& devDelkaAktualni
-        ) {
+// funkce pro inicializovani veskerych promennych potrebnych behem vypoctu 
+void inicializace( unsigned ** graf, unsigned pocetUzlu, unsigned **& hostDelka, unsigned **& devDelka ) {
     // alokovani pameti pro vysledek -----------------------
-    maticeInicializaceNaCPU( vzdalenostM, pocetUzlu );
+    maticeInicializaceNaCPU( hostDelka, pocetUzlu );
 
     // alokovani pameti na GPU -----------------------------
-    // devDelkaPredchozi bude kopie grafu
-    maticeInicializaceNaGPU(   graf, pocetUzlu, devDelkaPredchozi );
-    // devDelkaAktualni bude jen alokovana (prepisuje se v alg.)
-    maticeInicializaceNaGPU(   NULL, pocetUzlu, devDelkaAktualni  );
+    maticeInicializaceNaGPU(   graf, pocetUzlu, devDelka );
 
     // dalsi nastaveni pro GPU -----------------------------
 #ifdef CACHE
@@ -37,23 +32,23 @@ void inicializace( unsigned ** graf, unsigned pocetUzlu,
 #endif // CACHE
 }
 
-void uklid( unsigned pocetUzlu, unsigned **& vzdalenostM, unsigned **& devDelkaPredchozi, unsigned **& devDelkaAktualni ) {
-    maticeUklidNaCPU(       vzdalenostM, pocetUzlu );
-    maticeUklidNaGPU( devDelkaPredchozi, pocetUzlu );
-    maticeUklidNaGPU(  devDelkaAktualni, pocetUzlu );
+// funkce, ktera zajisti uklizeni alokovanych promennych
+void uklid( unsigned pocetUzlu, unsigned **& hostDelka, unsigned **& devDelka ) {
+    maticeUklidNaCPU(       hostDelka, pocetUzlu );
+    maticeUklidNaGPU(  devDelka, pocetUzlu );
 
-    vzdalenostM    = NULL;
-    devDelkaPredchozi = devDelkaAktualni = NULL;
+    hostDelka    = NULL;
+    devDelka = NULL;
 }
 
-void zkopirujDataZGPU( unsigned ** vzdalenostM, unsigned ** devVzdalenostM, unsigned pocetUzlu ) {
+void zkopirujDataZGPU( unsigned ** hostDelka, unsigned ** devDelka, unsigned pocetUzlu ) {
     // zkopirovani pole [ukazatelu do device] ---------------------------
     unsigned ** hostDevVzdalenost = new unsigned * [pocetUzlu];
     HANDLE_ERROR( 
             cudaMemcpy( 
                 hostDevVzdalenost,
-                devVzdalenostM,
-                pocetUzlu*sizeof(*devVzdalenostM), 
+                devDelka,
+                pocetUzlu*sizeof(*devDelka), 
                 cudaMemcpyDeviceToHost 
                 )
             );
@@ -62,7 +57,7 @@ void zkopirujDataZGPU( unsigned ** vzdalenostM, unsigned ** devVzdalenostM, unsi
         // zkopiruje data z device do matice vzdalenosti ------------
         HANDLE_ERROR( 
                 cudaMemcpy(
-                    vzdalenostM[i],
+                    hostDelka[i],
                     hostDevVzdalenost[i],
                     pocetUzlu*sizeof(*hostDevVzdalenost[i]),
                     cudaMemcpyDeviceToHost 
@@ -73,77 +68,111 @@ void zkopirujDataZGPU( unsigned ** vzdalenostM, unsigned ** devVzdalenostM, unsi
     delete [] hostDevVzdalenost;
 }
 
-void prohodUkazatele( unsigned **& ukazatel1, unsigned **& ukazatel2 ) {
-    unsigned ** pomocny;
-    pomocny   = ukazatel1;
-    ukazatel1 = ukazatel2;
-    ukazatel2 = pomocny;
+// vzdy se spousti 32 bloku x 32 vlaken -- DLAZDICE_VELIKOST x DLAZDICE_VELIKOST 
+__global__ void kernelProNezavisleDlazdice( unsigned ** devDelka, unsigned pocetUzlu, unsigned dlazdice, unsigned krok ) {
+    const unsigned radek   =  blockIdx.x + dlazdice * DLAZDICE_VELIKOST;
+    const unsigned sloupec = threadIdx.x + dlazdice * DLAZDICE_VELIKOST;
+#ifdef DEBUG
+    const unsigned blok   =  blockIdx.x;
+    const unsigned vlakno = threadIdx.x;
+    const unsigned id     = DLAZDICE_VELIKOST * blok + vlakno;
+    printf( "  - Kernel 1: vlakno id = %d, b = %d, v = %d, M[ %d , %d ]\n", id, blok, vlakno, radek, sloupec );
+#endif // DEBUG
+
+    if ( radek < pocetUzlu && sloupec < pocetUzlu ) {
+        devDelka[radek][sloupec] = MIN(  devDelka[radek][sloupec],  devDelka[radek][krok] + devDelka[krok][sloupec]  );
+    }
 }
 
-void spustVypocet( unsigned **& devDelkaPredchozi, unsigned **& devDelkaAktualni, unsigned pocetUzlu, unsigned pocetBloku, unsigned pocetVlaken ) {
-    for ( unsigned k = 0; k < pocetUzlu; k++ ) {
+// vzdy se spousti 32 bloku x 32 vlaken -- DLAZDICE_VELIKOST x DLAZDICE_VELIKOST 
+__global__ void kernelProJednoZavisleDlazdice( unsigned ** devDelka, unsigned pocetUzlu, unsigned dlazdiceRadek, unsigned dlazdiceSloupec, unsigned krok ) {
+    const unsigned radek   =  blockIdx.x + dlazdiceRadek   * DLAZDICE_VELIKOST;
+    const unsigned sloupec = threadIdx.x + dlazdiceSloupec * DLAZDICE_VELIKOST;
 #ifdef DEBUG
-        printf( "k = %d\n", k );
+    const unsigned blok   =  blockIdx.x;
+    const unsigned vlakno = threadIdx.x;
+    const unsigned id     = DLAZDICE_VELIKOST * blok + vlakno;
+    printf( "  - Kernel 2: vlakno id = %d, b = %d, v = %d, M[ %d , %d ]\n", id, blok, vlakno, radek, sloupec );
 #endif // DEBUG
-        // TODO strange casting?!
-        wrapperProGPU <<< pocetBloku, pocetVlaken >>> ( (const unsigned **)devDelkaPredchozi, devDelkaAktualni, pocetUzlu, pocetVlaken, k );
-        HANDLE_ERROR(   cudaDeviceSynchronize( ) );
+
+    if ( radek < pocetUzlu && sloupec < pocetUzlu ) {
+        devDelka[radek][sloupec] = MIN(  devDelka[radek][sloupec],  devDelka[radek][krok] + devDelka[krok][sloupec]  );
+    }
+}
+__global__ void kernelProDvouZavisleDlazdice( unsigned ** devDelka, unsigned i, unsigned j, unsigned k ) {
+    devDelka[i][j] = MIN(  devDelka[i][j],  devDelka[i][k] + devDelka[k][j]  );
+}
+
+// realizuje samotny (paralelni) vypocet algoritmu Floyd-Warshalla O( n^3 / p ) 
+void spustVypocet( unsigned ** devDelka, unsigned pocetUzlu, unsigned pocetWarpu ) {
+    const unsigned s = DLAZDICE_VELIKOST;
+    // horni cast pocetUzlu / s
+    const unsigned pocetDlazdic = ( pocetUzlu + s - 1 ) / s; 
+
+//    unsigned vlakenMin    = pocetUzlu * pocetUzlu;
+//    // pocet vlaken v bloku -- minimalne pocet uzlu ^ 2
+//    unsigned vlakenVBloku = MIN( pocetWarpu * CUDA_WARP_VELIKOST, vlakenMin );
+//    // horni cast pocetUzlu/vlakenVBloku
+//    unsigned bloku        = ( vlakenMin + vlakenVBloku - 1 ) / vlakenVBloku;
+
+    for ( unsigned b = 0 ; b < pocetDlazdic ; b++ ) {
+#ifdef DEBUG
+        printf( "b = %d\n", b );
+#endif // DEBUG
+        // nezavisle dlazdice -- na hl. diagonale dlazdickovane matice ---------
+        for ( unsigned k = b*s ; k < (b+1)*s ; k++ ) {
+            if ( k >= pocetUzlu ) break;            // pokud je uz mimo, konci
+            kernelProNezavisleDlazdice <<< s, s >>> ( devDelka, pocetUzlu, b, k );
+            HANDLE_ERROR(   cudaDeviceSynchronize( ) );
+        }
+
+        // jedno-zavisle dlazdice ----------------------------------------------
+        // ve stejnem radku
+        for ( unsigned ib = 0 ; ib < pocetDlazdic ; ib++ ) {
+            if ( ib == b ) continue;    // pokud uz danou dlazdici spocital, preskoci
+            for ( unsigned k = b*s ; k < (b+1)*s ; k++ ) {
+                if ( k >= pocetUzlu ) break;            // pokud je uz mimo, konci
+                kernelProJednoZavisleDlazdice <<< s, s >>> ( devDelka, pocetUzlu, b, ib, k );
+                HANDLE_ERROR(   cudaDeviceSynchronize( ) );
+            }
+        }
+        // ve stejnem sloupci
+        for ( unsigned jb = 0 ; jb < pocetDlazdic ; jb++ ) {
+            if ( jb == b ) continue;    // pokud uz danou dlazdici spocital, preskoci
+            for ( unsigned k = b*s ; k < (b+1)*s ; k++ ) {
+                if ( k >= pocetUzlu ) break;            // pokud je uz mimo, konci
+                kernelProJednoZavisleDlazdice <<< s, s >>> ( devDelka, pocetUzlu, jb, b, k );
+                HANDLE_ERROR(   cudaDeviceSynchronize( ) );
+            }
+        }
+
+        // dvou-zavisle dlazdice -- zbytek -------------------------------------
+        for ( unsigned ib = 0 ; ib < pocetDlazdic ; ib++ ) {
+            if ( ib == b ) continue;        // pokud uz danou dlazdici spocital, preskoci
+            for ( unsigned jb = 0 ; jb < pocetDlazdic ; jb++ ) {
+                if ( jb == b ) continue;    // pokud uz danou dlazdici spocital, preskoci
+                for ( unsigned i = jb*s ; i < (jb+1)*s ; i++ ) {
+                    if ( i >= pocetUzlu ) break;            // pokud je uz mimo, konci
+                    for ( unsigned j = ib*s ; j < (ib+1)*s ; j++ ) {
+                        if ( j >= pocetUzlu ) break;        // pokud je uz mimo, konci
+                        for ( unsigned k = b*s ; k < (b+1)*s ; k++ ) {
+                            if ( k >= pocetUzlu ) break;    // pokud je uz mimo, konci
+                            kernelProDvouZavisleDlazdice <<< 1, 1 >>> ( devDelka, i, j, k );
+                        }
+                    }
+                }
+            }
+        }
+
 #ifdef DEBUG
         printf( "\n" );
 #endif // DEBUG
-
-        // prohozeni predchozi a aktualni
-        prohodUkazatele( devDelkaPredchozi, devDelkaAktualni );
-    }
-
-    // prohozeni predchozi a aktualni, aby vysledky byly v aktualnim ( po skonceni cyklu jsou vysledky v predchozim )
-    prohodUkazatele( devDelkaPredchozi, devDelkaAktualni );
-}
-
-__global__ void wrapperProGPU( const unsigned ** devDelkaPredchozi, unsigned ** devDelkaAktualni, 
-                               unsigned pocetUzlu, unsigned pocetVlakenVBloku, 
-                               unsigned krok
-                             ) {
-    unsigned blok   =  blockIdx.x;
-    unsigned vlakno = threadIdx.x;
-    unsigned id     = pocetVlakenVBloku * blok + vlakno;
-    unsigned novaVzdalenost;
-
-    unsigned radek   = id / pocetUzlu;
-    unsigned sloupec = id % pocetUzlu;
-
-#ifdef DEBUG
-    printf( "thread id = %d, b = %d, v = %d, M[ %d , %d ]\n", id, blok, vlakno, radek, sloupec );
-#endif // DEBUG
-    if ( radek < pocetUzlu ) {
-
-        // osetreni nekonecna
-        if ( devDelkaPredchozi[radek][krok] == NEKONECNO || devDelkaPredchozi[krok][sloupec] == NEKONECNO )
-            novaVzdalenost = NEKONECNO;
-        else
-            novaVzdalenost = devDelkaPredchozi[radek][krok] + devDelkaPredchozi[krok][sloupec];
-
-        // pokud nalezne kratsi cestu, zapise ji
-        if ( novaVzdalenost < devDelkaPredchozi[radek][sloupec] ) {
-            devDelkaAktualni[radek][sloupec] = novaVzdalenost;
-        }// jinak delka zustava
-        else {
-            devDelkaAktualni[radek][sloupec] = devDelkaPredchozi[radek][sloupec];
-        }
-
     }
 }
 
 void floydWarshall( unsigned ** graf, unsigned pocetUzlu, unsigned pocetWarpu ) {
-    unsigned ** devDelkaPredchozi = NULL;
-    unsigned ** devDelkaAktualni  = NULL;
-    unsigned ** vzdalenostM       = NULL;
-    unsigned    pocetVlakenMin    = pocetUzlu * pocetUzlu;
-    // pocet vlaken v bloku -- minimalne pocet uzlu ^ 2
-    unsigned vlakenVBloku = MIN( pocetWarpu * CUDA_WARP_VELIKOST, pocetVlakenMin );
-    // horni cast pocetUzlu/vlakenVBloku
-    unsigned bloku        = ( pocetVlakenMin + vlakenVBloku - 1 ) / vlakenVBloku;
-
+    unsigned ** devDelka  = NULL;
+    unsigned ** hostDelka = NULL;
     
 #ifdef MERENI
     // udalosti pro mereni casu vypoctu
@@ -155,14 +184,14 @@ void floydWarshall( unsigned ** graf, unsigned pocetUzlu, unsigned pocetWarpu ) 
 #endif // MERENI
 
     // inicializace a kopirovani dat na GPU --------------------------
-    inicializace( graf, pocetUzlu, vzdalenostM, devDelkaPredchozi, devDelkaAktualni );
+    inicializace( graf, pocetUzlu, hostDelka, devDelka );
 
 #ifdef MERENI
     mereniZaznam( udalosti[MERENI_ZAPIS] );
 #endif // MERENI
 
     // vypocet na GPU ------------------------------------------------
-    spustVypocet( devDelkaPredchozi, devDelkaAktualni, pocetUzlu, bloku, vlakenVBloku );
+    spustVypocet( devDelka, pocetUzlu, pocetWarpu );
     HANDLE_ERROR(   cudaDeviceSynchronize( )        );
 
 #ifdef MERENI
@@ -170,7 +199,7 @@ void floydWarshall( unsigned ** graf, unsigned pocetUzlu, unsigned pocetWarpu ) 
 #endif // MERENI
 
     // kopirovani dat z GPU ------------------------------------------
-    zkopirujDataZGPU( vzdalenostM, devDelkaAktualni, pocetUzlu );
+    zkopirujDataZGPU( hostDelka, devDelka, pocetUzlu );
 
 #ifdef MERENI
     mereniZaznam( udalosti[MERENI_KONEC] );
@@ -178,17 +207,17 @@ void floydWarshall( unsigned ** graf, unsigned pocetUzlu, unsigned pocetWarpu ) 
 
 #ifdef VYPIS
     // vypis vysledku ------------------------------------------------
-    vypisGrafu( cout, vzdalenostM, pocetUzlu );
+    vypisGrafu( cout, hostDelka, pocetUzlu );
 #endif // VYPIS
 
     // uvolneni pameti na CPU i GPU ----------------------------------
-    uklid( pocetUzlu, vzdalenostM, devDelkaPredchozi, devDelkaAktualni );
+    uklid( pocetUzlu, hostDelka, devDelka );
 
 #ifdef MERENI
     mereniUplynulo( tVypocet, udalosti[MERENI_ZAPIS], udalosti[MERENI_VYPOCET] );
     mereniUplynulo(  tCelkem, udalosti[MERENI_START],   udalosti[MERENI_KONEC] );
 
-    cerr << pocetUzlu << '	' << bloku   << '	' << vlakenVBloku << '	'
+    cerr << pocetUzlu << '	' //<< bloku   << '	' << vlakenVBloku << '	'
          << tVypocet  << '	' << tCelkem << endl;
 
     mereniUklid( udalosti, MERENI_POCET);

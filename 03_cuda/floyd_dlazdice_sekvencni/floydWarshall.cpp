@@ -27,7 +27,7 @@ void spustVypocet( unsigned ** delka, unsigned pocetUzlu ) {
     // horni cast pocetUzlu / s
     unsigned pocetDlazdic = ( pocetUzlu + s - 1 ) / s; 
     for ( unsigned b = 0 ; b < pocetDlazdic ; b++ ) {
-        // nezavisle dlazdive -- na hl. diagonale dlazdickovane matice ---------
+        // nezavisle dlazdice -- na hl. diagonale dlazdickovane matice ---------
         for ( unsigned k = b*s ; k < (b+1)*s ; k++ ) {
             if ( k >= pocetUzlu ) break;            // pokud je uz mimo, konci
             for ( unsigned i = b*s ; i < (b+1)*s ; i++ ) {

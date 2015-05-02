@@ -29,25 +29,17 @@
     #define MERENI_KONEC   3
 #endif // MERENI
 
+// velikost dlazdic, podle kterych se deli dlazdicovy algoritmus Floyd-Warshall
+// optimalizovano pro 32, jelikoz pocet prvku v dlazdici je 32*32 = 1024
+// tuto hodnotu nelze jen tak zmenit, bylo by potreba zmenit funkcne pro 
+// prepocitavani pozice vlakna v matici
+#define DLAZDICE_VELIKOST 32
+
 #include "funkceSpolecne.cuh"
 
 // funkce zabalujici kompletni vypocet vcetne inicializace a uklidu...
 // vysledek vypise na stdout
 void floydWarshall( unsigned ** graf, unsigned pocetUzlu, unsigned pocetWarpu );
-
-// funkce pro inicializovani veskerych promennych potrebnych behem vypoctu 
-void inicializace( unsigned ** graf, unsigned pocetUzlu, unsigned **& vzdalenostM, unsigned **& devDelkaPredchozi, unsigned **& devDelkaAktualni );
-
-// funkce, ktera zajisti uklizeni alokovanych promennych
-void uklid( unsigned pocetUzlu, unsigned **& vzdalenostM, unsigned **& devDelkaPredchozi, unsigned **& devDelkaAktualni );
-
-// realizuje samotny (paralelni) vypocet algoritmu Floyd-Warshalla O( n^3 / p ) 
-void spustVypocet( unsigned **& devDelkaPredchozi, unsigned **& devDelkaAktualni, unsigned pocetUzlu, unsigned pocetBloku, unsigned pocetVlaken );
-
-// pomocna funkce prohazujici dva ukazatele
-void prohodUkazatele( unsigned **& ukazatel1, unsigned **& ukazatel2 );
-
-__global__ void wrapperProGPU( const unsigned ** devDelkaPredchozi, unsigned ** devDelkaAktualni, unsigned pocetUzlu, unsigned pocetVlakenVBloku, unsigned krok );
 
 #endif // FLOYDWARSHALL_kljnef29kjdsnf02
 

@@ -16,8 +16,9 @@
 #ifndef FLOYDWARSHALL_kljnef29kjdsnf02
 #define FLOYDWARSHALL_kljnef29kjdsnf02
 
+
 #ifdef DEBUG2
-   #define DEBUG
+    #define DEBUG
 #endif // DEBUG2
 
 #define DLAZDICE_VELIKOST 32

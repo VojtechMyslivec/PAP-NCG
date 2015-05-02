@@ -3,7 +3,7 @@
  * Autori:      Vojtech Myslivec <vojtech.myslivec@fit.cvut.cz>,  FIT CVUT v Praze
  *              Zdenek  Novy     <novyzde3@fit.cvut.cz>,          FIT CVUT v Praze
  *              
- * Datum:       unor-duben 2015
+ * Datum:       unor-kveten 2015
  *
  * Popis:       Semestralni prace z predmetu MI-PAP:
  *              Hledani nejkratsich cest v grafu 
@@ -24,7 +24,9 @@
 #define CUDA_MAX_POCET_WARPU      32
 #define CUDA_WARP_VELIKOST        32
 
-#define NEKONECNO  UINT_MAX
+// polovina z 32b unsigned -- tak, aby 2* nekonecno bylo stale dostatecne velke
+// je to 2^30
+#define NEKONECNO 0x40000000 
 
 #define MAIN_OK            0
 #define MAIN_ERR_USAGE     1
