@@ -99,8 +99,20 @@ __global__ void kernelProJednoZavisleDlazdice( unsigned ** devDelka, unsigned po
         devDelka[radek][sloupec] = MIN(  devDelka[radek][sloupec],  devDelka[radek][krok] + devDelka[krok][sloupec]  );
     }
 }
-__global__ void kernelProDvouZavisleDlazdice( unsigned ** devDelka, unsigned i, unsigned j, unsigned k ) {
-    devDelka[i][j] = MIN(  devDelka[i][j],  devDelka[i][k] + devDelka[k][j]  );
+
+__global__ void kernelProDvouZavisleDlazdice( unsigned ** devDelka, unsigned pocetUzlu, unsigned dlazdiceRadek, unsigned dlazdiceSloupec, unsigned krok ) {
+    const unsigned radek   =  blockIdx.x + dlazdiceRadek   * DLAZDICE_VELIKOST;
+    const unsigned sloupec = threadIdx.x + dlazdiceSloupec * DLAZDICE_VELIKOST;
+#ifdef DEBUG
+    const unsigned blok   =  blockIdx.x;
+    const unsigned vlakno = threadIdx.x;
+    const unsigned id     = DLAZDICE_VELIKOST * blok + vlakno;
+    printf( "  - Kernel 2: vlakno id = %d, b = %d, v = %d, M[ %d , %d ]\n", id, blok, vlakno, radek, sloupec );
+#endif // DEBUG
+
+    if ( radek < pocetUzlu && sloupec < pocetUzlu ) {
+        devDelka[radek][sloupec] = MIN(  devDelka[radek][sloupec],  devDelka[radek][krok] + devDelka[krok][sloupec]  );
+    }
 }
 
 // realizuje samotny (paralelni) vypocet algoritmu Floyd-Warshalla O( n^3 / p ) 
@@ -151,15 +163,9 @@ void spustVypocet( unsigned ** devDelka, unsigned pocetUzlu, unsigned pocetWarpu
             if ( ib == b ) continue;        // pokud uz danou dlazdici spocital, preskoci
             for ( unsigned jb = 0 ; jb < pocetDlazdic ; jb++ ) {
                 if ( jb == b ) continue;    // pokud uz danou dlazdici spocital, preskoci
-                for ( unsigned i = jb*s ; i < (jb+1)*s ; i++ ) {
-                    if ( i >= pocetUzlu ) break;            // pokud je uz mimo, konci
-                    for ( unsigned j = ib*s ; j < (ib+1)*s ; j++ ) {
-                        if ( j >= pocetUzlu ) break;        // pokud je uz mimo, konci
-                        for ( unsigned k = b*s ; k < (b+1)*s ; k++ ) {
-                            if ( k >= pocetUzlu ) break;    // pokud je uz mimo, konci
-                            kernelProDvouZavisleDlazdice <<< 1, 1 >>> ( devDelka, i, j, k );
-                        }
-                    }
+                for ( unsigned k = b*s ; k < (b+1)*s ; k++ ) {
+                    if ( k >= pocetUzlu ) break;    // pokud je uz mimo, konci
+                    kernelProDvouZavisleDlazdice <<< s, s >>> ( devDelka, pocetUzlu, jb, ib, k );
                 }
             }
         }

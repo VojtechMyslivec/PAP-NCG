@@ -74,12 +74,12 @@ void spustVypocet( unsigned ** delka, unsigned pocetUzlu ) {
             if ( ib == b ) continue;        // pokud uz danou dlazdici spocital, preskoci
             for ( unsigned jb = 0 ; jb < pocetDlazdic ; jb++ ) {
                 if ( jb == b ) continue;    // pokud uz danou dlazdici spocital, preskoci
-                for ( unsigned i = jb*s ; i < (jb+1)*s ; i++ ) {
-                    if ( i >= pocetUzlu ) break;            // pokud je uz mimo, konci
-                    for ( unsigned j = ib*s ; j < (ib+1)*s ; j++ ) {
-                        if ( j >= pocetUzlu ) break;        // pokud je uz mimo, konci
-                        for ( unsigned k = b*s ; k < (b+1)*s ; k++ ) {
-                            if ( k >= pocetUzlu ) break;    // pokud je uz mimo, konci
+                for ( unsigned k = b*s ; k < (b+1)*s ; k++ ) {
+                    if ( k >= pocetUzlu ) break;            // pokud je uz mimo, konci
+                    for ( unsigned i = jb*s ; i < (jb+1)*s ; i++ ) {
+                        if ( i >= pocetUzlu ) break;        // pokud je uz mimo, konci
+                        for ( unsigned j = ib*s ; j < (ib+1)*s ; j++ ) {
+                            if ( j >= pocetUzlu ) break;    // pokud je uz mimo, konci
                             relaxace( delka, pocetUzlu, i, j, k );
                         }
                     }
