@@ -1,7 +1,7 @@
 # skript pro gnuplot
 
 reset
-adresar = "../../mereni/"
+adresar = "../../mereni/02_openMP/"
 
 podadresarDynamicDijkstraHuste = adresar."dynamic_huste_dijkstra_v1/"."vysledky/"
 
