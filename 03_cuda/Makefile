@@ -1,6 +1,6 @@
 CC      = nvcc
 RM      = rm -f
-FLAGS   = -g -arch=sm_20 -rdc=true #-O3 -Xptxas -O3
+FLAGS   = -arch=sm_20 -rdc=true #-O3 -Xptxas -O3
 LIBS    =
 DEFINE  = # -D DEBUG
 DEFINE += -D CACHE
