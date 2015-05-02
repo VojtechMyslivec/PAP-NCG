@@ -1,4 +1,4 @@
-/** dijkstra.h
+/** dijkstra.hpp
  *
  * Autori:      Vojtech Myslivec <vojtech.myslivec@fit.cvut.cz>,  FIT CVUT v Praze
  *              Zdenek  Novy     <novyzde3@fit.cvut.cz>,          FIT CVUT v Praze
@@ -7,7 +7,7 @@
  *
  * Popis:       Semestralni prace z predmetu MI-PAP:
  *              Hledani nejkratsich cest v grafu 
- *                 paralelni cast
+ *                 openMP paralelni implementace
  *                 algoritmus Dijkstra
  *
  *
@@ -20,11 +20,13 @@
 bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu, unsigned pocetVlaken );
 
 // funkce pro inicializovani veskerych promennych potrebnych behem vypoctu 
-void inicializace( unsigned ** graf, unsigned pocetUzlu, unsigned **& vzdalenostM, unsigned **& predchudceM, unsigned pocetVlaken );
+//void inicializace( unsigned ** graf, unsigned pocetUzlu, unsigned **& vzdalenostM, unsigned **& predchudceM, unsigned pocetVlaken );
+void inicializace( unsigned ** graf, unsigned pocetUzlu, unsigned **& vzdalenostM, unsigned pocetVlaken );
 
 // funkce, ktera zajisti uklizeni alokovane dvourozmerne promenne
 void uklidUkazatelu( unsigned **& dveDimenze, unsigned rozmer );
 
 // funkce pro vypis matice delek a predchudcu
-void vypisVysledekMaticove( unsigned pocetUzlu, unsigned ** delka, unsigned ** predchudce );
+//void vypisVysledekMaticove( unsigned pocetUzlu, unsigned ** delka, unsigned ** predchudce );
+void vypisVysledekMaticove( unsigned pocetUzlu, unsigned ** delka );
 

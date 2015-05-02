@@ -1,4 +1,4 @@
-/** cDijkstra.h
+/** cDijkstra.hpp
  *
  * Autori:      Vojtech Myslivec <vojtech.myslivec@fit.cvut.cz>,  FIT CVUT v Praze
  *              Zdenek  Novy     <novyzde3@fit.cvut.cz>,          FIT CVUT v Praze
@@ -7,7 +7,7 @@
  *
  * Popis:       Semestralni prace z predmetu MI-PAP:
  *              Hledani nejkratsich cest v grafu 
- *                 paralelni cast
+ *                 openMP paralelni implementace
  *                 trida cDijkstra pro Dijkstruv algoritmus
  *                    upraven vypocet prioritni fronty -- misto haldy for cylky, 
  *                    aby slo paralelizovat
@@ -22,7 +22,7 @@
    #define DEBUG
 #endif // DEBUG2
 
-#include "funkceSpolecne.h"
+#include "funkceSpolecne.hpp"
 #include <climits>
 
 #define DIJKSTRA_NEKONECNO    UNSIGNED_NEKONECNO
@@ -48,7 +48,7 @@ class cDijkstra {
       bool spustVypocet( );
       
       // navrat poli s vysledky
-      unsigned * getPredchudce( ) const;
+//      unsigned * getPredchudce( ) const;
       unsigned * getVzdalenost( ) const;
 
       void vypisVysledekPoUzlech( ) const;
@@ -67,7 +67,7 @@ class cDijkstra {
       unsigned idVychozihoUzlu;
 
       unsigned * vzdalenost;
-      unsigned * predchudce;
+//      unsigned * predchudce;
       // jestli je jiz cesta k uzlu vytvorena
       // zaroven urcije, jestli je jeste v prioritni fronte
       bool     * uzavreny;
