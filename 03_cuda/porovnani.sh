@@ -42,6 +42,8 @@ for file in "$data"/*.txt ; do
    diff "${vystupD}" "${vystupF}" > "${vystupDiff}"
 done
 
+exit 0
+
 # Uklid souboru
 # make clean > /dev/null
 # [[ $? -ne 0 ]] && {

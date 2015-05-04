@@ -70,12 +70,12 @@ void zkopirujDataZGPU( unsigned ** hostDelka, unsigned ** devDelka, unsigned poc
 
 // vzdy se spousti 32 bloku x 32 vlaken -- DLAZDICE_VELIKOST x DLAZDICE_VELIKOST 
 __global__ void kernelProNezavisleDlazdice( unsigned ** devDelka, unsigned pocetUzlu, unsigned dlazdice, unsigned krok ) {
-    const unsigned radek   =  blockIdx.x + dlazdice * DLAZDICE_VELIKOST;
-    const unsigned sloupec = threadIdx.x + dlazdice * DLAZDICE_VELIKOST;
+    const unsigned radek   =  blockIdx.x + ( dlazdice << DLAZDICE_VELIKOST_LOG2 );
+    const unsigned sloupec = threadIdx.x + ( dlazdice << DLAZDICE_VELIKOST_LOG2 );
 #ifdef DEBUG
     const unsigned blok   =  blockIdx.x;
     const unsigned vlakno = threadIdx.x;
-    const unsigned id     = DLAZDICE_VELIKOST * blok + vlakno;
+    const unsigned id     =  blockDim.x * blok + vlakno;
     printf( "  - Kernel 1: vlakno id = %d, b = %d, v = %d, M[ %d , %d ]\n", id, blok, vlakno, radek, sloupec );
 #endif // DEBUG
 
@@ -84,10 +84,11 @@ __global__ void kernelProNezavisleDlazdice( unsigned ** devDelka, unsigned pocet
     }
 }
 
-// vzdy se spousti 32 bloku x 32 vlaken -- DLAZDICE_VELIKOST x DLAZDICE_VELIKOST 
-__global__ void kernelProJednoZavisleDlazdice( unsigned ** devDelka, unsigned pocetUzlu, unsigned dlazdiceRadek, unsigned dlazdiceSloupec, unsigned krok ) {
-    const unsigned radek   =  blockIdx.x + dlazdiceRadek   * DLAZDICE_VELIKOST;
-    const unsigned sloupec = threadIdx.x + dlazdiceSloupec * DLAZDICE_VELIKOST;
+// vzdy se spousti pocetDlazdic (bloku) * 32 (x) *  32 vlaken (y) 
+__global__ void kernelProRadky( unsigned ** devDelka, unsigned pocetUzlu, unsigned dlazdiceRadek, unsigned krok ) {
+    const unsigned dlazdiceSloupec = blockIdx.x;
+    const unsigned radek           = threadIdx.x + (   dlazdiceRadek << DLAZDICE_VELIKOST_LOG2 );
+    const unsigned sloupec         = threadIdx.y + ( dlazdiceSloupec << DLAZDICE_VELIKOST_LOG2 );
 #ifdef DEBUG
     const unsigned blok   =  blockIdx.x;
     const unsigned vlakno = threadIdx.x;
@@ -100,9 +101,28 @@ __global__ void kernelProJednoZavisleDlazdice( unsigned ** devDelka, unsigned po
     }
 }
 
-__global__ void kernelProDvouZavisleDlazdice( unsigned ** devDelka, unsigned pocetUzlu, unsigned dlazdiceRadek, unsigned dlazdiceSloupec, unsigned krok ) {
-    const unsigned radek   =  blockIdx.x + dlazdiceRadek   * DLAZDICE_VELIKOST;
-    const unsigned sloupec = threadIdx.x + dlazdiceSloupec * DLAZDICE_VELIKOST;
+// vzdy se spousti pocetDlazdic (bloku) * 32 (x) *  32 vlaken (y) 
+__global__ void kernelProSloupce( unsigned ** devDelka, unsigned pocetUzlu, unsigned dlazdiceSloupec, unsigned krok ) {
+    const unsigned dlazdiceRadek   = blockIdx.x;
+    const unsigned radek           = threadIdx.x + (   dlazdiceRadek << DLAZDICE_VELIKOST_LOG2 );
+    const unsigned sloupec         = threadIdx.y + ( dlazdiceSloupec << DLAZDICE_VELIKOST_LOG2 );
+#ifdef DEBUG
+    const unsigned blok   =  blockIdx.x;
+    const unsigned vlakno = threadIdx.x;
+    const unsigned id     = DLAZDICE_VELIKOST * blok + vlakno;
+    printf( "  - Kernel 2: vlakno id = %d, b = %d, v = %d, M[ %d , %d ]\n", id, blok, vlakno, radek, sloupec );
+#endif // DEBUG
+
+    if ( radek < pocetUzlu && sloupec < pocetUzlu ) {
+        devDelka[radek][sloupec] = MIN(  devDelka[radek][sloupec],  devDelka[radek][krok] + devDelka[krok][sloupec]  );
+    }
+}
+
+__global__ void kernelProDvouZavisleDlazdice( unsigned ** devDelka, unsigned pocetUzlu, unsigned krok ) {
+    const unsigned dlazdiceRadek   = blockIdx.x;
+    const unsigned dlazdiceSloupec = blockIdx.y;
+    const unsigned radek   = threadIdx.x + dlazdiceRadek   * DLAZDICE_VELIKOST;
+    const unsigned sloupec = threadIdx.y + dlazdiceSloupec * DLAZDICE_VELIKOST;
 #ifdef DEBUG
     const unsigned blok   =  blockIdx.x;
     const unsigned vlakno = threadIdx.x;
@@ -120,12 +140,8 @@ void spustVypocet( unsigned ** devDelka, unsigned pocetUzlu, unsigned pocetWarpu
     const unsigned s = DLAZDICE_VELIKOST;
     // horni cast pocetUzlu / s
     const unsigned pocetDlazdic = ( pocetUzlu + s - 1 ) / s; 
-
-//    unsigned vlakenMin    = pocetUzlu * pocetUzlu;
-//    // pocet vlaken v bloku -- minimalne pocet uzlu ^ 2
-//    unsigned vlakenVBloku = MIN( pocetWarpu * CUDA_WARP_VELIKOST, vlakenMin );
-//    // horni cast pocetUzlu/vlakenVBloku
-//    unsigned bloku        = ( vlakenMin + vlakenVBloku - 1 ) / vlakenVBloku;
+    const dim3     prvky2D( s, s );
+    const dim3     dlazdice2D( pocetDlazdic, pocetDlazdic );
 
     for ( unsigned b = 0 ; b < pocetDlazdic ; b++ ) {
 #ifdef DEBUG
@@ -140,34 +156,22 @@ void spustVypocet( unsigned ** devDelka, unsigned pocetUzlu, unsigned pocetWarpu
 
         // jedno-zavisle dlazdice ----------------------------------------------
         // ve stejnem radku
-        for ( unsigned ib = 0 ; ib < pocetDlazdic ; ib++ ) {
-            if ( ib == b ) continue;    // pokud uz danou dlazdici spocital, preskoci
-            for ( unsigned k = b*s ; k < (b+1)*s ; k++ ) {
-                if ( k >= pocetUzlu ) break;            // pokud je uz mimo, konci
-                kernelProJednoZavisleDlazdice <<< s, s >>> ( devDelka, pocetUzlu, b, ib, k );
-                HANDLE_ERROR(   cudaDeviceSynchronize( ) );
-            }
+        for ( unsigned k = b*s ; k < (b+1)*s ; k++ ) {
+            if ( k >= pocetUzlu ) break;            // pokud je uz mimo, konci
+            kernelProRadky <<< pocetDlazdic, prvky2D >>> ( devDelka, pocetUzlu, b, k );
+            HANDLE_ERROR(   cudaDeviceSynchronize( ) );
         }
         // ve stejnem sloupci
-        for ( unsigned jb = 0 ; jb < pocetDlazdic ; jb++ ) {
-            if ( jb == b ) continue;    // pokud uz danou dlazdici spocital, preskoci
-            for ( unsigned k = b*s ; k < (b+1)*s ; k++ ) {
-                if ( k >= pocetUzlu ) break;            // pokud je uz mimo, konci
-                kernelProJednoZavisleDlazdice <<< s, s >>> ( devDelka, pocetUzlu, jb, b, k );
-                HANDLE_ERROR(   cudaDeviceSynchronize( ) );
-            }
+        for ( unsigned k = b*s ; k < (b+1)*s ; k++ ) {
+            if ( k >= pocetUzlu ) break;            // pokud je uz mimo, konci
+            kernelProSloupce <<< pocetDlazdic, prvky2D >>> ( devDelka, pocetUzlu, b, k );
+            HANDLE_ERROR(   cudaDeviceSynchronize( ) );
         }
 
         // dvou-zavisle dlazdice -- zbytek -------------------------------------
-        for ( unsigned ib = 0 ; ib < pocetDlazdic ; ib++ ) {
-            if ( ib == b ) continue;        // pokud uz danou dlazdici spocital, preskoci
-            for ( unsigned jb = 0 ; jb < pocetDlazdic ; jb++ ) {
-                if ( jb == b ) continue;    // pokud uz danou dlazdici spocital, preskoci
-                for ( unsigned k = b*s ; k < (b+1)*s ; k++ ) {
-                    if ( k >= pocetUzlu ) break;    // pokud je uz mimo, konci
-                    kernelProDvouZavisleDlazdice <<< s, s >>> ( devDelka, pocetUzlu, jb, ib, k );
-                }
-            }
+        for ( unsigned k = b*s ; k < (b+1)*s ; k++ ) {
+            if ( k >= pocetUzlu ) break;    // pokud je uz mimo, konci
+            kernelProDvouZavisleDlazdice <<< dlazdice2D, prvky2D >>> ( devDelka, pocetUzlu, k );
         }
 
 #ifdef DEBUG

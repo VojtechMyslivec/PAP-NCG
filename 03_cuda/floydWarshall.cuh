@@ -33,7 +33,8 @@
 // optimalizovano pro 32, jelikoz pocet prvku v dlazdici je 32*32 = 1024
 // tuto hodnotu nelze jen tak zmenit, bylo by potreba zmenit funkcne pro 
 // prepocitavani pozice vlakna v matici
-#define DLAZDICE_VELIKOST 32
+#define DLAZDICE_VELIKOST      32
+#define DLAZDICE_VELIKOST_LOG2 5
 
 #include "funkceSpolecne.cuh"
 
