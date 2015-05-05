@@ -28,10 +28,20 @@
 // je to 2^30
 #define NEKONECNO 0x40000000 
 
+// velikost dlazdic, podle kterych se deli dlazdicovy algoritmus Floyd-Warshall
+// optimalizovano pro 32, jelikoz pocet prvku v dlazdici je 32*32 = 1024
+// tuto hodnotu nelze jen tak zmenit, bylo by potreba zmenit funkcne pro 
+// prepocitavani pozice vlakna v matici
+#define DLAZDICE_VELIKOST      32
+#define DLAZDICE_VELIKOST_LOG2 5
+#define DLAZDICE_VELIKOST_PUL    16 // DLAZDICE_VELIKOST / 2
+#define DLAZDICE_VELIKOST_CTVRT   8 // DLAZDICE_VELIKOST / 4
+
 #define MAIN_OK            0
 #define MAIN_ERR_USAGE     1
 #define MAIN_ERR_VSTUP     2
 #define MAIN_ERR_GRAF      3
+#define MAIN_ERR_VYPOCET   4
 #define MAIN_ERR_NEOCEKAVANA 10
 
 #define NACTI_OK           0
@@ -108,7 +118,7 @@ bool nactiGraf( istream & is, unsigned ** & graf, unsigned & pocetUzlu );
 //
 //   true   uspesne nacteni dat ze souboru
 //   false  chyba souboru ci chyba vstupu
-bool nactiData( const char * jmenoSouboru, unsigned ** & graf, unsigned & pocetUzlu );
+bool nactiData( const char * jmenoSouboru, unsigned ** & graf, unsigned & pocetUzlu, unsigned & velikostMatice );
 
 // funkce, ktera zkontroluje graf, zda je orientovany ci neorientovany 
 // a ve spravnem formatu

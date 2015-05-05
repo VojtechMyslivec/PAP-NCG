@@ -213,35 +213,46 @@ unsigned nactiHodnotu( istream & is, unsigned & hodnota ) {
     return NACTI_OK;
 }
 
-bool nactiGraf( istream & is, unsigned ** & graf, unsigned & pocetUzlu ) {
+bool nactiGraf( istream & is, unsigned ** & graf, unsigned & pocetUzlu, unsigned & velikostMatice ) {
     is >> pocetUzlu;
     if ( is.fail( ) || pocetUzlu < 1 ) {
         cerr << "nactiGraf(): Chyba! Pocet uzlu musi byt kladne cislo" << endl;
         return false;
     }
+    
+    // uprava velikosti matice na pocet uzlu nasobek DLAZDICE_VELIKOST
+    velikostMatice = pocetUzlu + ( ( DLAZDICE_VELIKOST - ( pocetUzlu % DLAZDICE_VELIKOST ) ) % DLAZDICE_VELIKOST );
 
     // page-locked memory
     HANDLE_ERROR( 
             cudaHostAlloc( 
                 &graf, 
-                pocetUzlu * sizeof(*graf),
+                velikostMatice * sizeof(*graf),
                 cudaHostAllocDefault
                 )
             );
-    for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
+    for ( unsigned i = 0 ; i < velikostMatice ; i++ ) {
         // page-locked memory
         HANDLE_ERROR( 
                 cudaHostAlloc( 
                     &graf[i], 
-                    pocetUzlu * sizeof(*graf[i]),
+                    velikostMatice * sizeof(*graf[i]),
                     cudaHostAllocDefault
                     )
                 );
     }
 
     unsigned ret;
-    for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
-        for ( unsigned j = 0 ; j < pocetUzlu ; j++ ) {
+    for ( unsigned i = 0 ; i < velikostMatice ; i++ ) {
+        for ( unsigned j = 0 ; j < velikostMatice ; j++ ) {
+            // Vypln do nasobku 32 hodnotami NEKONECNO
+            if ( j >= pocetUzlu || i >= pocetUzlu ) {
+                if ( i == j )
+                    graf[i][j] = 0;
+                else
+                    graf[i][j] = NEKONECNO;
+                continue;
+            }
             ret = nactiHodnotu( is, graf[i][j] );
             // pouze se rozhoduje vypis pripadne chybove hlasky
             switch ( ret ) {
@@ -270,13 +281,13 @@ bool nactiGraf( istream & is, unsigned ** & graf, unsigned & pocetUzlu ) {
     return true;
 }
 
-bool nactiData( const char * jmenoSouboru, unsigned ** & graf, unsigned & pocetUzlu ) {
+bool nactiData( const char * jmenoSouboru, unsigned ** & graf, unsigned & pocetUzlu, unsigned & velikostMatice ) {
     ifstream ifs( jmenoSouboru );
     if ( ifs.fail( ) ) {
         cerr << "nactiData(): Chyba! Nelze otevrit soubor '" << jmenoSouboru << "' pro cteni." << endl;
         return false;
     }
-    bool ret = nactiGraf( ifs, graf, pocetUzlu );
+    bool ret = nactiGraf( ifs, graf, pocetUzlu, velikostMatice );
     ifs.close( );
     return ret;
 }

@@ -38,7 +38,7 @@ void dijkstraInicializaceNaGPU( unsigned ** devGraf, unsigned pocetUzlu, cDijkst
 // vola (paralelne) vypocet Dijkstrova algoritmu pro kazdy uzel
 // idealni slozitost O( n^3 / p )
 // vysledek vypise na stdout
-void dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu, unsigned pocetWarpu );
+bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu, unsigned pocetWarpu );
 
 // TODO smazat // funkce pro inicializovani veskerych promennych potrebnych behem vypoctu 
 // void inicializace( unsigned ** graf, unsigned pocetUzlu, unsigned **& vzdalenostM, unsigned **& predchudceM );

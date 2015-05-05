@@ -248,7 +248,7 @@ __global__ void wrapperProGPU( cDijkstra ** devDijkstra, unsigned pocetUzlu, uns
     return;
 }
 
-void dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu, unsigned pocetWarpu ) {
+bool dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu, unsigned pocetWarpu ) {
     unsigned  ** devGraf;
     unsigned  ** vzdalenostM; 
     cDijkstra ** devDijkstra;
@@ -307,5 +307,6 @@ void dijkstraNtoN( unsigned ** graf, unsigned pocetUzlu, unsigned pocetWarpu ) {
 
 #endif // MERENI
 
+    return true;
 }
 

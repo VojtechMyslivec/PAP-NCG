@@ -29,18 +29,11 @@
     #define MERENI_KONEC   3
 #endif // MERENI
 
-// velikost dlazdic, podle kterych se deli dlazdicovy algoritmus Floyd-Warshall
-// optimalizovano pro 32, jelikoz pocet prvku v dlazdici je 32*32 = 1024
-// tuto hodnotu nelze jen tak zmenit, bylo by potreba zmenit funkcne pro 
-// prepocitavani pozice vlakna v matici
-#define DLAZDICE_VELIKOST      32
-#define DLAZDICE_VELIKOST_LOG2 5
-
 #include "funkceSpolecne.cuh"
 
 // funkce zabalujici kompletni vypocet vcetne inicializace a uklidu...
 // vysledek vypise na stdout
-void floydWarshall( unsigned ** graf, unsigned pocetUzlu, unsigned pocetWarpu );
+bool floydWarshall( unsigned ** graf, unsigned pocetUzlu, unsigned velikostMatice, unsigned pocetWarpu );
 
 #endif // FLOYDWARSHALL_kljnef29kjdsnf02
 

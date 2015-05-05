@@ -40,63 +40,69 @@
 using namespace std;
 
 // mereni jiz v danem algoritmu pomoci CUDA udalosti
-void mereni( unsigned ** graf, unsigned pocetUzlu, unsigned pocetWarpu ) {
+bool mereni( unsigned ** graf, unsigned pocetUzlu, unsigned velikostMatice, unsigned pocetWarpu ) {
 
 #ifdef DIJKSTRA
-   dijkstraNtoN(  graf, pocetUzlu, pocetWarpu );
+    return dijkstraNtoN(  graf, pocetUzlu, pocetWarpu );
 #endif // DIJKSTRA
 
 #ifdef FLOYDWARSHALL
-   floydWarshall( graf, pocetUzlu, pocetWarpu );
+    return floydWarshall( graf, pocetUzlu, velikostMatice, pocetWarpu );
 #endif // FLOYDWARSHALL
 
 }
 
 // main =======================================================================
 int main( int argc, char ** argv ) {
-   unsigned ** graf          = NULL;
-   char     *  souborSGrafem = NULL;
-   unsigned    pocetWarpu    = CUDA_VYCHOZI_POCET_WARPU;
-   unsigned    pocetUzlu     = 0;
-   unsigned    navrat;
+    //TODO 
+    HANDLE_ERROR( cudaSetDevice( 1 ) );
+    unsigned ** graf           = NULL;
+    char     *  souborSGrafem  = NULL;
+    unsigned    pocetWarpu     = CUDA_VYCHOZI_POCET_WARPU;
+    unsigned    pocetUzlu      = 0;
+    unsigned    velikostMatice = 0;
+    unsigned    navrat;
 
-   if ( parsujArgumenty( argc, argv, souborSGrafem, pocetWarpu, navrat ) != true ) {
-      return navrat;
-   }
+    if ( parsujArgumenty( argc, argv, souborSGrafem, pocetWarpu, navrat ) != true ) {
+        return navrat;
+    }
 
-   // nacteni dat
-   if ( nactiData( souborSGrafem, graf, pocetUzlu ) != true ) {
-      uklid( graf, pocetUzlu );
-      return MAIN_ERR_VSTUP;
-   }
+    // nacteni dat
+    if ( nactiData( souborSGrafem, graf, pocetUzlu, velikostMatice ) != true ) {
+        uklid( graf, pocetUzlu );
+        return MAIN_ERR_VSTUP;
+    }
 
-   // vypis a kontrola grafu
+    // vypis a kontrola grafu
 #ifdef VYPIS
-   vypisGrafu( cout, graf, pocetUzlu );
+    vypisGrafu( cout, graf, pocetUzlu );
 #endif // VYPIS
-   switch ( kontrolaGrafu( graf, pocetUzlu ) ) {
-      case GRAF_NEORIENTOVANY:
+    switch ( kontrolaGrafu( graf, pocetUzlu ) ) {
+        case GRAF_NEORIENTOVANY:
 #ifdef VYPIS
-         cout << "Graf je neorientovany" << endl;
+            cout << "Graf je neorientovany" << endl;
 #endif // VYPIS
-         break;
-      case GRAF_ORIENTOVANY:
+            break;
+        case GRAF_ORIENTOVANY:
 #ifdef VYPIS
-         cout << "Graf je orientovany" << endl;
+            cout << "Graf je orientovany" << endl;
 #endif // VYPIS
-         break;
-      case GRAF_CHYBA:
-      default:
-         return MAIN_ERR_GRAF;
-   }
+            break;
+        case GRAF_CHYBA:
+        default:
+            return MAIN_ERR_GRAF;
+    }
 #ifdef VYPIS
-   cout << endl;
+    cout << endl;
 #endif // VYPIS
 
-   mereni( graf, pocetUzlu, pocetWarpu );
+    bool bNavrat;
+    bNavrat = mereni( graf, pocetUzlu, velikostMatice, pocetWarpu );
 
-   uklid( graf, pocetUzlu );
+    uklid( graf, pocetUzlu );
 
-   return MAIN_OK;
+    if ( bNavrat != true ) 
+        return MAIN_ERR_VYPOCET;
+    return MAIN_OK;
 }
 
