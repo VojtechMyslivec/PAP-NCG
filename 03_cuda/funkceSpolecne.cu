@@ -44,6 +44,8 @@ void vypisUsage( ostream & os, const char * jmenoProgramu ) {
           "      pocet_warpu      Pocet warpu v jednom bloku pro paralelni cast vypoctu.\n"
           "                       Pocet bloku se dopocita automaticky, aby pocet vlaken\n"
           "                       byl >= pocet uzlu grafu.\n"
+          "                       (Pro algoritmus Floyd-Warshall podporovany pouze mocniny\n"
+          "                       dvou: 1, 2, 4, 8, 16, 32).\n"
           "                       Vychozi hodnota: 4\n"
           "\n"
           "      -h               Vypise tuto napovedu a skonci."

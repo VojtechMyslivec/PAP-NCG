@@ -54,8 +54,6 @@ bool mereni( unsigned ** graf, unsigned pocetUzlu, unsigned velikostMatice, unsi
 
 // main =======================================================================
 int main( int argc, char ** argv ) {
-    //TODO 
-    HANDLE_ERROR( cudaSetDevice( 1 ) );
     unsigned ** graf           = NULL;
     char     *  souborSGrafem  = NULL;
     unsigned    pocetWarpu     = CUDA_VYCHOZI_POCET_WARPU;
