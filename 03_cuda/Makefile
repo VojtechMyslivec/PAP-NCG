@@ -3,16 +3,20 @@ RM      = rm -f
 FLAGS   = -arch=sm_20 -rdc=true -O3 -Xptxas -O3
 LIBS    =
 DEFINE  = # -D DEBUG
+DEFINE += $(D)
 DEFINE += -D CACHE
 DEFINE += -D MERENI
+DEFINE += -D SHARED
 
 DIJKSTRA=dijkstra
 FLOYD=floyd-warshall
 
 all: $(DIJKSTRA) $(FLOYD)
 
+rebuild: clean all
+
 vypis: DEFINE += -D VYPIS
-vypis: $(DIJKSTRA) $(FLOYD)
+vypis: all
 
 # alias
 floyd: $(FLOYD)
@@ -46,6 +50,9 @@ floydWarshall.o: floydWarshall.cu
 	$(CC) -c $(DEFINE) $(FLAGS) $(LIBS) -o $@ $^
 
 
-clean:
-	$(RM) funkceSpolecne.o dijkstra.o mainDijkstra.o cDijkstra.o $(DIJKSTRA) floydWarshall.o mainFloyd.o $(FLOYD)
+clean: softclean
+	$(RM) $(DIJKSTRA) $(FLOYD)
+
+softclean:
+	$(RM) funkceSpolecne.o dijkstra.o mainDijkstra.o cDijkstra.o floydWarshall.o mainFloyd.o
 

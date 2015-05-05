@@ -1,13 +1,13 @@
-/** floydWarshall.cuh
+/** floydWarshall.hpp
  *
  * Autori:      Vojtech Myslivec <vojtech.myslivec@fit.cvut.cz>,  FIT CVUT v Praze
- *              Zdenek  Novy     <novyzde3@fit.cvut.cz>,          FIT CVUT v Praze
+ *              Zdenek  Novy     <zdenek.novy@fit.cvut.cz>,       FIT CVUT v Praze
  *              
  * Datum:       unor-kveten 2015
  *
  * Popis:       Semestralni prace z predmetu MI-PAP:
  *              Hledani nejkratsich cest v grafu 
- *                 paralelni implementace na CUDA
+ *                 Algoritmus Floyd-Warshall pomoci dlazdickovani
  *                 funkce pro algoritmus Floyd-Warshall
  *
  *
@@ -21,19 +21,13 @@
     #define DEBUG
 #endif // DEBUG2
 
-#ifdef MERENI
-    #define MERENI_POCET   4
-    #define MERENI_START   0
-    #define MERENI_ZAPIS   1
-    #define MERENI_VYPOCET 2
-    #define MERENI_KONEC   3
-#endif // MERENI
+#define DLAZDICE_VELIKOST 32
 
-#include "funkceSpolecne.cuh"
+#include "funkceSpolecne.hpp"
 
 // funkce zabalujici kompletni vypocet vcetne inicializace a uklidu...
 // vysledek vypise na stdout
-bool floydWarshall( unsigned ** graf, unsigned pocetUzlu, unsigned velikostMatice, unsigned pocetWarpu );
+void floydWarshall( unsigned ** graf, unsigned pocetUzlu );
 
 #endif // FLOYDWARSHALL_kljnef29kjdsnf02
 
