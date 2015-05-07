@@ -20,6 +20,8 @@
 #define HANDLE_ERROR( err )  ( HandleError( err, __FILE__, __LINE__) )
 #define MIN( A, B )          ( A < B ? A : B )
 
+#define CUDA_VYCHOZI_GPU_ID        0
+
 #define CUDA_VYCHOZI_POCET_WARPU   4
 #define CUDA_MAX_POCET_WARPU      32
 #define CUDA_WARP_VELIKOST        32
@@ -44,6 +46,8 @@
 #define MAIN_ERR_VSTUP     2
 #define MAIN_ERR_GRAF      3
 #define MAIN_ERR_VYPOCET   4
+#define MAIN_ERR_NO_GPU    5
+#define MAIN_ERR_GPU_POCET 6
 #define MAIN_ERR_NEOCEKAVANA 10
 
 #define NACTI_OK           0
@@ -73,6 +77,10 @@ void vypisUsage( ostream & os, const char * jmenoProgramu );
 // ukazatel(e) na NULL
 void uklid( unsigned ** graf, unsigned pocetUzlu );
 
+// nastavi cuda gpu na gpuID
+// kod chyby MAIN_... ulozi do vystupni promenne navrat
+bool nastavGpuID( int gpuID, unsigned & navrat );
+
 // zkonstroluje, zda vstupni stream is je uz prazdny (muze obsahovat prazdne znaky)
 //
 //   true   stream je prazdny
@@ -91,7 +99,7 @@ bool zkontrolujPrazdnyVstup( istream & is );
 //           Prepinac -h prinuti funkci skoncit s chybou, ale navratova
 //           hodnota bude MAIN_OK.
 //    true   Vse v poradku, parametry byly uspesne nacteny
-bool parsujArgumenty( int argc, char ** argv, char *& souborSGrafem, unsigned & pocetWarpu, unsigned & navrat );
+bool parsujArgumenty( int argc, char ** argv, char *& souborSGrafem, unsigned & pocetWarpu, int & gpuID, unsigned & navrat );
 
 // nacte jednu unsigned hodnotu ze vstupu
 // pokud misto unsigned cisla nalezne - (nasledovanou prazdnym znakem)
