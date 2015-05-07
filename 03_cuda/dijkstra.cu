@@ -17,13 +17,6 @@
 #include "cDijkstra.cuh"
 #include "funkceSpolecne.cuh"
 
-// TODO smazat
-//#include <iostream>
-//#include <fstream>
-//#include <iomanip>
-//#include <cstring>
-
-
 using namespace std;
 
 void dijkstraObjektInit( unsigned ** devGraf, unsigned pocetUzlu, unsigned idUzlu, cDijkstra *& devDijkstra ) {
