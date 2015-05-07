@@ -1,6 +1,6 @@
 CC      = nvcc
 RM      = rm -f
-FLAGS   = -arch=sm_20 -rdc=true -O3 -Xptxas -O3
+FLAGS   = -gencode=arch=compute_30,code=compute_30 -rdc=true -O3 -Xptxas -O3 -Xptxas -v
 LIBS    =
 DEFINE  = # -D DEBUG
 DEFINE += $(D)

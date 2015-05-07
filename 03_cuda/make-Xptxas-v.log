@@ -1,0 +1,67 @@
+# ==============================================================================
+#  dijkstra ====================================================================
+# ==============================================================================
+nvcc -c   -D CACHE -D MERENI -D SHARED -arch=sm_20 -rdc=true -O3 -Xptxas -O3 -Xptxas -v  -o dijkstra.o dijkstra.cu
+ptxas info    : 0 bytes gmem
+
+ptxas info    : Compiling entry function '_Z13wrapperProGPUPP9cDijkstrajj' for 'sm_20'
+ptxas info    : Function properties for _Z13wrapperProGPUPP9cDijkstrajj
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 18 registers, 48 bytes cmem[0]
+
+
+
+# ==============================================================================
+#  floydWarshall ===============================================================
+# ==============================================================================
+nvcc -c   -D CACHE -D MERENI -D SHARED -arch=sm_20 -rdc=true -O3 -Xptxas -O3 -Xptxas -v  -o floydWarshall.o floydWarshall.cu
+ptxas info    : 0 bytes gmem
+
+ptxas info    : Compiling entry function '_Z26kernelProNezavisleDlazdicePPjjjj' for 'sm_20'
+ptxas info    : Function properties for _Z26kernelProNezavisleDlazdicePPjjjj
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 14 registers, 52 bytes cmem[0]
+
+
+ptxas info    : Compiling entry function '_Z14kernelProRadkyPPjjjj' for 'sm_20'
+ptxas info    : Function properties for _Z14kernelProRadkyPPjjjj
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 14 registers, 52 bytes cmem[0]
+
+ptxas info    : Compiling entry function '_Z16kernelProSloupcePPjjjj' for 'sm_20'
+ptxas info    : Function properties for _Z16kernelProSloupcePPjjjj
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 14 registers, 52 bytes cmem[0]
+
+
+ptxas info    : Compiling entry function '_Z32kernelProDvouZavisleDlazdice1024PPjjj' for 'sm_20'
+ptxas info    : Function properties for _Z32kernelProDvouZavisleDlazdice1024PPjjj
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 18 registers, 256 bytes smem, 48 bytes cmem[0]
+
+ptxas info    : Compiling entry function '_Z31kernelProDvouZavisleDlazdice512PPjjj' for 'sm_20'
+ptxas info    : Function properties for _Z31kernelProDvouZavisleDlazdice512PPjjj
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 20 registers, 256 bytes smem, 48 bytes cmem[0]
+
+ptxas info    : Compiling entry function '_Z31kernelProDvouZavisleDlazdice256PPjjj' for 'sm_20'
+ptxas info    : Function properties for _Z31kernelProDvouZavisleDlazdice256PPjjj
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 21 registers, 256 bytes smem, 48 bytes cmem[0]
+
+ptxas info    : Compiling entry function '_Z31kernelProDvouZavisleDlazdice128PPjjj' for 'sm_20'
+ptxas info    : Function properties for _Z31kernelProDvouZavisleDlazdice128PPjjj
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 25 registers, 256 bytes smem, 48 bytes cmem[0]
+
+ptxas info    : Compiling entry function '_Z30kernelProDvouZavisleDlazdice64PPjjj' for 'sm_20'
+ptxas info    : Function properties for _Z30kernelProDvouZavisleDlazdice64PPjjj
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 30 registers, 256 bytes smem, 48 bytes cmem[0]
+
+ptxas info    : Compiling entry function '_Z30kernelProDvouZavisleDlazdice32PPjjj' for 'sm_20'
+ptxas info    : Function properties for _Z30kernelProDvouZavisleDlazdice32PPjjj
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 50 registers, 256 bytes smem, 48 bytes cmem[0]
+
+
