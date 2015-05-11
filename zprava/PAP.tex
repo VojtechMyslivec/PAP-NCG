@@ -260,7 +260,7 @@ for ( unsigned k = 0; k < tmp; k++ ) {
 \section{Paralelní algoritmus pomocí knihovny OpenMP}
 
 % ########## Dijkstra ##########
-\subsection{Dijkstrův algoritmus}
+\subsection{Dijkstrův algoritmus} \label{l:omp:dij}
 Paralelizace algoritmu spočívá v~paralelizaci cyklu, který prochází jednotlivé uzly a~pro ně řeší problém hledání nejkratší cesty v~grafu z~jednoho počátečního uzlu. Každé vlákno tedy zpracovává jeden uzel jako počáteční a~z~něj hledá nejkratší cesty do všech ostatních uzlů.
 
 \subsubsection{Paměťové struktury}
@@ -457,8 +457,26 @@ Výsledky Floyd-Warshallova algoritmu mohou být způsobeny opakovaným vytvář
 %-------------------------------
 \section{Paralelní algoritmy pomocí technologie CUDA}
 \subsection{Dijkstrův algoritmus}
-%\subsubsection{Úprava algoritmu}
-%\subsubsection{Optimalizace}
+Paralelizace Dijkstrova algoritmu spočívá, stejně jako u technologie openMP \ref{l:omp:dij}, v~paralelizaci cyklu, který prochází jednotlivé uzly a~pro ně řeší problém hledání nejkratší cesty v~grafu z~jednoho počátečního uzlu. Každé vlákno na grafické kartě (GPU) \cite{w:gpu} zpracovává jednu instanci s jedním uzlem jako počátečním a~z~něj hledá nejkratší cesty do všech ostatních uzlů. Na grafické kartě se tedy spouští v součtu \textit{N} vláken.
+
+\paragraph{Počet vláken}
+Pomocí přepínače \textit{-w} je možné specifikovat počet spouštěných warpů. Algoritmus si poté sám vypočte, jaký počet bloků a vláken je potřeba spustit pro daný počet uzlů \textit{N}.
+
+\subsubsection{Paměť}
+Alokace paměti v programu, který počítá na grafické kartě je rozdílná od klasické alokace v RAM, kterou používá procesor. Pro alokaci paměti na grafické kartě je nutné využívat specializované funkce pro systém Cuda. Pro alokaci pole na grafické kartě je nutné nejprve alokovat pole na příslušnou velikost a poté ještě nakopírovat ukazatel na toto pole do paměti grafické karty. Pro dvojrozměrné pole, které v algoritmu využíváme, je nutné přidat ještě další krok kopírování \textit{N} ukazatelů a pro každý z nich teprve alokovat příslušné pole.
+
+\paragraph{Paměťové struktury na CPU}
+V algoritmu je na CPU alokována \textit{matice vzdáleností}, která je použita pro sběr výsledků, kam po skončení algoritmu vlákna z GPU kopírují své výsledky.
+
+\paragraph{Paměťové struktury na GPU}
+Na GPU je alokována a inicializována jedna instance grafu, která je kopií grafu, vytvořeného na CPU. Graf je přístupný všem vláknům a slouží pouze ke čtení, proto stačí pouze jedna instance. Dále je na GPU alokován celý objekt třídy \textit{cDijkstra}, který obsahuje číslo výchozího uzlu, které je pro každé vlákno jiné, počet již uzavřených uzlů, celkový počet uzlů, ukazatel na společný graf a dvě jednorozměrná pole. První je pole \textit{vzdáleností} k ostatním uzlům, které je inicializováno na \textit{nekonečno}. Druhé pole \textit{uzavřený} definuje již uzavřené uzly, ke kterým již byla nalezena nejkratší možná cesta.
+
+\subsubsection{Výpočet}
+Samotný výpočet již zajišťuje samotná třída \textit{cDijkstra}, respektive její metoda \textit{devSpustVypocet()}, která je spuštěna v každém vlákně. Protože vlákno již má všechny potřebné paměťové struktury, může počítat nejkratší cesty v grafu z daného výchozího uzlu, aniž by bylo nutné synchronizovat se s ostatními vlákny.
+
+\paragraph{Kopírování a výpis výsledků}
+Po skončení výpočtu na všech vláknech na GPU následuje kopírování výsledků zpět do paměti RAM tak, aby data byla přístupná z CPU. CPU pak pouze vypíše připravenou matici nejkratších vzdáleností v grafu.
+
 
 \subsection{Floyd-Warshallův algoritmus}
 \subsubsection{Základní paralelní algoritmus}
