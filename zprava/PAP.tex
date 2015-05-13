@@ -457,10 +457,10 @@ Výsledky Floyd-Warshallova algoritmu mohou být způsobeny opakovaným vytvář
 %-------------------------------
 \section{Paralelní algoritmy pomocí technologie CUDA}
 \subsection{Dijkstrův algoritmus}
-Paralelizace Dijkstrova algoritmu spočívá, stejně jako u technologie openMP \ref{l:omp:dij}, v~paralelizaci cyklu, který prochází jednotlivé uzly a~pro ně řeší problém hledání nejkratší cesty v~grafu z~jednoho počátečního uzlu. Každé vlákno na grafické kartě (GPU) \cite{w:gpu} zpracovává jednu instanci s jedním uzlem jako počátečním a~z~něj hledá nejkratší cesty do všech ostatních uzlů. Na grafické kartě se tedy spouští v součtu \textit{N} vláken.
+Paralelizace Dijkstrova algoritmu spočívá, stejně jako u technologie openMP \ref{l:omp:dij}, v~paralelizaci cyklu, který prochází jednotlivé uzly a~pro ně řeší problém hledání nejkratší cesty v~grafu z~jednoho počátečního uzlu. Každé vlákno na grafické kartě (GPU) \cite{w:gpu} zpracovává jednu instanci s jedním uzlem jako počátečním a~z~něj hledá nejkratší cesty do všech ostatních uzlů. Na grafické kartě se tedy spouští v součtu $N$ vláken.
 
-\paragraph{Počet vláken}
-Pomocí přepínače \textit{-w} je možné specifikovat počet spouštěných warpů. Algoritmus si poté sám vypočte, jaký počet bloků a vláken je potřeba spustit pro daný počet uzlů \textit{N}.
+\paragraph{Počet vláken} \label{l:cuda:dijkstra:vlakna}
+Pomocí celočíselného parametru $w$ je možné specifikovat velikost bloku jako počet spouštěných warpů, aby nedocházelo ke zbytečnému snižování efektivity výpočtu\footnote{Řadič grafické karty s~technologií CUDA vždy spouští celočíselný počet warpů (1 warp odpovídá 32 vláknům), přičemž nežádoucí vlákna jsou deaktivována. V~případě, že je třeba spustit jiný počet vláken, je tak efektivita výkonu grafického akcelerátoru snižována.}. Algoritmus si poté sám dopočte, jaký počet bloků a vláken je potřeba spustit pro daný počet uzlů $N$. 
 
 \subsubsection{Paměť}
 Alokace paměti v programu, který počítá na grafické kartě je rozdílná od klasické alokace v RAM, kterou používá procesor. Pro alokaci paměti na grafické kartě je nutné využívat specializované funkce pro systém Cuda. Pro alokaci pole na grafické kartě je nutné nejprve alokovat pole na příslušnou velikost a poté ještě nakopírovat ukazatel na toto pole do paměti grafické karty. Pro dvojrozměrné pole, které v algoritmu využíváme, je nutné přidat ještě další krok kopírování \textit{N} ukazatelů a pro každý z nich teprve alokovat příslušné pole.
@@ -483,7 +483,7 @@ V~rámci této semestrální práce byly implementovány dvě verze paralelního
 První verze je základní algoritmus, kde je pro každý výpočet relaxace každé hrany\footnote{Relaxace hrany $i,j$ přes $k$ je operace, 
 kde se do matice délky cest uloží menší ze dvou vzdáleností -- buď původní cesta z~$i$ do $j$ nebo cesta
 přes $k$, tedy součet vzdáleností z~$i$ do $k$ a~z~$k$ do $j$.} voláno jedno vlákno. Dále bylo implementováno 
-optimálnější paralelní Floyd-Warshallova algoritmu -- zpracování po dlaždicích, včetně efektivního použití sdílené paměti.
+optimálnější paralelní řešení Floyd-Warshallova algoritmu -- zpracování po dlaždicích, včetně efektivního použití sdílené paměti.
 Měření bylo provedeno u~obou verzí a~je shrnuto v sekci \ref{l:cuda:mereni}.
 
 \subsubsection{Základní paralelní algoritmus}
@@ -497,35 +497,29 @@ algoritmu.
 % todo vysledek z profilace?
 
 Pro konkrétní implementaci v~této práci byla zvolena velikost bloku jako volitelný parametr programu. Tato velikost bloku se zadává
-jako celočíselný počet warpů ($w$), aby nedocházelo ke zbytečnému snižování efektivity výpočtu\footnote{Řadič grafické karty 
-s~technologií CUDA vždy spouští celočíselný počet warpů (1 warp odpovídá 32 vláken), přičemž nežádoucí vlákna jsou deaktivována.
-V~případě, že je třeba spustit jiný počet vláken, je tak efektivita výkonu grafického akcelerátoru snižována.}.
-% todo možná zmínit už u Dijkstry a zde se na to odkázat.
+jako celočíselný počet warpů ($w$) a je popsána v kapitole \ref{l:cuda:dijkstra:vlakna}.
 Počet bloků se pak dopočítá tak, aby bylo celkově spuštěno minimálně $N^2$ vláken. Tedy počet bloků $B = \lceil \frac{N^2}{w*32} \rceil$.
 
 \subsubsection{Optimalizace pro paralelní výpočet}
-Optimalizace pro paralelní výpočet na akcelerátoru CUDA byla zpracována dle \ref{floyd-cuda}. Prvním krokem bylo rozdělit výpočet 
-celé matice najednou do výpočtu po (pevně velkých) dlaždicích. Touto optimalizací se zvyšuje prostorová lokalita dat a zvyšuje
-se tak \emph{cache-hit} pravděpodobnost. V tomto parlalním zpracování se každý blok vláken stará pouze o jednu dlaždici
-a je tak možné využít sdílenou paměť, kterou mohou společně využít vlákna v~jednom bloku.
+% TODO co je floyd-cuda neni to \cite?
+Optimalizace pro paralelní výpočet na akcelerátoru CUDA byla zpracována dle \ref{floyd-cuda}. Prvním krokem bylo rozdělit výpočet  celé matice najednou do výpočtu po (pevně velkých) dlaždicích. Touto optimalizací se zvyšuje prostorová lokalita dat a zvyšuje se tak \emph{cache-hit} pravděpodobnost. V tomto paralelním zpracování se každý blok vláken stará pouze o jednu dlaždici a je tak možné využít sdílenou paměť, kterou mohou společně využít všechna vlákna v~jednom bloku.
 
 \paragraph{Dlaždicové zpracování}
-V tomto pristupu vypoctu je daná matice délek cest rozdělena do pevně velkých dlaždic. Iterování~v průbehu algoritmu je pak
+V tomto způsobu výpočtu je daná matice délek cest rozdělena do pevně velkých dlaždic. Iterování~v průběhu algoritmu je pak
 upraveno podle klasické metody \emph{proložení cyklů} (\emph{loop tiling}) -- tedy kde $k1$ iteruje přes počet dlaždic 
 a~$k2$ přes velikost dlaždice. Výpočet každé iterace $k1$ je pak dále rozdělen do
 3 sekcí -- výpočet pro \emph{nezávislé dlaždice}, pro \emph{jedno-závislé dlaždice} a \emph{dvou-závislé dlaždice}.
 \begin{enumerate}
-    \item[Výpočet pro nezávislé dlaždice] \hfil \\
+    \item Výpočet pro nezávislé dlaždice \hfil \\
         Jedná se o výpočet dlaždice ležící na hlavní diagonále matice. Pro každé $k1$ i~$k2$ je mezilehlý uzel $k$ uvnitř této
-        dlaždice a výpočet relaxace všech hran je tedy velmi lokalizovaný. Všechny přístupy do paměti jsou pouze v rámci této 
-        jedné dlaždice.
+        dlaždice a výpočet relaxace všech hran je tedy velmi lokalizovaný. Všechny přístupy do paměti jsou pouze v rámci této jedné dlaždice.
 
-    \item[Výpočet pro jedno-nezávislé dlaždice] \hfil \\
+    \item Výpočet pro jedno-závislé dlaždice \hfil \\
         Tyto dlaždice vždy leží ve stejném řádku (resp. sloupci) jako dlaždice z~bodu 1. Pro tyto dlaždice platí, že hrana do 
         mezilehlého uzlu $k$ leží v~matici z~bodu 1. a hrana z~uzlu $k$ v~jedno-závislé dlaždici samotné (resp. pro sloupce je to 
         přesně naopak). Výpočet je tak velmi lokalizovaný, neboť každý blok čte pouze z~dlaždice samotné a z~matice z~bodu 1.
 
-    \item[Výpočet pro nezávislé dlaždice] \hfil \\
+    \item Výpočet pro dvou-závislé dlaždice \hfil \\
 
 \end{enumerate}
 
