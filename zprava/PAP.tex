@@ -478,6 +478,10 @@ Samotný výpočet již zajišťuje samotná třída \textit{cDijkstra}, respekt
 Po skončení výpočtu na všech vláknech na GPU následuje kopírování výsledků zpět do paměti RAM tak, aby data byla přístupná z CPU. CPU pak pouze vypíše připravenou matici nejkratších vzdáleností v grafu.
 
 
+
+
+
+
 \subsection{Floyd-Warshallův algoritmus}
 V~rámci této semestrální práce byly implementovány dvě verze paralelního zpracování Floyd-Warshallova algoritmu. 
 První verze je základní algoritmus, kde je pro každý výpočet relaxace každé hrany\footnote{Relaxace hrany $i,j$ přes $k$ je operace, 
@@ -510,30 +514,130 @@ se tak \emph{cache-hit} pravděpodobnost. V tomto parlalním zpracování se ka�
 a je tak možné využít sdílenou paměť, kterou mohou společně využít vlákna v~jednom bloku.
 
 \paragraph{Dlaždicové zpracování}
-V tomto pristupu vypoctu je daná matice délek cest rozdělena do pevně velkých dlaždic. Iterování~v průbehu algoritmu je pak
+V tomto přístupu výpočtu je daná matice délek cest rozdělena do pevně velkých dlaždic. Iterování~v průbehu algoritmu je pak
 upraveno podle klasické metody \emph{proložení cyklů} (\emph{loop tiling}) -- tedy kde $k1$ iteruje přes počet dlaždic 
 a~$k2$ přes velikost dlaždice. Výpočet každé iterace $k1$ je pak dále rozdělen do
 3 sekcí -- výpočet pro \emph{nezávislé dlaždice}, pro \emph{jedno-závislé dlaždice} a \emph{dvou-závislé dlaždice}.
 \begin{enumerate}
-    \item[Výpočet pro nezávislé dlaždice] \hfil \\
+    \item \textbf{Výpočet pro nezávislé dlaždice} \label{cuda:dlazdice:nezavisle} \\
         Jedná se o výpočet dlaždice ležící na hlavní diagonále matice. Pro každé $k1$ i~$k2$ je mezilehlý uzel $k$ uvnitř této
         dlaždice a výpočet relaxace všech hran je tedy velmi lokalizovaný. Všechny přístupy do paměti jsou pouze v rámci této 
         jedné dlaždice.
 
-    \item[Výpočet pro jedno-nezávislé dlaždice] \hfil \\
-        Tyto dlaždice vždy leží ve stejném řádku (resp. sloupci) jako dlaždice z~bodu 1. Pro tyto dlaždice platí, že hrana do 
+    \item \textbf{Výpočet pro jedno-závislé dlaždice} \label{cuda:dlazdice:jednozavisle} \\ 
+        Tyto dlaždice vždy leží ve stejném řádku (resp. sloupci)\footnote{Dále nazýváno jako \emph{hlavní řádek} (resp.
+        \emph{sloupec}) dlaždic.} jako dlaždice z~bodu~1. Pro tyto dlaždice platí, že hrana do 
         mezilehlého uzlu $k$ leží v~matici z~bodu 1. a hrana z~uzlu $k$ v~jedno-závislé dlaždici samotné (resp. pro sloupce je to 
         přesně naopak). Výpočet je tak velmi lokalizovaný, neboť každý blok čte pouze z~dlaždice samotné a z~matice z~bodu 1.
 
-    \item[Výpočet pro nezávislé dlaždice] \hfil \\
+    \item \textbf{Výpočet pro dvou-závislé dlaždice} \label{cuda:dlazdice:dvouzavisle} \\
+        Jedná se o výpočet pro všechny ostatní dlaždice nezpracované v~předešlých krocích. Pro všechny tyto dlaždice platí, že 
+        hodnota hran do i~z~mezilehlého uzlu $k$ leží v dlaždicích vypočítaných v~kroku 2.. Přesněji potřebné hodnoty pro výpočet
+        jedné \emph{dvou-závislé} dlaždice leží v~dlaždici samotné a právě ve dvou dlaždicích spočítaných v kroku 2. První, 
+        z~\emph{hlavního sloupce} je ve stejném řádku a~druhá, z~\emph{hlavního řádku}, je ve stejném sloupci. Opět je tak 
+        výpočet velmi lokalizovaný -- pro výpočet jedné dlaždice se opakuje přístup ke stejným hodnotám na malém prostoru v paměti.
 
 \end{enumerate}
 
-\paragraph{Použití sdílené paměti}
-V~případě, že se jeden blok vždy stará právě o~jednu dlaždici, je možné iterování přes $k2$ řešit uvnitř kernelu a~sekvenční iterování
-přes $k2$ řešit pomocí bariéry v rámci bloku. Tímto
+\paragraph{Použití sdílené paměti a registrů}\label{cuda:sdilena}
+V~případě, že se jeden blok vždy stará právě o~jednu dlaždici, je možné iterování přes $k2$ řešit uvnitř kernelu. 
+Pak v~případě výpočtu \emph{dvou-závislých} dlaždic každý blok pracuje s~daty právě ze tří dlaždic:
+\begin{itemize}
+    \item dlaždice samotné, kde se zapisují nově nalezené hodnoty
+    \item jedna dlaždice z~\emph{hlavního sloupce} a jedna dlaždice z~\emph{hlavního řádku}, ze kterých se čtou hodnoty
+        pro mezilehlý uzel $k$
+\end{itemize}
+
+Pro jednu konkrétní hranu $i,j$ a~velikost dlaždice $s$ se uvnitř kernelu provádí $s$ čtení a $s$ zápisů prvku $i,j$ matice ($M_{i,j}$).
+Dále se čtou opakovaně hodnoty z~dlaždice z~\emph{hlavního sloupce} resp. \emph{řádku} -- pro všech $s$ hran z~jednoho řádku se čte
+daná hodnota pro index $k2$ z~dlaždice z~\emph{hlavního sloupce} a stejně tak pro všech $s$ hran z~jednoho sloupce se čte daná hodnota
+pro index $k2$ z~dlaždice z~\emph{hlavního řádku}. V~průběhu iterování $k2$ se tak čte každá hodnota z~dlaždice z~\emph{hlavního sloupce} 
+i~\emph{řádku} a $s$-krát.
+
+Jelikož o výpočet pro jednu dlaždici se stará právě jeden blok vláken, je možné využít sdílenou paměť a~uštřit tak čas kvůli opakovanému 
+čtení stejný položek z matice. Na začátku kernelu se načtou 2 dlaždice z~\emph{hlavního řádku} a~sloupce do sdílené paměti a~v~průběhu 
+výpočtu se pak používají data z~této sdílené paměti. Jelikož se tato data používají jen pro čtení, není třeba je zpět zapisovat do 
+hlavní paměti.
+
+Pro optimalizaci algoritmu byly implementovány různé kernely pro pevný počet warpů. Díky tomu je možné dlaždici samotnou -- která je 
+kernelem zpracovávána -- uložit do registrů. Každé vlákno si na začátku kernelu uloží do vlastních registrů hodnoty $M_{i,j}$, které
+má na starost a~výpočet provádí v~registrech. Před ukončením kernelu každé vlákno uloží výsledná data z~registrů uloží zpět do hlavní 
+paměti.
+
+Kvůli úpravě algoritmu pro použití registrů jsou implementovány kernely pouze pro počet warpů rovný mocninám dvou.
 
 \paragraph{Fázové zpracování}
+Jak již bylo řečeno v~\ref{cuda:sdilena}, tak pro výpočet \emph{dvou-závislých} dlaždic se opakovaně čte jedna hodnota z~dlaždic 
+z~\emph{hlavního řádku} resp. \emph{sloupce}. Koknrétně v~iteraci danou hodnotou $k$ se čte sloupec matice $M_{i,k}$ a~řádek matice
+$M_{k,j}$. Tedy při omezení na dlaždicové zpracování se pro výpočet celé dlaždice v~iteraci $k$ čte pouze jeden sloupec z~dlaždice
+z~\emph{hlavního sloupce} a~jeden řádek z~dlaždice z~\emph{hlavního řádku}. V~průběhu iterování přes $k2$ není tedy třeba si udržovat 
+ve sdílené paměti celé dlaždice z~\emph{hlavního řádku} resp. sloupce.
+
+Tato skutečnost se dá využít pro fázové načítání dat do sdílené paměti, čímž se radikálně ušetří požadavky na velikost sdílené paměti
+pro jeden blok. Místo toho, aby se data z~dlaždic načetla do sdílené paměti na začáctku kernelu, se načítá potřebný sloupec (resp. řádek)
+do sdílené paměti v~každé iteraci přes $k2$. Pro správný průběh výpočtu a načítání dat v průběhu iterování je potřeba vlákna synchronizovat
+bariériou v~každé iteraci.
+
+
+\subsubsection{Profilace}
+
+
+\subsubsection{Efektivnost využití akcelerátor}
+Následující výpočet efektivnosti využití \emph{gpu} byl spočítán pro graf o~5000 uzlech a 4 warpy (128 vláken v bloku).
+Měření bylo prováděno na grafické kartě \emph{GeForce GTX 780 Ti} (\emph{Cuda CC 3.0}), pro kterou platí hardwarové omezení 
+dle tabulky \ref{tab:cuda:hw}.
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{lll}
+        \hline
+        Vlastnost                & Označení & Hodnota \\
+        \hline
+        Počet SM                 & $#SM$    & 15      \\
+        \hline
+        \emph{Vlastnosti na 1 SM:} &        &
+        \hline
+        Počet bloků              & $BlMax$  & 16      \\
+        Počet registrů           & $RegMax$ & 64 k    \\
+        Velikost sdílené paměti  & $ShMax$  & 48 kB   \\
+        \hline
+    \end{tabular}
+    \caption{Hardwareové vlastnosti karty GeForce GTX 780 Ti \cite{pap:prednasky}}
+    \label{tab:cuda:hw}
+\end{table}
+
+
+Spouštený počet bloků ($#SB$)odpovídá počtu dlaždic matice vzdáleností. Pro $5000$ uzlů a velikost dlaždice $32$ je to 
+$\lceil \frac{5000}{32} \rceil ^ 2 = 24649$. Počet vláken $#V$ je tedy 128 (4 warpy).
+
+V~každém bloku se vždy spouští přesně 4 warpy ($ #Wb $), ale celkově se matice $5000 \times 5000$ musi zarovnat na celočíselný násobek
+dlaždic, tedy na $5024$ a je tak třeba provádět výpočet i~pro neexistující prvky. Celkový počet prvků navíc je tedy $ 5024^2 $, kde 
+užitečných počet prvků je $ 5000^2 $. Efektivita pro počet užitečných vláken je tedy
+$$ E_1 = \frac{5000^2}{5024^2} = 99.05 \% $$
+
+
+Dle \ref{cuda:fw:profilace} zabírá každé vlákno \emph{25} registrů ($#reg$) a~každý blok \emph{256~B} sdílené paměti $#ShM$. Pro rezidentní počet 
+bloků na jednom SM ($#B$)  platí následující nerovnice:
+$$             #B \leq BlMax   \Rightarrow  #B \leq 16    $$
+$$ #B . #V . #reg \leq RegMax  \Rightarrow  #B \leq 20.48 $$
+$$      #B . #ShM \leq ShMax   \Rightarrow  #B \leq 192   $$
+
+Z nerovnic tedy vyplývá, že počet rezidentních bloků na jednom \emph{SM} je 16. Celkový počet rezidentních bloků $ #RB = #B * #SM = 240 $.
+
+Počet iterací\footnote{V případě, že výpočet všech bloků trvá stejně dlouho. To v~tomto případě platí, protože je algoritmus datově necitlivý.}
+je $ #it = \lceil \frac{#SB}{#RB} \rceil = 103 $. Efektivita využití \emph{SM} je tedy 
+
+$$ E_2 = \frac{#SB}{#it . #RB } = 99.7 \% $$
+
+% TODO latence operaci
+Počet rezidentních warpů na jednom \emph{SM} je  $ #W = #B . #Wb = 64 $. To je více než nejdelší latence instrukcí a proto efektivita prokládání 
+warpů je 
+
+$$ E_3 = 100 \% $$
+
+
+Celková efektivita je 
+$$ E = E_1 . E_2 . E_3  = 98.8 \% $$
 
 \subsection{Měření}\label{l:cuda:mereni}
 \subsubsection{Analýza}
