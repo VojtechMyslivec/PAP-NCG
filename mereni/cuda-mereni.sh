@@ -27,7 +27,8 @@ nahrazeni["STANDARDNI"]=___NAHRAZENI-STDOUT___
 nahrazeni["PRIKAZ"]=___NAHRAZENI-PRIKAZ___
 
 vzor="vzor.q"
-merenyPocetWarpu="1 2 4 8 16 24 32"
+#merenyPocetWarpu="1 2 4 8 16 24 32"
+merenyPocetWarpu="1 2 4 8 16 32"
 
 [[ -f "$vzor" && -r "$vzor" ]] || {
     chyba "Soubor se vzorovou frontou '$vzor' neni citelny"

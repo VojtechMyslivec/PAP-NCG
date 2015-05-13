@@ -19,6 +19,9 @@ USAGE="USAGE
     Kde zrychleni  = (prumerny cas sekvencniho reseni) / (prumerny_celkovy_cas)
 "
 
+predpona="vysledky-"
+pripona=".txt"
+
 varovani() {
     echo "$0: Varovani:" "$*" >&2
 }
@@ -70,9 +73,13 @@ citelnyAdresar "$adrSekvencni" || {
     chyba "'$adrSekvencni' neni citelny adresar"
     exit 1
 }
+ls "$adrSekvencni/$predpona"*"$pripona" >/dev/null 2>&1 || {
+    chyba "V '$adrSekvencni' nexeistuji data s vysledky!"
+    exit 1 
+}
 
 cat "$adrMereni"/*.e* | awk \
-   -v adr="$adrVysledky" -v adrSekvencni="$adrSekvencni" -v predpona="vysledky-" -v pripona=".txt" '
+   -v adr="$adrVysledky" -v adrSekvencni="$adrSekvencni" -v predpona="$predpona" -v pripona="$pripona" '
 # funkce nalezne sekvencni cas pro dane n ze souboru v adrSekvencni
 #   funkce nastavi nalezene[n] na 1 a sekvencniCas[n] na cas
 #   ze souboru nebo na 0, pokud soubor nebo sekv. reseni neexistuje 

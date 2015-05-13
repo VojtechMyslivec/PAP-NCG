@@ -32,7 +32,7 @@ void HandleError( cudaError_t chyba, const char * soubor, int radek ) {
 
 void vypisUsage( ostream & os, const char * jmenoProgramu ) {
     os << "USAGE\n"
-          "   " << jmenoProgramu << " [-w pocet_warpu] -f vstupni_soubor\n"
+          "   " << jmenoProgramu << " [-w pocet_warpu] [-g gpu_id] -f vstupni_soubor\n"
           "   " << jmenoProgramu << " -h\n"
           "\n"
           "      vstupni_soubor   Soubor s daty grafu ve formatu ohodnocene incidencni\n"
@@ -47,6 +47,10 @@ void vypisUsage( ostream & os, const char * jmenoProgramu ) {
           "                       (Pro algoritmus Floyd-Warshall podporovany pouze mocniny\n"
           "                       dvou: 1, 2, 4, 8, 16, 32).\n"
           "                       Vychozi hodnota: 4\n"
+          "\n"
+          "      gpu_id           ID gpu device, ktere se zvoli pro vypocet. Musi byt v intervalu\n"
+          "                       od 0 (vcetne) do poctu device na stroji-- [0,D)\n"
+          "                       Vychozi hodnota: 0\n"
           "\n"
           "      -h               Vypise tuto napovedu a skonci."
         << endl;
@@ -69,6 +73,31 @@ void uklid( unsigned ** graf, unsigned pocetUzlu ) {
                 );
         graf = NULL;
     }
+}
+
+
+
+bool nastavGpuID( int gpuID, unsigned & navrat ) {
+    int pocetGpu;
+    HANDLE_ERROR( cudaGetDeviceCount( &pocetGpu )  );
+    if ( pocetGpu <= 0 ) {
+        navrat = MAIN_ERR_NO_GPU;
+        cerr << "nastavGpuID(): Neni pristupne zadne CUDA zarizeni!" << endl;
+        return false;
+    }
+
+    if ( gpuID >= pocetGpu ) {
+        cerr << "nastavGpuID(): GPU ID musi byt mensi nez pocet zarizeni (" << pocetGpu << ")" << endl;
+        navrat = MAIN_ERR_GPU_POCET;
+        return false;
+    }
+
+#ifdef DEBUG
+    cerr << "nastavGpuID(): nastavuji device na " << gpuID << endl;
+#endif // DEBUG
+    HANDLE_ERROR(   cudaSetDevice( gpuID ) );
+
+    return true;
 }
 
 bool zkontrolujPrazdnyVstup( istream & is ) {
@@ -100,6 +129,19 @@ bool nactiPocetWarpu( const char * vstup, unsigned & pocetWarpu ) {
     return true;
 }
 
+bool nactiGpuID( const char * vstup, int & gpuID ) {
+    istringstream iss( vstup );
+    iss >> gpuID;
+    if ( gpuID < 0          ||
+            iss.fail( )     ||
+            zkontrolujPrazdnyVstup( iss ) != true 
+       ) {
+        return false;
+    }
+
+    return true;
+}
+
 bool zkontrolujSoubor( const char * optarg ) {
     ifstream f( optarg );
     bool navrat = true;
@@ -109,7 +151,7 @@ bool zkontrolujSoubor( const char * optarg ) {
     return navrat;
 }
 
-bool parsujArgumenty( int argc, char ** argv, char *& souborSGrafem, unsigned & pocetWarpu, unsigned & navrat ) {
+bool parsujArgumenty( int argc, char ** argv, char *& souborSGrafem, unsigned & pocetWarpu, int & gpuID, unsigned & navrat ) {
     if ( argc < 2 ) {
         cerr << "Nedostatecny pocet argumentu" << endl;
         vypisUsage( cerr, argv[0] );
@@ -117,12 +159,15 @@ bool parsujArgumenty( int argc, char ** argv, char *& souborSGrafem, unsigned & 
         return false;
     }
 
+    pocetWarpu = CUDA_VYCHOZI_POCET_WARPU;
+    gpuID      = CUDA_VYCHOZI_GPU_ID;
+
     int o = 0;
     souborSGrafem = NULL;
     opterr = 0; // zabrani getopt, aby vypisovala chyby
     // optstring '+' zajisti POSIX zadavani prepinacu, 
     //           ':' pro rozliseni neznameho prepinace od chybejiciho argumentu
-    while ( ( o = getopt( argc, argv, "+:hf:w:" ) ) != -1 ) {
+    while ( ( o = getopt( argc, argv, "+:hf:w:g:" ) ) != -1 ) {
         switch ( o ) {
             case 'h':
                 vypisUsage( cout, argv[0] );
@@ -142,6 +187,14 @@ bool parsujArgumenty( int argc, char ** argv, char *& souborSGrafem, unsigned & 
                 if ( nactiPocetWarpu( optarg, pocetWarpu ) != true ) {
                     cerr << argv[0] << ": Pocet warpu musi byt kladne cele cislo mensi rovno nez " << CUDA_MAX_POCET_WARPU << endl;
                     navrat = MAIN_ERR_VSTUP;
+                    return false;
+                }
+                break;
+
+            case 'g':
+                if ( nactiGpuID( optarg, gpuID ) != true ) {
+                    cerr << argv[0] << ": GPU ID musi byt nezaporne cislo!" << endl;
+                    navrat = MAIN_ERR_GPU_POCET;
                     return false;
                 }
                 break;

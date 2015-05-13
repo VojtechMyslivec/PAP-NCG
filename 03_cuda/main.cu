@@ -56,18 +56,23 @@ bool mereni( unsigned ** graf, unsigned pocetUzlu, unsigned velikostMatice, unsi
 int main( int argc, char ** argv ) {
     unsigned ** graf           = NULL;
     char     *  souborSGrafem  = NULL;
-    unsigned    pocetWarpu     = CUDA_VYCHOZI_POCET_WARPU;
-    unsigned    pocetUzlu      = 0;
-    unsigned    velikostMatice = 0;
+    unsigned    pocetWarpu, pocetUzlu, velikostMatice;
+    int         gpuID;
     unsigned    navrat;
 
-    if ( parsujArgumenty( argc, argv, souborSGrafem, pocetWarpu, navrat ) != true ) {
+    if ( parsujArgumenty( argc, argv, souborSGrafem, pocetWarpu, gpuID, navrat ) != true ) {
         return navrat;
     }
 
+    if ( nastavGpuID( gpuID, navrat ) != true ) {
+        return navrat;
+    }
+    // TODO dost divne, vypada to, ze i kdyz je device nastaveno na != 0, tak vzdy bezi na 0
+    HANDLE_ERROR ( cudaSetDevice( gpuID ));
+
     // nacteni dat
     if ( nactiData( souborSGrafem, graf, pocetUzlu, velikostMatice ) != true ) {
-        uklid( graf, pocetUzlu );
+        uklid( graf, velikostMatice );
         return MAIN_ERR_VSTUP;
     }
 
@@ -97,7 +102,7 @@ int main( int argc, char ** argv ) {
     bool bNavrat;
     bNavrat = mereni( graf, pocetUzlu, velikostMatice, pocetWarpu );
 
-    uklid( graf, pocetUzlu );
+    uklid( graf, velikostMatice );
 
     if ( bNavrat != true ) 
         return MAIN_ERR_VYPOCET;
