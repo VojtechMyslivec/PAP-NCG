@@ -37,6 +37,7 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{listings}
+\usepackage{csvsimple} % tabulky z csv souboru
 %----------------------------------------------------------------------------------------
 
 \hyphenation{OpenMP}
@@ -529,7 +530,35 @@ přes $k2$ řešit pomocí bariéry v rámci bloku. Tímto
 
 \paragraph{Fázové zpracování}
 
-\subsection{Měření}\label{l:cuda:mereni}
+\subsection{Měření} \label{l:cuda:mereni}
+\subsection{Výsledky} \label{f:cuda:vysledky}
+\subsubsection{Data} \label{f:cuda:data}
+Tabulky \ref{f:cuda:vysledky:dijkstra}, \ref{f:cuda:vysledky:fw-v1} a \ref{f:cuda:vysledky:fw-v2} zobrazují naměřené časy výpočtů jednotlivých algoritmů v závislosti na počtu spuštěných bloků a vláken.
+Tyto a jiné výsledky jsou dále zobrazovány v grafech v podkapitole \ref{f:cuda:grafy}.
+
+% tabulky s vysledky z mereni
+\begin{figure}
+    \centering
+    \csvautotabular{vysledky/dijkstra-huste-5000.csv}
+    \caption{Výsledky měření pro Dijkstrův algoritmus.}
+    \label{f:cuda:vysledky:dijkstra}
+\end{figure}
+\begin{figure}
+    \centering
+    \csvautotabular{vysledky/fw-v1-huste-5000.csv}
+    \caption{Výsledky měření první verze Floyd-Warshallova algoritmu.}
+    \label{f:cuda:vysledky:fw-v1}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \csvautotabular{vysledky/fw-v2-huste-5000.csv}
+    \caption{Výsledky měření druhé verze Floyd-Warshallova algoritmu.}
+    \label{f:cuda:vysledky:fw-v2}
+\end{figure}
+
+\subsubsection{Grafy} \label{f:cuda:grafy}
+
 \subsubsection{Analýza}
 \subsubsection{Zhodnocení}
 
