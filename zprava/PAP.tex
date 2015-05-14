@@ -82,7 +82,7 @@ Zdeněk \textsc{Nový}\\[2cm]	% Jmeno
 \end{abstract}
 
 % --- Klicova slova ---
-\keywords{Dijkstra, Floyd-Warshall, nejkratší cesty, NCG, OpenMP, Cuda}
+\keywords{Dijkstra, Floyd-Warshall, nejkratší cesty, NCG, OpenMP, CUDA}
 
 \clearpage
 
@@ -499,7 +499,7 @@ Po skončení výpočtu na všech vláknech na GPU následuje kopírování výs
 
 \subsubsection{Efektivita využití akcelerátoru} \label{l:cuda:dijkstra:efektivita}
 Následující výpočet efektivnosti využití \emph{gpu} byl spočítán pro graf o~5000 uzlech a~1 warp (32 vláken v~bloku).
-Měření bylo prováděno na grafické kartě \emph{GeForce GTX 780 Ti} (\emph{Cuda CC 3.0}), pro kterou platí hardwarové omezení 
+Měření bylo prováděno na grafické kartě \emph{GeForce GTX 780 Ti} (\emph{CUDA CC 3.0}), pro kterou platí hardwarové omezení 
 dle tabulky \ref{tab:cuda:hw}.
 
 \begin{table}[h!]
