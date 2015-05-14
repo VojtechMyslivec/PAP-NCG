@@ -1,24 +1,13 @@
- - pocet warpu max
+TYPO SMRT
+   - ostatni -- rozdeleni
+   - vektorizace -- pretekani mimo stranku
+   - profiling result -- dtto
 
 
-
+TODO
  - profilace
-    - narocnost kernelu 
-       - registry, sh. m., ...
-       - latence
+    - latence
     - vyuziti pameti, cache
-       - 
-    - zaver u FW -- 60 % casu se stravi v kernelu pro jednozavisle dlazdice...
 
-
- - mereni zaver
-
- - tabulky pro openMP
-
- - citace
-
-   - clanek
-
-Ben Lund, Justin W. Smith. \emph{A Multi-Stage CUDA Kernel for Floyd-Warshall}. Cincinnati (Ohio, United States): University of Cincinnati, 2010. 
-Dostupné online: <http://arxiv.org/pdf/1001.4108.pdf>
+ - MIPS
 
