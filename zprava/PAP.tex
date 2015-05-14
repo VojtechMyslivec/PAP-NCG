@@ -82,7 +82,8 @@ Zdeněk \textsc{Nový}\\[2cm]	% Jmeno
 \end{abstract}
 
 % --- Klicova slova ---
-\keywords{Dijkstra, Floyd-Warshall, nejkratší cesty, NCG, OpenMP, Cuda}
+\keywords{Dijkstra, Floyd-Warshall, nejkratší cesty, NCG,\\
+OpenMP, Cuda}
 
 \clearpage
 
@@ -117,7 +118,8 @@ Dijkstrův algoritmus je zobecněné prohledávání grafu do šířky, při kte
 Floyd-Warshallův algoritmus slouží k~nalezení nejkratších cest mezi všemi dvojicemi uzlů v~grafu. Graf může obsahovat hrany -- nikoliv však cykly -- se zápornou hodnotou délky\footnote{Pokud má graf cyklus se zápornou hodnotou délky, postrádá úloha nejkratších cest smysl.}~\cite{w:fw:def}.
 
 \paragraph{Princip} \label{l:fw:princip}
-Floyd-Warhsallův algoritmus pracuje s~maticí sousednosti, kde hrana je ohodnocena vahou. Na počátku tato matice obsahuje pouze vzdálenosti dvou uzlů, mezi kterými je vedena hrana. V~každém kroku je vybrán jeden uzel jako prostředník. Prvek matice sousednosti se přepočítá, pokud je vzdálenost z~počátečního do koncového uzlu kratší přes nového prostředníka než bez něj \cite{w:fw:def}.
+Floyd-Warhsallův algoritmus pracuje s~maticí sousednosti, kde hrana je ohodnocena vahou. Na počátku tato matice obsahuje pouze vzdá\-le\-no\-sti dvou uzlů, mezi kterými je vedena hrana.
+V~každém kroku je vybrán jeden uzel jako prostředník. Prvek matice sousednosti se přepočítá, pokud je vzdálenost z~počátečního do koncového uzlu kratší přes nového prostředníka než bez něj \cite{w:fw:def}.
 
 
 %-------------------------------
@@ -162,7 +164,8 @@ for ( unsigned j = 0; j < pocetUzlu; j++ ) {
     \end{lstlisting}
     
     \begin{lstlisting}
-dijkstra.cpp:99: note: not vectorized: number of iterations cannot be computed.
+dijkstra.cpp:99: note: not vectorized: number
+    of iterations cannot be computed.
 dijkstra.cpp:99: note: bad loop form.
 dijkstra.cpp:82: note: vectorized 0 loops in function.
     \end{lstlisting}
@@ -174,7 +177,8 @@ dijkstra.cpp:82: note: vectorized 0 loops in function.
     \caption{Cyklus, který se nepodařilo vektorizovat.}
 	\label{f:dij:vect2}
     \begin{lstlisting}
-dijkstra.cpp:99: note: not vectorized: number of iterations cannot be computed.
+dijkstra.cpp:99: note: not vectorized: number
+    of iterations cannot be computed.
 dijkstra.cpp:99: note: bad loop form.
 dijkstra.cpp:82: note: vectorized 0 loops in function.
     \end{lstlisting}
@@ -189,7 +193,7 @@ for ( unsigned i = 0 ; i < pocetUzlu ; i++ ) {
 % ----------------------------------------------------
 
 \paragraph{Původní stav}
-Na obrázcích \ref{f:dij:vect1} a~\ref{f:dij:vect2} je znázorněn příklad jednoho z cyklů, který byl vektorizován a~jiný cyklus, který se nepodařilo vektorizovat z~důvodu neznámého počtu iterací.
+Na obrázcích \ref{f:dij:vect1} a~\ref{f:dij:vect2} je znázorněn příklad jednoho z cyklů, který byl vektorizován a~jiný cyklus, který se nepodařilo vektorizovat z~dů\-vo\-du neznámého počtu iterací.
 
 \paragraph{Optimalizace}
 Výpis \ref{f:dij:vect3} ukazuje úspěšnou úpravu cyklu, který se díky změně zdrojového kódu podařilo vektorizovat.
@@ -238,14 +242,17 @@ Z~výpisu \ref{f:fw:vect1} je patrné, že v~programu je vektorizován pouze cyk
     \caption{Úspěšně vektorizovaný cyklus.}
 	\label{f:fw:vect1}
     \begin{lstlisting}
-floydWarshall.cpp:90: note: vectorizing stmts using SLP.BASIC BLOCK VECTORIZED
+floydWarshall.cpp:90: note: vectorizing stmts using \
+    SLP.BASIC BLOCK VECTORIZED
 floydWarshall.cpp:90: note: basic block vectorized using SLP
     \end{lstlisting}
     
 	\begin{lstlisting}
 for ( unsigned k = 0; k < tmp; k++ ) {
 	unsigned i;
-	#pragma omp parallel for private( i, novaVzdalenost ) shared( delkaPredchozi, delkaAktualni, pre    dchudcePredchozi, predchudceAktualni )
+	#pragma omp parallel for private(i, novaVzdalenost)
+        shared( delkaPredchozi, delkaAktualni,
+                predchudcePredchozi, predchudceAktualni)
 	for ( i = 0; i < tmp; i++ ) {
 		for ( unsigned j = 0; j < tmp; j++ ) {
 	\end{lstlisting}
@@ -262,7 +269,8 @@ for ( unsigned k = 0; k < tmp; k++ ) {
 
 % ########## Dijkstra ##########
 \subsection{Dijkstrův algoritmus} \label{l:omp:dij}
-Paralelizace algoritmu spočívá v~paralelizaci cyklu, který prochází jednotlivé uzly a~pro ně řeší problém hledání nejkratší cesty v~grafu z~jednoho počátečního uzlu. Každé vlákno tedy zpracovává jeden uzel jako počáteční a~z~něj hledá nejkratší cesty do všech ostatních uzlů.
+Paralelizace algoritmu spočívá v~paralelizaci cyklu, který prochází jednotlivé uzly a~pro ně řeší problém hledání nejkratší cesty v~grafu z~jednoho po\-čá\-teč\-ní\-ho uzlu.
+Každé vlákno tedy zpracovává jeden uzel jako počáteční a~z~něj hledá nejkratší cesty do všech ostatních uzlů.
 
 \subsubsection{Paměťové struktury}
 Každé vlákno dostane ukazatel na strukturu grafu. Protože všechna vlákna používají strukturu grafu pouze ke čtení, nedochází při přístupu k~této struktuře k~žádným datovým hazardům.
@@ -366,7 +374,8 @@ Grafy \ref{f:mer:cas}, \ref{f:mer:zry} a~\ref{f:mer:efe} ukazují výsledky mě�
 Graf \ref{f:mer:pomerhustota} porovnává výpočetní časy při použití statického plánování v závislosti na hustotě grafu. Z grafů vyplývá, že oba algoritmy jsou téměř nezávislé na hustotě grafu.
 
 \paragraph{Poměr rychlosti algoritmů v závislosti na plánování}
-Graf \ref{f:mer:pomerplanovani} zobrazuje poměr výpočetních časů v závislosti na použitém plánování. V porovnání byla použita plánování statické a dynamické. Z grafů je patrné, že plánování ovlivní čas výpočtu pouze nevýznamně a není tedy podstatné, jaké plánování je v algoritmu použito.
+Graf \ref{f:mer:pomerplanovani} zobrazuje poměr výpočetních časů v závislosti na použitém plánování.
+V po\-rov\-ná\-ní byla použita plánování statické a dynamické. Z grafů je patrné, že plánování ovlivní čas výpočtu pouze nevýznamně a není tedy podstatné, jaké plánování je v algoritmu použito.
 \paragraph{Statické plánování}
 Při statickém plánování se iterace cyklu rovnoměrně rozdělí po blocích mezi všechna vlákna před začátkem provádění cyklu \cite{w:omp}.
 \paragraph{Dynamické plánování}
@@ -464,7 +473,7 @@ Efektivita Dijkstrova algoritmu s~přidáváním vláken pomalu klesá a~napří
 
 Výrazně lépe ve prospěch Dijkstrova paralelního algoritmu vycházejí i~ostatní ukazatele -- zrychlení a~čas výpočtu.
 
-Výsledky Floyd-Warshallova algoritmu mohou být způsobeny opakovaným vytvářením a~rušením vláken. V~každém vnějším cyklu se vytvoří daný počet vláken, zpracuje jeden uzel a~všechna tato vytvořená vlákna se opět ukončí. Tedy za běhu algoritmu se vytváří a~ruší \textit{pocet\_uzlu $\times$ vlaken}, kde parametr \textit{vlaken} je počet najednou vytvářených paralelních vláken.
+Výsledky Floyd-Warshallova algoritmu mohou být způsobeny o\-pa\-ko\-va\-ným vytvářením a~rušením vláken. V~každém vnějším cyklu se vytvoří daný počet vláken, zpracuje jeden uzel a~všechna tato vytvořená vlákna se opět ukončí. Tedy za běhu algoritmu se vytváří a~ruší \textit{pocet\_uzlu $\times$ vlaken}, kde parametr \textit{vlaken} je počet najednou vytvářených paralelních vláken.
 
 
 
@@ -598,8 +607,8 @@ a~$k2$ přes velikost dlaždice. Výpočet každé iterace $k1$ je pak dále roz
         přesně naopak). Výpočet je tak velmi lokalizovaný, neboť každý blok čte pouze z~dlaždice samotné a z~matice z~bodu 1.
 
     \item \textbf{Výpočet pro dvou-závislé dlaždice} \label{cuda:dlazdice:dvouzavisle} \\
-        Jedná se o výpočet pro všechny ostatní dlaždice nezpracované v~předešlých krocích. Pro všechny tyto dlaždice platí, že 
-        hodnota hran do i~z~mezilehlého uzlu $k$ leží v dlaždicích vypočítaných v~kroku 2.. Přesněji potřebné hodnoty pro výpočet
+        Jedná se o výpočet pro všechny ostatní dlaždice nezpracované v~pře\-deš\-lých krocích. Pro všechny tyto dlaždice platí, že 
+        hodnota hran do i~z~me\-zi\-leh\-lé\-ho uzlu $k$ leží v dlaždicích vypočítaných v~kroku 2.. Přesněji potřebné hodnoty pro výpočet
         jedné \emph{dvou-závislé} dlaždice leží v~dlaždici samotné a právě ve dvou dlaždicích spočítaných v kroku 2. První, 
         z~\emph{hlavního sloupce} je ve stejném řádku a~druhá, z~\emph{hlavního řádku}, je ve stejném sloupci. Opět je tak 
         výpočet velmi lokalizovaný -- pro výpočet jedné dlaždice se opakuje přístup ke stejným hodnotám na malém prostoru v paměti.
@@ -649,7 +658,10 @@ bariérou v~každé iteraci.
 \subsubsection{Profilace} \label{l:cuda:profilace}
 Výstup \ref{f:cuda:floyd:profilace} ukazuje informace z verbose režimu příkazu \emph{nvcc}. Výstup je zkrácen a jsou ponechány pouze nejdůležitější informace pro kernel pro dvou--závislé dlaždice \ref{cuda:dlazdice:dvouzavisle}. Každé vlákno z tohoto kernelu používá 25 registrů a každý blok vláken používá 256 B sdílené paměti. Tyto údaje jsou použity pro výpočet efektivity v kapitole \ref{l:cuda:floyd:efektivita}.
 
-Obrázek \ref{f:cuda:floyd:profilace2} ukazuje, že třetina času algoritmu se počítá ve funkci \emph{kernelProRadky} a dalších téměř 30\% ve funkci \emph{kernelProSloupce}. Obě tyto funkce představují výpočet jedno--závislých dlaždic \ref{cuda:dlazdice:jednozavisle}, kdy se vypočítává celkem $x$ dlaždic (jeden sloupec nebo řádek dlaždic). Funkce \emph{kernelProDvouZavisleDlazdice}, která je nejvíce optimalizována, trvá přibližně čtvrtinu času algoritmu, ačkoli se provádí pro všechny dlaždice, tedy $x^2$ dlaždic. Vše napovídá tomu, že funkce \emph{kernelProDvouZavisleDlazdice} je velice dobře optimalizována.
+Obrázek \ref{f:cuda:floyd:profilace2} ukazuje, že třetina času algoritmu se počítá ve funkci \emph{kernelProRadky} a dalších téměř 30\% ve funkci \emph{kernelProSloupce}.
+Obě tyto funkce představují výpočet jedno--závislých dlaždic \ref{cuda:dlazdice:jednozavisle}, kdy se vypočítává celkem $x$ dlaždic (jeden sloupec nebo řádek dlaždic).
+Funkce \emph{kernelProDvouZavisleDlazdice}, která je nejvíce optimalizována, trvá přibližně čtvrtinu času algoritmu, ačkoli se provádí pro všechny dlaždice, tedy $x^2$ dlaždic.
+Vše napovídá tomu, že funkce \emph{kernelProDvouZavisleDlazdice} je velice dobře optimalizována.
 
 \begin{figure}
 	\centering
@@ -675,17 +687,19 @@ Obrázek \ref{f:cuda:floyd:profilace2} ukazuje, že třetina času algoritmu se 
 	\centering
 	\begin{verbatim}
 ======== Profiling result:
-Time(%)      Time     Calls       Avg       Min       Max  Name
-35.50%  32.382ms      1024  31.622us  30.561us  32.736us
-  kernelProRadky(unsigned int**, unsigned int, unsigned int, unsigned int)
-28.88%  26.345ms      1024  25.727us  25.057us  27.169us
-  kernelProSloupce(unsigned int**, unsigned int, unsigned int, unsigned int)
-24.76%  22.584ms        32  705.76us  699.56us  720.91us
-  kernelProDvouZavisleDlazdice128(unsigned int**, unsigned int, unsigned int)
-5.41%  4.9374ms      2025  2.4380us  1.9520us  4.0000us  [CUDA memcpy DtoH]
-2.74%  2.5038ms      2048  1.2220us     832ns  1.6640us  [CUDA memcpy HtoD]
-2.71%  2.4743ms      1024  2.4160us  2.3360us  3.6800us
-  kernelProNezavisleDlazdice(unsigned int**, unsigned int, unsigned int...)
+Time(%)    Time    Calls    Avg    Min    Max    Name
+35.50%  32.382ms  1024  31.622us  30.561us  32.736us
+    kernelProRadky(unsigned int**, unsigned int, ...)
+28.88%  26.345ms  1024  25.727us  25.057us  27.169us
+    kernelProSloupce(unsigned int**, unsigned int, ...)
+24.76%  22.584ms    32  705.76us  699.56us  720.91us
+    kernelProDvouZavisleDlazdice128(unsigned int**, ...)
+5.41%  4.9374ms   2025  2.4380us  1.9520us  4.0000us
+    [CUDA memcpy DtoH]
+2.74%  2.5038ms   2048  1.2220us     832ns  1.6640us
+    [CUDA memcpy HtoD]
+2.71%  2.4743ms   1024  2.4160us  2.3360us  3.6800us
+    kernelProNezavisleDlazdice(unsigned int**, ...)
 	\end{verbatim}
 	\caption{Výpis z příkazu \emph{nvprof} pro Floyd-Warshallův algoritmus při použití \emph{cache} a sdílené paměti.}
     \label{f:cuda:floyd:profilace2}
