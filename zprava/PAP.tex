@@ -45,7 +45,7 @@
 \begin{document}
 
 \begin{titlepage}
-\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a~new command for the horizontal lines, change thickness here
 \center
 
 \textsc{\LARGE Fakulta informačních technologií}\\[1.5cm] % Jmeno fakulty (university)
@@ -83,7 +83,7 @@ Zdeněk \textsc{Nový}\\[2cm]	% Jmeno
 
 % --- Klicova slova ---
 \keywords{Dijkstra, Floyd-Warshall, nejkratší cesty, NCG,\\
-OpenMP, Cuda}
+OpenMP, CUDA}
 
 \clearpage
 
@@ -144,7 +144,7 @@ Za účelem prioritní fronty byla implementována binární halda, kde složito
 \subsubsection{Vektorizace}
 Pomocí přepínačů optimalizace \textit{-O3} a~podpory vektorových sad \textit{-msse4.2} kompilátoru \textit{gcc} byla zapnuta podpora vektorizace cyklů \cite{w:vect}. Pro záznam o~pokusech vektorizace byl použit přepínač \textit{-ftree-vectorizer-verbose=n}, kde za \textit{n} byly dosazeny 1,~3,~5, kde čím vyšší číslo, tím podrobnější informace \cite{w:vect}.\textbf{}
 
-Samotný algoritmus je velmi sekvenční. V každém kroku se vybere minimum z prioritní fronty --- jinými slovy ze složitější struktury --- a přepíší se hodnoty uzlu ve frontě. Tyto operace nelze nijak vektorizovat a~v~průběhu výpočtu (kromě počáteční inicializace polí) se nevyskytují žádné prvky vedle sebe ani pro čtení ani pro zápis.
+Samotný algoritmus je velmi sekvenční. V každém kroku se vybere minimum z prioritní fronty --- jinými slovy ze složitější struktury --- a~přepíší se hodnoty uzlu ve frontě. Tyto operace nelze nijak vektorizovat a~v~průběhu výpočtu (kromě počáteční inicializace polí) se nevyskytují žádné prvky vedle sebe ani pro čtení ani pro zápis.
 
 % ----------------------------------------------------
 % - vektorizovany cyklus -
@@ -233,7 +233,7 @@ Floyd-Warshallův algoritmus obsahuje tři vnořené for cykly a~funguje na prin
 Aktuální implementace je k~nahlédnutí i~ke stažení na adrese \url{https://github.com/VojtechMyslivec/PAP-NCG}. Sekvenční algoritmus se nachází ve složce \textit{01\_sekvencni}.
 
 \subsubsection{Vektorizace}
-Algoritmus sice počítá s maticemi, ale během výpočtu se porovnávají čísla, která v dané matici nemusí vůbec sousedit (navíc se porovnávají pouze dvě čísla: jedno na indexu \emph{(i,j)} a druhé, které je součtem dvou čísel na indexech \emph{(i,k)} a \emph{(k,j)}).
+Algoritmus sice počítá s~maticemi, ale během výpočtu se porovnávají čísla, která v~dané matici nemusí vůbec sousedit (navíc se porovnávají pouze dvě čísla: jedno na indexu \emph{(i,j)} a~druhé, které je součtem dvou čísel na indexech \emph{(i,k)} a~\emph{(k,j)}).
 Z~výpisu \ref{f:fw:vect1} je patrné, že v~programu je vektorizován pouze cyklus pro inicializaci matic. 
 
 % - vektorizovany cyklus -
@@ -289,7 +289,7 @@ Díky třem vnořeným sekvenčního algoritmu existuje několik možností, jak
 První variantou je algoritmus paralelizovat pouze v~jednom cyklu, který definuje, která řádka je právě zpracovávána. 
 Vlákna čtou z~matice $W_k$ a~zapisují do přidělených řádků v~matici $W_{k+1}$\footnote{V každém kroku je
 potřeba pouze jedna matice z předchozí iterace a~jedna matice pro zápis nalezených cest. Na konci každé iterace 
-se pak prohodí matice aktuální s maticí předchozí a~mohou se tak nepotřebná starší data přepisovat.}. Přidělené řádky 
+se pak prohodí matice aktuální s~maticí předchozí a~mohou se tak nepotřebná starší data přepisovat.}. Přidělené řádky 
 jsou navzájem disjunktní, takže nehrozí konflikt zápisů jednotlivými vlákny (viz obrázek \ref{f:fw:omp}).
 
 % Přidělená data jednomu vláknu zobrazuje obrázek \ref{f:fw:omp}. Algoritmus zapisuje pouze do přidělených sloupců, tedy řádků zobrazených v~části \textit{a}. Řádek \textit{k} v~části \textit{b} využívají všechna vlákna pouze ke čtení, proto zde nedochází ke konfliktům. Tato varianta je implementována.
@@ -307,22 +307,22 @@ Druhou variantou, jak problém paralelizovat je použít původní variantu a~p�
 
 \subsection{Optimalizace implementace}
 \subsubsection{Optimalizace vytváření vláken} \label{l:opt1}
-Z měření algoritmu Floyd-Warshall v sekci \ref{l:vysledky} bylo zjištěno, že implementace v každé iteraci vnějšího cyklu vytváří a spouští nová vlákna, která po skončení vnitřního cyklu ukončí a v další iteraci proces opakuje. Proto byla paralelizace vláken upravena tak, aby na začátku vnějšího cyklu algoritmus vytvořil příslušný počet vláken, kterým pak v jednotlivých iteracích přiděloval práci. Grafy s touto optimalizací mají tvar \textit{*\_v2.png}. Výsledky měření jsou prezentovány v kapitole \ref{l:mer:opt1}.
+Z měření algoritmu Floyd-Warshall v~sekci \ref{l:vysledky} bylo zjištěno, že implementace v~každé iteraci vnějšího cyklu vytváří a~spouští nová vlákna, která po skončení vnitřního cyklu ukončí a~v~další iteraci proces opakuje. Proto byla paralelizace vláken upravena tak, aby na začátku vnějšího cyklu algoritmus vytvořil příslušný počet vláken, kterým pak v~jednotlivých iteracích přiděloval práci. Grafy s~touto optimalizací mají tvar \textit{*\_v2.png}. Výsledky měření jsou prezentovány v~kapitole \ref{l:mer:opt1}.
 
 \subsubsection{Odstranění výpočtu předchůdců} \label{l:opt2}
-Protože zadáním této práce nebylo získat matici předchůdců, je v algoritmu zbytečné udržovat informaci o předchůdcích jednotlivých uzlů. Proto byly v rámci další optimalizace odstraněny veškeré výpočty, které se týkaly matice předchůdců. Výsledek byl znovu naměřen a výsledky jsou prezentovány v kapitolách \ref{l:mer:opt2}.
+Protože zadáním této práce nebylo získat matici předchůdců, je v~algoritmu zbytečné udržovat informaci o~předchůdcích jednotlivých uzlů. Proto byly v~rámci další optimalizace odstraněny veškeré výpočty, které se týkaly matice předchůdců. Výsledek byl znovu naměřen a~výsledky jsou prezentovány v~kapitolách \ref{l:mer:opt2}.
 
 
 \subsection{Měření}
 Na obou algoritmech bylo provedeno měření, které si klade za cíl analyzovat čas, zrychlení a~efektivitu použitého paralelního algoritmu. Měření bylo prováděno na hustých grafech, kde při generování grafů byla použita pravděpodobnost 0.5, že mezi dvěmi uzly existuje hrana.
 
 \subsubsection{Testovací data} \label{l:testdata}
-Byly vygenerovány 2 testovací sady dat. Obě sady obsahují 25 grafů, kde pro každé $n$ (počet uzlů) z $1000$, $2000$, $3000$, $4000$ a $5000$ 
+Byly vygenerovány 2 testovací sady dat. Obě sady obsahují 25 grafů, kde pro každé $n$ (počet uzlů) z $1000$, $2000$, $3000$, $4000$ a~$5000$ 
 je vygenerováno 5 náhodných grafů. Jedna sada obsahuje \emph{husté} grafy s~pravděpodobností hrany $50 \%$, druhá obsahuje \emph{řídké} grafy
 s~pravděpodobností hrany $1 \%$.
-Měření probíhalo na serveru \url{star2.fit.cvut.cz} na stroji \textit{gpu-02} pro počet vláken $p$ $1$, $2$, $4$, $6$, $8$, $12$ a $24$.
+Měření probíhalo na serveru \url{star2.fit.cvut.cz} na stroji \textit{gpu-02} pro počet vláken $p$ $1$, $2$, $4$, $6$, $8$, $12$ a~$24$.
 
-Jako čas výpočtu pro dané $n$ se vypočítal průměr z časů přes všech 5 grafů s odpovídajícím počtem uzlů.
+Jako čas výpočtu pro dané $n$ se vypočítal průměr z časů přes všech 5 grafů s~odpovídajícím počtem uzlů.
 
 \subsubsection{Výsledky}
 \label{l:vysledky}
@@ -355,7 +355,7 @@ Grafy \ref{f:mer:cas}, \ref{f:mer:zry} a~\ref{f:mer:efe} ukazují výsledky mě�
     \label{f:mer:efe}
 \end{figure}
 
-% tabulky s vysledky z mereni
+% tabulky s~vysledky z mereni
 \begin{figure}
     \centering
     \csvautotabular{vysledky/omp-dijkstra-huste-5000.csv}
@@ -370,38 +370,40 @@ Grafy \ref{f:mer:cas}, \ref{f:mer:zry} a~\ref{f:mer:efe} ukazují výsledky mě�
     \label{f:omp:vysledky:fw}
 \end{figure}
 
-\paragraph{Poměr rychlosti algoritmů v závislosti na hustotě grafu}
-Graf \ref{f:mer:pomerhustota} porovnává výpočetní časy při použití statického plánování v závislosti na hustotě grafu. Z grafů vyplývá, že oba algoritmy jsou téměř nezávislé na hustotě grafu.
+\paragraph{Poměr rychlosti algoritmů v~závislosti na hustotě grafu}
+Graf \ref{f:mer:pomerhustota} porovnává výpočetní časy při použití statického plánování v~závislosti na hustotě grafu. Z grafů vyplývá, že oba algoritmy jsou téměř nezávislé na hustotě grafu.
 
-\paragraph{Poměr rychlosti algoritmů v závislosti na plánování}
-Graf \ref{f:mer:pomerplanovani} zobrazuje poměr výpočetních časů v závislosti na použitém plánování.
-V po\-rov\-ná\-ní byla použita plánování statické a dynamické. Z grafů je patrné, že plánování ovlivní čas výpočtu pouze nevýznamně a není tedy podstatné, jaké plánování je v algoritmu použito.
+\paragraph{Poměr rychlosti algoritmů v~závislosti na plánování}
+Graf \ref{f:mer:pomerplanovani} zobrazuje poměr výpočetních časů v~závislosti na použitém plánování.
+V po\-rov\-ná\-ní byla použita plánování statické a~dynamické. Z grafů je patrné, že plánování ovlivní čas výpočtu pouze nevýznamně a~není tedy podstatné, jaké plánování je v~algoritmu použito. 
+
 \paragraph{Statické plánování}
 Při statickém plánování se iterace cyklu rovnoměrně rozdělí po blocích mezi všechna vlákna před začátkem provádění cyklu \cite{w:omp}.
+
 \paragraph{Dynamické plánování}
 Dynamickým plánováním se rozumí rozdělení jednotlivých iterací vláknům po jedné iteraci. Vždy když vlákno dokončí iteraci, je mu přidělena další iterace \cite{w:omp}.
 
-% Pomer rychlost vypoctu v zavislosti na hustote grafu
+% Pomer rychlost vypoctu v~zavislosti na hustote grafu
 \begin{figure}
     \centering
     \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-04-Dijkstra_hustota_v1}
     \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-04-Floyd_hustota_v1}
-    \caption{Porovnání poměru rychlostí výpočtu v závislosti na hustotě grafu při použití statického plánování.}
+    \caption{Porovnání poměru rychlostí výpočtu v~závislosti na hustotě grafu při použití statického plánování.}
     \label{f:mer:pomerhustota}
 \end{figure}
 
-% Pomer rychlost vypoctu v zavislosti na hustote grafu
+% Pomer rychlost vypoctu v~zavislosti na hustote grafu
 \begin{figure}
     \centering
     \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-05-Dijkstra_schedule_v1}
     \includegraphics[width=0.45\textwidth]{../grafy/02_openMP/02-05-Floyd_schedule_v1}
-    \caption{Porovnání poměru rychlostí výpočtu v závislosti na použitém plánování.}
+    \caption{Porovnání poměru rychlostí výpočtu v~závislosti na použitém plánování.}
     \label{f:mer:pomerplanovani}
 \end{figure}
 
 \subsubsection{Analýza}
 \paragraph{Dijkstra}
-Z~grafů \ref{f:mer:cas} je vidět klesající dobu výpočtu v závislosti na počtu vláken.
+Z~grafů \ref{f:mer:cas} je vidět klesající dobu výpočtu v~závislosti na počtu vláken.
 Zrychlení, které je zobrazeno v~grafu \ref{f:mer:zry} na počátku stoupá téměř lineárně a~teprve pro větší počet vláken 
 se zmírňuje. Toto nelineární zrychlení může způsobit například přístup do paměti, protože se vzrůstajícím počtem vláken klesá 
 relativní velikost cache pro každé z vláken.
@@ -471,7 +473,7 @@ Výsledky měření obou algoritmů po implementaci optimalizace \ref{l:opt2}.
 \subsubsection{Zhodnocení}
 Efektivita Dijkstrova algoritmu s~přidáváním vláken pomalu klesá a~například pro 24 vláken dosahuje hodnoty 0.5. Naproti tomu u~Floyd-Warshallova algoritmu klesá efektivita mnohem rychleji a~na hodnotě 0.5 se nachází už pro 6 vláken. 
 
-Výrazně lépe ve prospěch Dijkstrova paralelního algoritmu vycházejí i~ostatní ukazatele -- zrychlení a~čas výpočtu.
+Výrazně lépe ve prospěch Dijkstrova paralelního algoritmu vycházejí i~os\-tat\-ní ukazatele -- zrychlení a~čas výpočtu.
 
 Výsledky Floyd-Warshallova algoritmu mohou být způsobeny o\-pa\-ko\-va\-ným vytvářením a~rušením vláken. V~každém vnějším cyklu se vytvoří daný počet vláken, zpracuje jeden uzel a~všechna tato vytvořená vlákna se opět ukončí. Tedy za běhu algoritmu se vytváří a~ruší \textit{pocet\_uzlu $\times$ vlaken}, kde parametr \textit{vlaken} je počet najednou vytvářených paralelních vláken.
 
@@ -482,33 +484,33 @@ Výsledky Floyd-Warshallova algoritmu mohou být způsobeny o\-pa\-ko\-va\-ným 
 %-------------------------------
 \section{Paralelní algoritmy pomocí technologie CUDA}
 \subsection{Dijkstrův algoritmus}
-Paralelizace Dijkstrova algoritmu spočívá, stejně jako u technologie openMP \ref{l:omp:dij}, v~paralelizaci cyklu, který prochází jednotlivé uzly a~pro ně řeší problém hledání nejkratší cesty v~grafu z~jednoho počátečního uzlu. Každé vlákno na grafické kartě (GPU) \cite{w:gpu} zpracovává jednu instanci s jedním uzlem jako počátečním a~z~něj hledá nejkratší cesty do všech ostatních uzlů. Na grafické kartě se tedy spouští v součtu $N$ vláken.
+Paralelizace Dijkstrova algoritmu spočívá, stejně jako u~technologie openMP \ref{l:omp:dij}, v~paralelizaci cyklu, který prochází jednotlivé uzly a~pro ně řeší problém hledání nejkratší cesty v~grafu z~jednoho počátečního uzlu. Každé vlákno na grafické kartě (GPU) \cite{w:gpu} zpracovává jednu instanci s~jedním uzlem jako počátečním a~z~něj hledá nejkratší cesty do všech ostatních uzlů. Na grafické kartě se tedy spouští v~součtu $N$ vláken.
 
 \paragraph{Počet vláken} \label{l:cuda:dijkstra:vlakna}
-Pomocí celočíselného parametru $w$ je možné specifikovat velikost bloku jako počet spouštěných warpů, aby nedocházelo ke zbytečnému snižování efektivity výpočtu\footnote{Řadič grafické karty s~technologií CUDA vždy spouští celočíselný počet warpů (1 warp odpovídá 32 vláknům), přičemž nežádoucí vlákna jsou deaktivována. V~případě, že je třeba spustit jiný počet vláken, je tak efektivita výkonu grafického akcelerátoru snižována.}. Algoritmus si poté sám dopočte, jaký počet bloků a vláken je potřeba spustit pro daný počet uzlů $N$. 
+Pomocí celočíselného parametru $w$ je možné specifikovat velikost bloku jako počet spouštěných warpů, aby nedocházelo ke zbytečnému snižování efektivity výpočtu\footnote{Řadič grafické karty s~technologií CUDA vždy spouští celočíselný počet warpů (1 warp odpovídá 32 vláknům), přičemž nežádoucí vlákna jsou deaktivována. V~případě, že je třeba spustit jiný počet vláken, je tak efektivita výkonu grafického akcelerátoru snižována.}. Algoritmus si poté sám dopočte, jaký počet bloků a~vláken je potřeba spustit pro daný počet uzlů $N$. 
 
 \subsubsection{Paměť}
-Alokace paměti v programu, který počítá na grafické kartě je rozdílná od klasické alokace v RAM, kterou používá procesor. Pro alokaci paměti na grafické kartě je nutné využívat specializované funkce pro systém Cuda. Pro alokaci pole na grafické kartě je nutné nejprve alokovat pole na příslušnou velikost a poté ještě nakopírovat ukazatel na toto pole do paměti grafické karty. Pro dvojrozměrné pole, které v algoritmu využíváme, je nutné přidat ještě další krok kopírování \textit{N} ukazatelů a pro každý z nich teprve alokovat příslušné pole.
+Alokace paměti v~programu, který počítá na grafické kartě je rozdílná od klasické alokace v~RAM, kterou používá procesor. Pro alokaci paměti na grafické kartě je nutné využívat specializované funkce pro systém CUDA. Pro alokaci pole na grafické kartě je nutné nejprve alokovat pole na příslušnou velikost a~poté ještě nakopírovat ukazatel na toto pole do paměti grafické karty. Pro dvojrozměrné pole, které v~algoritmu využíváme, je nutné přidat ještě další krok kopírování \textit{N} ukazatelů a~pro každý z nich teprve alokovat příslušné pole.
 
 \paragraph{Paměťové struktury na CPU}
 V algoritmu je na CPU alokována \textit{matice vzdáleností}, která je použita pro sběr výsledků, kam po skončení algoritmu vlákna z GPU kopírují své výsledky.
 
 \paragraph{Paměťové struktury na GPU}
-Na GPU je alokována a inicializována jedna instance grafu, která je kopií grafu, vytvořeného na CPU. Graf je přístupný všem vláknům a slouží pouze ke čtení, proto stačí pouze jedna instance. Dále je na GPU alokován celý objekt třídy \textit{cDijkstra}, který obsahuje číslo výchozího uzlu, které je pro každé vlákno jiné, počet již uzavřených uzlů, celkový počet uzlů, ukazatel na společný graf a dvě jednorozměrná pole. První je pole \textit{vzdáleností} k ostatním uzlům, které je inicializováno na \textit{nekonečno}. Druhé pole \textit{uzavřený} definuje již uzavřené uzly, ke kterým již byla nalezena nejkratší možná cesta.
+Na GPU je alokována a~inicializována jedna instance grafu, která je kopií grafu, vytvořeného na CPU. Graf je přístupný všem vláknům a~slouží pouze ke čtení, proto stačí pouze jedna instance. Dále je na GPU alokován celý objekt třídy \textit{cDijkstra}, který obsahuje číslo výchozího uzlu, které je pro každé vlákno jiné, počet již uzavřených uzlů, celkový počet uzlů, ukazatel na společný graf a~dvě jednorozměrná pole. První je pole \textit{vzdáleností} k~ostatním uzlům, které je inicializováno na \textit{nekonečno}. Druhé pole \textit{uzavřený} definuje již uzavřené uzly, ke kterým již byla nalezena nejkratší možná cesta.
 
 %\subsubsection{Profilace}
 
 
 \subsubsection{Výpočet}
-Samotný výpočet již zajišťuje samotná třída \textit{cDijkstra}, respektive její metoda \textit{devSpustVypocet()}, která je spuštěna v každém vlákně. Protože vlákno již má všechny potřebné paměťové struktury, může počítat nejkratší cesty v grafu z daného výchozího uzlu, aniž by bylo nutné synchronizovat se s ostatními vlákny.
+Samotný výpočet již zajišťuje samotná třída \textit{cDijkstra}, respektive její metoda \textit{devSpustVypocet()}, která je spuštěna v~každém vlákně. Protože vlákno již má všechny potřebné paměťové struktury, může počítat nejkratší cesty v~grafu z daného výchozího uzlu, aniž by bylo nutné synchronizovat se s~ostatními vlákny.
 
-\paragraph{Kopírování a výpis výsledků}
-Po skončení výpočtu na všech vláknech na GPU následuje kopírování výsledků zpět do paměti RAM tak, aby data byla přístupná z CPU. CPU pak pouze vypíše připravenou matici nejkratších vzdáleností v grafu.
+\paragraph{Kopírování a~výpis výsledků}
+Po skončení výpočtu na všech vláknech na GPU následuje kopírování výsledků zpět do paměti RAM tak, aby data byla přístupná z CPU. CPU pak pouze vypíše připravenou matici nejkratších vzdáleností v~grafu.
 
 
 \subsubsection{Efektivita využití akcelerátoru} \label{l:cuda:dijkstra:efektivita}
-Následující výpočet efektivnosti využití \emph{gpu} byl spočítán pro graf o~5000 uzlech a 1 warp (32 vláken v bloku).
-Měření bylo prováděno na grafické kartě \emph{GeForce GTX 780 Ti} (\emph{Cuda CC 3.0}), pro kterou platí hardwarové omezení 
+Následující výpočet efektivnosti využití \emph{gpu} byl spočítán pro graf o~5000 uzlech a~1 warp (32 vláken v~bloku).
+Měření bylo prováděno na grafické kartě \emph{GeForce GTX 780 Ti} (\emph{CUDA CC 3.0}), pro kterou platí hardwarové omezení 
 dle tabulky \ref{tab:cuda:hw}.
 
 \begin{table}[h!]
@@ -523,7 +525,7 @@ dle tabulky \ref{tab:cuda:hw}.
         \hline
         Počet bloků              & $BlMax$   & 16      \\
         Počet warpů              & $WarpMax$ & 64      \\
-        Počet registrů           & $RegMax$  & 64 k    \\
+        Počet registrů           & $RegMax$  & 64 k   \\
         Velikost sdílené paměti  & $ShMax$   & 48 kB   \\
         \hline
     \end{tabular}
@@ -532,13 +534,13 @@ dle tabulky \ref{tab:cuda:hw}.
 \end{table}
 
 
-Spouštěný počet bloků ($\#SB$) se dopočítává tak, aby celkový počet vláken byl roven alespoň $N$. Pro $32$ vláken (počet warpů $\#Wb = 1$) v bloku je tedy $\#SB = 157$.
+Spouštěný počet bloků ($\#SB$) se dopočítává tak, aby celkový počet vláken byl roven alespoň $N$. Pro $32$ vláken (počet warpů $\#Wb = 1$) v~bloku je tedy $\#SB = 157$.
 
 Celkově se tedy spustí $\#SB . \#Wb . 32$ vláken, ale počet vláken provádějících užitečný výpočet je právě $N$. Efektivita pro počet užitečných vláken je tedy
 $$ E_1 = \frac{N}{\#SB . \#Wb . 32} = 99.5 \% $$
 
 
-Každé vlákno zabírá \emph{18} registrů ($\#reg$) a není využita žádná sdílená paměť. Pro rezidentní počet 
+Každé vlákno zabírá \emph{18} registrů ($\#reg$) a~není využita žádná sdílená paměť. Pro rezidentní počet 
 bloků na jednom SM ($\#B$)  platí následující nerovnice:
 $$               \#B \leq BlMax   \Rightarrow  \#B \leq 16    $$
 $$        \#B . \#Wb \leq WarpMax \Rightarrow  \#B \leq 64    $$
@@ -571,7 +573,7 @@ První verze je základní algoritmus, kde je pro každý výpočet relaxace ka�
 kde se do matice délky cest uloží menší ze dvou vzdáleností -- buď původní cesta z~$i$ do $j$ nebo cesta
 přes $k$, tedy součet vzdáleností z~$i$ do $k$ a~z~$k$ do $j$.} voláno jedno vlákno. Dále bylo implementováno 
 optimálnější paralelní řešení Floyd-Warshallova algoritmu -- zpracování po dlaždicích, včetně efektivního použití sdílené paměti.
-Měření bylo provedeno u~obou verzí a~je shrnuto v sekci \ref{l:cuda:mereni}.
+Měření bylo provedeno u~obou verzí a~je shrnuto v~sekci \ref{l:cuda:mereni}.
 
 \subsubsection{Základní paralelní algoritmus}
 Základní naivní paralelní řešení Floyd-Warshallova algoritmu spočívá v~$N$-krát paralelním spuštění $N^2$ vláken. 
@@ -584,53 +586,55 @@ algoritmu.
 % todo vysledek z profilace?
 
 Pro konkrétní implementaci v~této práci byla zvolena velikost bloku jako volitelný parametr programu. Tato velikost bloku se zadává
-jako celočíselný počet warpů ($w$) a je popsána v kapitole \ref{l:cuda:dijkstra:vlakna}.
+jako celočíselný počet warpů ($w$) a~je popsána v~kapitole \ref{l:cuda:dijkstra:vlakna}.
 Počet bloků se pak dopočítá tak, aby bylo celkově spuštěno minimálně $N^2$ vláken. Tedy počet bloků $B = \lceil \frac{N^2}{w*32} \rceil$.
 
 \subsubsection{Optimalizace pro paralelní výpočet} \label{l:cuda:optimalizace}
-Optimalizace pro paralelní výpočet na akcelerátoru CUDA byla zpracována dle \cite{w:fw:cuda}. Prvním krokem bylo rozdělit výpočet  celé matice najednou do výpočtu po (pevně velkých) dlaždicích. Touto optimalizací se zvyšuje prostorová lokalita dat a zvyšuje se tak \emph{cache-hit} pravděpodobnost. V tomto paralelním zpracování se každý blok vláken stará pouze o jednu dlaždici a je tak možné využít sdílenou paměť, kterou mohou společně využít všechna vlákna v~jednom bloku.
+Optimalizace pro paralelní výpočet na akcelerátoru CUDA byla zpracována dle \cite{w:fw:cuda}. Prvním krokem bylo rozdělit výpočet  celé matice najednou do výpočtu po (pevně velkých) dlaždicích. Touto optimalizací se zvyšuje prostorová lokalita dat a~zvyšuje se tak \emph{cache-hit} pravděpodobnost. V tomto paralelním zpracování se každý blok vláken stará pouze o~jednu dlaždici a~je tak možné využít sdílenou paměť, kterou mohou společně využít všechna vlákna v~jednom bloku.
 
 \paragraph{Dlaždicové zpracování}
-V tomto způsobu výpočtu je daná matice délek cest rozdělena do pevně velkých dlaždic. Iterování~v průběhu algoritmu je pak
+V tomto způsobu výpočtu je daná matice délek cest rozdělena do pevně velkých dlaždic. Iterování~v~průběhu algoritmu je pak
 upraveno podle klasické metody \emph{proložení cyklů} (\emph{loop tiling}) -- tedy kde $k1$ iteruje přes počet dlaždic 
 a~$k2$ přes velikost dlaždice. Výpočet každé iterace $k1$ je pak dále rozdělen do
-3 sekcí -- výpočet pro \emph{nezávislé dlaždice}, pro \emph{jedno-závislé dlaždice} a \emph{dvou-závislé dlaždice}.
+3 sekcí -- výpočet pro \emph{nezávislé dlaždice}, pro \emph{jedno-závislé dlaždice} a~\emph{dvou-závislé dlaždice}.
 \begin{enumerate}
     \item \textbf{Výpočet pro nezávislé dlaždice} \label{cuda:dlazdice:nezavisle} \\
-        Jedná se o výpočet dlaždice ležící na hlavní diagonále matice. Pro každé $k1$ i~$k2$ je mezilehlý uzel $k$ uvnitř této
-        dlaždice a výpočet relaxace všech hran je tedy velmi lokalizovaný. Všechny přístupy do paměti jsou pouze v rámci této jedné dlaždice.
+        Jedná se o~výpočet dlaždice ležící na hlavní diagonále matice. Pro každé $k1$ i~$k2$ je mezilehlý uzel $k$ uvnitř této
+        dlaždice a~výpočet relaxace všech hran je tedy velmi lokalizovaný. Všechny přístupy do paměti jsou pouze v~rámci této jedné dlaždice.
 
     \item \textbf{Výpočet pro jedno-závislé dlaždice} \label{cuda:dlazdice:jednozavisle} \\ 
         Tyto dlaždice vždy leží ve stejném řádku (resp. sloupci)\footnote{Dále nazýváno jako \emph{hlavní řádek} (resp.
         \emph{sloupec}) dlaždic.} jako dlaždice z~bodu~1. Pro tyto dlaždice platí, že hrana do 
-        mezilehlého uzlu $k$ leží v~matici z~bodu 1. a hrana z~uzlu $k$ v~jedno-závislé dlaždici samotné (resp. pro sloupce je to 
-        přesně naopak). Výpočet je tak velmi lokalizovaný, neboť každý blok čte pouze z~dlaždice samotné a z~matice z~bodu 1.
+
+
+        mezilehlého uzlu $k$ leží v~matici z~bodu~1. a~hrana z~uzlu $k$ v~jedno-závislé dlaždici samotné (resp. pro sloupce je to 
+        přesně naopak). Vý\-po\-čet je tak velmi lokalizovaný, neboť každý blok čte pouze z~dlaždice samotné a~z~matice z~bodu~1.
 
     \item \textbf{Výpočet pro dvou-závislé dlaždice} \label{cuda:dlazdice:dvouzavisle} \\
-        Jedná se o výpočet pro všechny ostatní dlaždice nezpracované v~pře\-deš\-lých krocích. Pro všechny tyto dlaždice platí, že 
-        hodnota hran do i~z~me\-zi\-leh\-lé\-ho uzlu $k$ leží v dlaždicích vypočítaných v~kroku 2.. Přesněji potřebné hodnoty pro výpočet
-        jedné \emph{dvou-závislé} dlaždice leží v~dlaždici samotné a právě ve dvou dlaždicích spočítaných v kroku 2. První, 
+        Jedná se o~výpočet pro všechny ostatní dlaždice nezpracované v~pře\-deš\-lých krocích. Pro všechny tyto dlaždice platí, že 
+        hodnota hran do i~z~me\-zi\-leh\-lé\-ho uzlu $k$ leží v~dlaždicích vypočítaných v~kroku~2.. Přesněji potřebné hodnoty pro výpočet
+        jedné \emph{dvou-závislé} dlaždice leží v~dlaždici samotné a~právě ve dvou dlaždicích spočítaných v~kroku 2. První, 
         z~\emph{hlavního sloupce} je ve stejném řádku a~druhá, z~\emph{hlavního řádku}, je ve stejném sloupci. Opět je tak 
-        výpočet velmi lokalizovaný -- pro výpočet jedné dlaždice se opakuje přístup ke stejným hodnotám na malém prostoru v paměti.
+        výpočet velmi lokalizovaný -- pro výpočet jedné dlaždice se opakuje přístup ke stejným hodnotám na malém prostoru v~paměti.
 
 \end{enumerate}
 
-\paragraph{Použití sdílené paměti a registrů}\label{cuda:sdilena}
+\paragraph{Použití sdílené paměti a~registrů}\label{cuda:sdilena}
 V~případě, že se jeden blok vždy stará právě o~jednu dlaždici, je možné iterování přes $k2$ řešit uvnitř kernelu. 
 Pak v~případě výpočtu \emph{dvou-závislých} dlaždic každý blok pracuje s~daty právě ze tří dlaždic:
 \begin{itemize}
     \item dlaždice samotné, kde se zapisují nově nalezené hodnoty
-    \item jedna dlaždice z~\emph{hlavního sloupce} a jedna dlaždice z~\emph{hlavního řádku}, ze kterých se čtou hodnoty
+    \item jedna dlaždice z~\emph{hlavního sloupce} a~jedna dlaždice z~\emph{hlavního řádku}, ze kterých se čtou hodnoty
         pro mezilehlý uzel $k$
 \end{itemize}
 
-Pro jednu konkrétní hranu $i,j$ a~velikost dlaždice $s$ se uvnitř kernelu provádí $s$ čtení a $s$ zápisů prvku $i,j$ matice ($M_{i,j}$).
+Pro jednu konkrétní hranu $i,j$ a~velikost dlaždice $s$ se uvnitř kernelu provádí $s$ čtení a~$s$ zápisů prvku $i,j$ matice ($M_{i,j}$).
 Dále se čtou opakovaně hodnoty z~dlaždice z~\emph{hlavního sloupce} resp. \emph{řádku} -- pro všech $s$ hran z~jednoho řádku se čte
-daná hodnota pro index $k2$ z~dlaždice z~\emph{hlavního sloupce} a stejně tak pro všech $s$ hran z~jednoho sloupce se čte daná hodnota
+daná hodnota pro index $k2$ z~dlaždice z~\emph{hlavního sloupce} a~stejně tak pro všech $s$ hran z~jednoho sloupce se čte daná hodnota
 pro index $k2$ z~dlaždice z~\emph{hlavního řádku}. V~průběhu iterování $k2$ se tak čte každá hodnota z~dlaždice z~\emph{hlavního sloupce} 
-i~\emph{řádku} a $s$-krát.
+i~\emph{řádku} a~$s$-krát.
 
-Jelikož o výpočet pro jednu dlaždici se stará právě jeden blok vláken, je možné využít sdílenou paměť a~uštřit tak čas kvůli opakovanému 
+Jelikož o~výpočet pro jednu dlaždici se stará právě jeden blok vláken, je možné využít sdílenou paměť a~uštřit tak čas kvůli opakovanému 
 čtení stejný položek z matice. Na začátku kernelu se načtou 2 dlaždice z~\emph{hlavního řádku} a~sloupce do sdílené paměti a~v~průběhu 
 výpočtu se pak používají data z~této sdílené paměti. Jelikož se tato data používají jen pro čtení, není třeba je zpět zapisovat do 
 hlavní paměti.
@@ -651,17 +655,19 @@ ve sdílené paměti celé dlaždice z~\emph{hlavního řádku} resp. sloupce.
 
 Tato skutečnost se dá využít pro fázové načítání dat do sdílené paměti, čímž se radikálně ušetří požadavky na velikost sdílené paměti
 pro jeden blok. Místo toho, aby se data z~dlaždic načetla do sdílené paměti na začátku kernelu, se načítá potřebný sloupec (resp. řádek)
-do sdílené paměti v~každé iteraci přes $k2$. Pro správný průběh výpočtu a načítání dat v průběhu iterování je potřeba vlákna synchronizovat
+do sdílené paměti v~každé iteraci přes $k2$. Pro správný průběh výpočtu a~načítání dat v~průběhu iterování je potřeba vlákna synchronizovat
 bariérou v~každé iteraci.
 
 
 \subsubsection{Profilace} \label{l:cuda:profilace}
-Výstup \ref{f:cuda:floyd:profilace} ukazuje informace z verbose režimu příkazu \emph{nvcc}. Výstup je zkrácen a jsou ponechány pouze nejdůležitější informace pro kernel pro dvou--závislé dlaždice \ref{cuda:dlazdice:dvouzavisle}. Každé vlákno z tohoto kernelu používá 25 registrů a každý blok vláken používá 256 B sdílené paměti. Tyto údaje jsou použity pro výpočet efektivity v kapitole \ref{l:cuda:floyd:efektivita}.
+Výstup \ref{f:cuda:floyd:profilace} ukazuje informace z verbose režimu příkazu \emph{nvcc}.
+Výstup je zkrácen a~jsou ponechány pouze nejdůležitější informace pro kernel pro dvou--závislé dlaždice \ref{cuda:dlazdice:dvouzavisle}.
+Každé vlákno z tohoto kernelu používá 25 registrů a~každý blok vláken používá 256 B sdílené paměti. Tyto údaje jsou použity pro výpočet efektivity v~kapitole \ref{l:cuda:floyd:efektivita}.
 
-Obrázek \ref{f:cuda:floyd:profilace2} ukazuje, že třetina času algoritmu se počítá ve funkci \emph{kernelProRadky} a dalších téměř 30\% ve funkci \emph{kernelProSloupce}.
+Obrázek \ref{f:cuda:floyd:profilace2} ukazuje, že třetina času algoritmu se počítá ve funkci \emph{kernelProRadky} a~dalších téměř 30\% ve funkci \emph{kernelProSloupce}.
 Obě tyto funkce představují výpočet jedno--závislých dlaždic \ref{cuda:dlazdice:jednozavisle}, kdy se vypočítává celkem $x$ dlaždic (jeden sloupec nebo řádek dlaždic).
-Funkce \emph{kernelProDvouZavisleDlazdice}, která je nejvíce optimalizována, trvá přibližně čtvrtinu času algoritmu, ačkoli se provádí pro všechny dlaždice, tedy $x^2$ dlaždic.
-Vše napovídá tomu, že funkce \emph{kernelProDvouZavisleDlazdice} je velice dobře optimalizována.
+Funkce \emph{kernelProDvouZavisleDlazdice}, která je nej\-ví\-ce optimalizována, trvá přibližně čtvrtinu času algoritmu, ačkoli se provádí pro všechny dlaždice, tedy $x^2$ dlaždic.
+Vše na\-po\-ví\-dá tomu, že funkce \emph{kernelProDvouZavisleDlazdice} je velice dobře op\-ti\-ma\-li\-zo\-vá\-na.
 
 \begin{figure}
 	\centering
@@ -701,18 +707,18 @@ Time(%)    Time    Calls    Avg    Min    Max    Name
 2.71%  2.4743ms   1024  2.4160us  2.3360us  3.6800us
     kernelProNezavisleDlazdice(unsigned int**, ...)
 	\end{verbatim}
-	\caption{Výpis z příkazu \emph{nvprof} pro Floyd-Warshallův algoritmus při použití \emph{cache} a sdílené paměti.}
+	\caption{Výpis z příkazu \emph{nvprof} pro Floyd-Warshallův algoritmus při použití \emph{cache} a~sdílené paměti.}
     \label{f:cuda:floyd:profilace2}
 \end{figure}
 
 \subsubsection{Efektivita využití akcelerátoru} \label{l:cuda:floyd:efektivita}
-Pro výpočet efektivnosti pro algoritmu Floyd-Warshalla byly použity stejné podmínky jako pro Dijkstrův algoritmus \ref{l:cuda:dijkstra:efektivita}. Jedná se tedy opět o graf o~5000 uzlech, ale tentokrát pro 4 warpy (128 vláken v bloku), protože tato hodnota vyšla z měření jako nejlepší dle času výpočtu.
+Pro výpočet efektivnosti pro algoritmu Floyd-Warshalla byly použity stejné podmínky jako pro Dijkstrův algoritmus \ref{l:cuda:dijkstra:efektivita}. Jedná se tedy opět o~graf o~5000 uzlech, ale tentokrát pro 4 warpy (128 vláken v~bloku), protože tato hodnota vyšla z měření jako nejlepší dle času výpočtu.
 
-Spouštěný počet bloků ($\#SB$) odpovídá počtu dlaždic matice vzdáleností. Pro $5000$ uzlů a velikost dlaždice $32$ je to 
+Spouštěný počet bloků ($\#SB$) odpovídá počtu dlaždic matice vzdáleností. Pro $5000$ uzlů a~velikost dlaždice $32$ je to 
 $\lceil \frac{5000}{32} \rceil ^ 2 = 24649$. Počet vláken $\#V$ je tedy 128 (4 warpy).
 
 V~každém bloku se vždy spouští přesně 4 warpy ($ \#Wb $), ale celkově se matice $5000 \times 5000$ musí zarovnat na celočíselný násobek
-dlaždic, tedy na $5024$ a je tak třeba provádět výpočet i~pro neexistující prvky. Celkový počet prvků navíc je tedy $ 5024^2 $, kde 
+dlaždic, tedy na $5024$ a~je tak třeba provádět výpočet i~pro neexistující prvky. Celkový počet prvků navíc je tedy $ 5024^2 $, kde 
 užitečných počet prvků je $ 5000^2 $. Efektivita pro počet užitečných vláken je tedy
 $$ E_1 = \frac{5000^2}{5024^2} = 99.05 \% $$
 
@@ -732,7 +738,7 @@ je $ \#it = \lceil \frac{\#SB}{\#RB} \rceil = 103 $. Efektivita využití \emph{
 $$ E_2 = \frac{\#SB}{\#it . \#RB } = 99.7 \% $$
 
 % TODO latence operaci
-Počet rezidentních warpů na jednom \emph{SM} je  $ \#W = \#B . \#Wb = 64 $. To je více než nejdelší latence instrukcí a proto efektivita prokládání 
+Počet rezidentních warpů na jednom \emph{SM} je  $ \#W = \#B . \#Wb = 64 $. To je více než nejdelší latence instrukcí a~proto efektivita prokládání 
 warpů je 
 
 $$ E_3 = 100 \% $$
@@ -742,14 +748,14 @@ Celková efektivita je
 $$ E = E_1 . E_2 . E_3  = 98.8 \% $$
 
 \subsection{Měření} \label{l:cuda:mereni}
-Pro měření byla použita stejná vstupní data jako pro měření řešení pomocí technologie \emph{OpenMP}. Měření bylo provedeno na \emph{gpu-02}, konkrétně na kartě \emph{GeForce GTX 780 Ti}. Výsledky byly zpracovány a zprůměrovány přes počet uzlů a bylo vypočteno zrychlení oproti sekvenční verzi (algoritmus pro \emph{openMP} s jedním vláknem).
+Pro měření byla použita stejná vstupní data jako pro měření řešení pomocí technologie \emph{OpenMP}. Měření bylo provedeno na \emph{gpu-02}, konkrétně na kartě \emph{GeForce GTX 780 Ti}. Výsledky byly zpracovány a~zprůměrovány přes počet uzlů a~bylo vypočteno zrychlení oproti sekvenční verzi (algoritmus pro \emph{openMP} s~jedním vláknem).
 
-Výsledky porovnání dob běhů jednotlivých implementací jsou zahrnuty v grafech \ref{f:mer:cuda:cas1}, \ref{f:mer:cuda:cas2} a \ref{f:mer:cuda:cas3}. Zrychlení je zobrazeno na grafech \ref{f:mer:cuda:zrychleni1}, \ref{f:mer:cuda:zrychleni2}. Pro porovnání jsou dvojice grafů vždy ve stejném měřítku.
+Výsledky porovnání dob běhů jednotlivých implementací jsou zahrnuty v~grafech \ref{f:mer:cuda:cas1}, \ref{f:mer:cuda:cas2} a~\ref{f:mer:cuda:cas3}. Zrychlení je zobrazeno na grafech \ref{f:mer:cuda:zrychleni1}, \ref{f:mer:cuda:zrychleni2}. Pro porovnání jsou dvojice grafů vždy ve stejném měřítku.
 
 \subsubsection{Výsledky} \label{f:cuda:vysledky}
-Tabulky \ref{f:cuda:vysledky:dijkstra} a \ref{f:cuda:vysledky:fw-v2} zobrazují naměřené časy výpočtů jednotlivých algoritmů v závislosti na počtu spuštěných bloků a vláken.
+Tabulky \ref{f:cuda:vysledky:dijkstra} a~\ref{f:cuda:vysledky:fw-v2} zobrazují naměřené časy výpočtů jednotlivých algoritmů v~závislosti na počtu spuštěných bloků a~vláken.
 
-% tabulky s vysledky z mereni
+% tabulky s~vysledky z mereni
 \begin{figure}
     \centering
     \csvautotabular{vysledky/dijkstra-huste-5000.csv}
@@ -770,7 +776,7 @@ Tabulky \ref{f:cuda:vysledky:dijkstra} a \ref{f:cuda:vysledky:fw-v2} zobrazují 
     \centering
     \includegraphics[width=0.45\textwidth]{../grafy/03_cuda/03-01-Dijkstra_cas}
     \includegraphics[width=0.45\textwidth]{../grafy/03_cuda/03-01-Floyd_v1_cas}
-    \caption{Srovnání dob běhu Dijkstrova a základního Floyd-Warshallova algoritmu.}
+    \caption{Srovnání dob běhu Dijkstrova a~základního Floyd-Warshallova algoritmu.}
     \label{f:mer:cuda:cas1}
 \end{figure}
 
@@ -778,14 +784,14 @@ Tabulky \ref{f:cuda:vysledky:dijkstra} a \ref{f:cuda:vysledky:fw-v2} zobrazují 
     \centering
     \includegraphics[width=0.45\textwidth]{../grafy/03_cuda/03-01-Floyd_v1_cas_zoom}
     \includegraphics[width=0.45\textwidth]{../grafy/03_cuda/03-01-Floyd_v2_cas}
-    \caption{Srovnání dob běhu základního a \emph{shared \& staged} Floyd-Warshallova algoritmu.}
+    \caption{Srovnání dob běhu základního a~\emph{shared \& staged} Floyd-Warshallova algoritmu.}
     \label{f:mer:cuda:cas2}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=0.45\textwidth]{../grafy/03_cuda/03-01-Floyd_v2_cas_zoom}
-    \caption{Graf doby běhu optimalizovaného \emph{shared \& staged} Floyd-Warshallova algoritmu (již není s čím porovnávat).}
+    \caption{Graf doby běhu optimalizovaného \emph{shared \& staged} Floyd-Warshallova algoritmu (již není s~čím porovnávat).}
     \label{f:mer:cuda:cas3}
 \end{figure}
 
@@ -794,7 +800,7 @@ Tabulky \ref{f:cuda:vysledky:dijkstra} a \ref{f:cuda:vysledky:fw-v2} zobrazují 
     \centering
     \includegraphics[width=0.45\textwidth]{../grafy/03_cuda/03-02-Dijkstra_zrychleni}
     \includegraphics[width=0.45\textwidth]{../grafy/03_cuda/03-02-Floyd_v1_zrychleni}
-    \caption{Srovnání dob běhu Dijkstrova a základního Floyd-Warshallova algoritmu.}
+    \caption{Srovnání dob běhu Dijkstrova a~základního Floyd-Warshallova algoritmu.}
     \label{f:mer:cuda:zrychleni1}
 \end{figure}
 
@@ -802,29 +808,29 @@ Tabulky \ref{f:cuda:vysledky:dijkstra} a \ref{f:cuda:vysledky:fw-v2} zobrazují 
     \centering
     \includegraphics[width=0.45\textwidth]{../grafy/03_cuda/03-02-Floyd_v1_zrychleni_unzoom}
     \includegraphics[width=0.45\textwidth]{../grafy/03_cuda/03-02-Floyd_v2_zrychleni}
-    \caption{Srovnání dob běhu základního a \emph{shared \& staged} Floyd-Warshallova algoritmu.}
+    \caption{Srovnání dob běhu základního a~\emph{shared \& staged} Floyd-Warshallova algoritmu.}
     \label{f:mer:cuda:zrychleni2}
 \end{figure}
 
 
 \subsubsection{Vyhodnocení}
-Graf \ref{f:mer:cuda:cas1} potvrzuje, že algoritmus Dijkstra je špatně paralelizovatelný pro mnohovláknovou implementaci pomocí technologie \emph{CUDA}. I naivní implementace Floyd-Warshallova algoritmu (kde se jedno vlákno stará o jeden prvek v matici) je řádově rychlejší.
+Graf \ref{f:mer:cuda:cas1} potvrzuje, že algoritmus Dijkstra je špatně paralelizovatelný pro mnohovláknovou implementaci pomocí technologie \emph{CUDA}. I naivní implementace Floyd-Warshallova algoritmu (kde se jedno vlákno stará o~jeden prvek v~matici) je řádově rychlejší.
 
-Z grafu \ref{f:mer:cuda:cas2} je patrné, že optimalizovaná verze Floyd-Warshallova algoritmu zrychluje výpočet průměrně 2--3 krát. Společně s výstupy z profilace (\ref{l:cuda:profilace}) je vidět, že se efektivně využívá sdílená paměť a registry na \emph{multiprocesorech}. 
+Z grafu \ref{f:mer:cuda:cas2} je patrné, že optimalizovaná verze Floyd-Warshallova algoritmu zrychluje výpočet průměrně 2--3 krát. Společně s~výstupy z profilace (\ref{l:cuda:profilace}) je vidět, že se efektivně využívá sdílená paměť a~registry na \emph{multiprocesorech}. 
 
 
 
 \section{Závěr}
-% Dijkstra openMP a cuda
+% Dijkstra openMP a~cuda
 Maximální sedmnáctinásobné zrychlení bylo dosaženo, při použití technologie \emph{openMP}, pro dvacet čtyři vláken.
-Implementace Dijkstrova algoritmu na technologii \emph{CUDA} dosahuje maximálně přibližně \emph{pětinásobného} zrychlení proti sekvenčnímu řešení. Při masivní paralelizaci (počet vláken rovný $N$) je sběrnice do globální paměti úzkým hrdlem a proto nebylo dosaženo výrazně velkého zrychlení než pětinásobného. 
+Implementace Dijkstrova algoritmu na technologii \emph{CUDA} dosahuje maximálně přibližně \emph{pětinásobného} zrychlení proti sekvenčnímu řešení. Při masivní paralelizaci (počet vláken rovný $N$) je sběrnice do globální paměti úzkým hrdlem a~proto nebylo dosaženo výrazně velkého zrychlení než pětinásobného. 
 
 
-% Floyd openMP a cuda
+% Floyd openMP a~cuda
 OpenMP dosahuje při použití šesti vláken přibližně pětinásobného zrychlení. Pro větší počet použitých vláken se již čas běhu nesnižuje.
 Naproti tomu optimalizovaný Floyd-Warshallův algoritmus na technologii \emph{CUDA} dosahuje oproti sekvenční verzi až \emph{devadesátinásobného} zrychlení. Tohoto zrychlení bylo dosaženo při použití asymptoticky $N^2$ počtu vláken. Efektivita paralelního výpočtu pomocí \emph{openMP} strádá hlavně na tom, že nebyl použit blokový algoritmus, který byl implementován pro řešení technologií \emph{CUDA} \ref{l:cuda:optimalizace}.
 
-V další práci je možné v optimalizovaném Floyd-Warshallově algoritmu optimalizovat pomocí sdílené paměti a registrů funkce \emph{kernelProRadky} a \emph{kernelProSloupce} podobným způsobem, jako byla optimalizována funkce \emph{kernelProDvouZavisleDlazdice}.
+V další práci je možné v~optimalizovaném Floyd-Warshallově algoritmu optimalizovat pomocí sdílené paměti a~registrů funkce \emph{kernelProRadky} a~\emph{kernelProSloupce} podobným způsobem, jako byla optimalizována funkce \emph{kernelProDvouZavisleDlazdice}.
 
 
 \clearpage
